@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * 操作対象とするファイルのパスを生成する。
  */
-public class PathBean {
+public class PathBean extends StatusBean {
     /**
     * ファイル名。
     */
@@ -54,6 +54,9 @@ public class PathBean {
     * @return path 正規化されたパスを返す。
     */
     public String getPath() {
+        this.setCode(0);
+        this.setMessage(null);
+
         File f = null;
 
         if (this.dirName != null && this.baseName != null) {
@@ -69,8 +72,10 @@ public class PathBean {
 
         try {
             this.path = f.getCanonicalPath();
+            this.setCode(2);
         } catch (IOException e) {
-            System.err.println(e);
+            this.setCode(1);
+            this.setMessage("エラーが発生しました。 " + e.toString());
         }
 
         return path;
