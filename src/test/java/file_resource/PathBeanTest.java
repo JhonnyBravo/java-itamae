@@ -66,12 +66,14 @@ public class PathBeanTest {
     */
     @Test
     public void testPath1() {
+        String expected = null;
+        StatusBean sb = new StatusBean();
+        sb.setCode(2);
+
         PathBean pb = new PathBean();
         pb.setDirName("test_dir");
         pb.setBaseName("test_file.txt");
-
         String actual = pb.getPath();
-        String expected = null;
 
         try {
             expected = new File("test_dir", "test_file.txt").getCanonicalPath();
@@ -79,6 +81,7 @@ public class PathBeanTest {
             e.printStackTrace();
         } finally {
             assertEquals(expected, actual);
+            assertEquals(sb.getCode(), pb.getCode());
         }
     }
 
@@ -93,11 +96,13 @@ public class PathBeanTest {
     */
     @Test
     public void testPath2() {
+        String expected = null;
+        StatusBean sb = new StatusBean();
+        sb.setCode(2);
+
         PathBean pb = new PathBean();
         pb.setDirName("test_dir");
-
         String actual = pb.getPath();
-        String expected = null;
 
         try {
             expected = new File("test_dir").getCanonicalPath();
@@ -105,6 +110,7 @@ public class PathBeanTest {
             e.printStackTrace();
         } finally {
             assertEquals(expected, actual);
+            assertEquals(sb.getCode(), pb.getCode());
         }
     }
 
@@ -119,11 +125,13 @@ public class PathBeanTest {
     */
     @Test
     public void testPath3() {
+        String expected = null;
+        StatusBean sb = new StatusBean();
+        sb.setCode(2);
+
         PathBean pb = new PathBean();
         pb.setBaseName("test_file.txt");
-
         String actual = pb.getPath();
-        String expected = null;
 
         try {
             expected = new File("test_file.txt").getCanonicalPath();
@@ -131,6 +139,7 @@ public class PathBeanTest {
             e.printStackTrace();
         } finally {
             assertEquals(expected, actual);
+            assertEquals(sb.getCode(), pb.getCode());
         }
     }
 
