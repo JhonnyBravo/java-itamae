@@ -3,6 +3,9 @@ package file_resource;
 import java.io.File;
 import java.io.IOException;
 
+import common_resource.PathBean;
+import common_resource.StatusBean;
+
 /**
  * ファイルを作成または削除する。
  */
