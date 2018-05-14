@@ -7,6 +7,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import common_resource.PathBean;
+import common_resource.StatusBean;
+
 /**
  * {@link file_resource.FileAction} の単体テスト。
  */
