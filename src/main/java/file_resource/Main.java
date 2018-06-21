@@ -4,23 +4,27 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 /**
- * コマンドライン上でファイルの作成・削除を実行する。
+ * ファイルを作成または削除する。
  */
 public class Main {
+    /**
+    * @param args
+    * <ul>
+    * <li>-c, --create &lt;path&gt; ファイルを新規作成する。</li>
+    * <li>-d, --delete &lt;path&gt; ファイルを削除する。</li>
+    * </ul>
+    */
     public static void main(String[] args) {
-        LongOpt[] longopts = new LongOpt[3];
+        LongOpt[] longopts = new LongOpt[2];
         longopts[0] = new LongOpt("create", LongOpt.REQUIRED_ARGUMENT, null, 'c');
         longopts[1] = new LongOpt("delete", LongOpt.REQUIRED_ARGUMENT, null, 'd');
-        longopts[2] = new LongOpt("cwd", LongOpt.REQUIRED_ARGUMENT, null, 'C');
 
-        Getopt options = new Getopt("Main", args, "c:d:C:", longopts);
+        Getopt options = new Getopt("Main", args, "c:d:", longopts);
 
         int c;
         int cFlag = 0;
         int dFlag = 0;
-        int cwdFlag = 0;
         String path = null;
-        String cwd = null;
 
         while ((c = options.getopt()) != -1) {
             switch (c) {
@@ -32,26 +36,18 @@ public class Main {
                 path = options.getOptarg();
                 dFlag = 1;
                 break;
-            case 'C':
-                cwd = options.getOptarg();
-                cwdFlag = 1;
-                break;
             }
         }
 
-        FileAction fa = new FileAction(path);
-
-        if (cwdFlag == 1) {
-            fa.setCwd(cwd);
-        }
+        FileController fc = new FileController(path);
 
         if (cFlag == 1) {
-            fa.create();
+            fc.create();
         } else if (dFlag == 1) {
-            fa.delete();
+            fc.delete();
         }
 
-        System.exit(fa.getCode());
+        System.exit(fc.getCode());
     }
 
 }
