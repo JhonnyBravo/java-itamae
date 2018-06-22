@@ -16,40 +16,40 @@ public class CreateFile implements FileState {
     */
     public CreateFile(String path) {
         this.path = path;
+    }
+
+    /**
+    * 終了コードとメッセージを初期化する。
+    */
+    @Override
+    public void initStatus() {
         this.code = 0;
         this.message = null;
     }
 
     /**
-     * 終了コード: 0 を設定して終了する。
-     */
+    * ファイルを作成する。
+    */
     @Override
-    public void noChanged() {
-        this.code = 0;
-        this.message = null;
-    }
+    public void runCommand() {
+        this.initStatus();
 
-    /**
-     * ファイルを作成する。
-     */
-    @Override
-    public void changed() {
         try {
             new File(this.path).createNewFile();
             this.code = 2;
             this.message = null;
         } catch (IOException e) {
-            this.code = 1;
             this.message = "エラーが発生しました。 " + e.toString();
-            this.error();
+            this.errorTerminate();
         }
     }
 
     /**
-     * エラーメッセージを出力する。
-     */
+    * エラーメッセージを出力する。
+    */
     @Override
-    public void error() {
+    public void errorTerminate() {
+        this.code = 1;
         System.err.println(this.message);
     }
 
