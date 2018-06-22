@@ -15,34 +15,35 @@ public class DeleteFile implements FileState {
     */
     public DeleteFile(String path) {
         this.path = path;
+    }
+
+    /**
+    * 終了コードとメッセージを初期化する。
+    */
+    @Override
+    public void initStatus() {
         this.code = 0;
         this.message = null;
     }
 
     /**
-     * 終了コード: 0 を設定して終了する。
-     */
+    * ファイルを削除する。
+    */
     @Override
-    public void noChanged() {
-        this.code = 0;
-        this.message = null;
-    }
+    public void runCommand() {
+        this.initStatus();
 
-    /**
-     * ファイルを削除する。
-     */
-    @Override
-    public void changed() {
         new File(this.path).delete();
         this.code = 2;
         this.message = null;
     }
 
     /**
-     * エラーメッセージを出力する。
-     */
+    * エラーメッセージを出力する。
+    */
     @Override
-    public void error() {
+    public void errorTerminate() {
+        this.code = 1;
         System.err.println(this.message);
     }
 
