@@ -5,23 +5,22 @@ import java.io.File;
 /**
  * ファイルの有無を確認してコマンドを実行する。
  */
-public class FileController {
+public class FileController extends StatusBean {
     private String path;
-    private int code;
 
     /**
-    * @param path 操作対象とするファイルのパスを指定する。
-    */
+     * @param path 操作対象とするファイルのパスを指定する。
+     */
     public FileController(String path) {
         this.path = path;
     }
 
     /**
-    * <ul>
-    * <li>ファイルが既に存在する場合: 何もしない。</li>
-    * <li>ファイルが存在しない場合: ファイルを新規作成する。</li>
-    * </ul>
-    */
+     * <ul>
+     * <li>ファイルが既に存在する場合: 何もしない。</li>
+     * <li>ファイルが存在しない場合: ファイルを新規作成する。</li>
+     * </ul>
+     */
     public void create() {
         CreateFile cf = new CreateFile(this.path);
 
@@ -32,15 +31,15 @@ public class FileController {
             cf.runCommand();
         }
 
-        this.code = cf.getCode();
+        this.setCode(cf.getCode());
     }
 
     /**
-    * <ul>
-    * <li>ファイルが存在する場合: ファイルを削除する。</li>
-    * <li>ファイルが存在しない場合: 何もしない。</li>
-    * </ul>
-    */
+     * <ul>
+     * <li>ファイルが存在する場合: ファイルを削除する。</li>
+     * <li>ファイルが存在しない場合: 何もしない。</li>
+     * </ul>
+     */
     public void delete() {
         DeleteFile df = new DeleteFile(this.path);
 
@@ -51,13 +50,7 @@ public class FileController {
             df.initStatus();
         }
 
-        this.code = df.getCode();
+        this.setCode(df.getCode());
     }
 
-    /**
-    * @return code 終了コードを返す。
-    */
-    public int getCode() {
-        return code;
-    }
 }
