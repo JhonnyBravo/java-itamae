@@ -2,6 +2,8 @@ package file_resource;
 
 import java.io.File;
 
+import status_resource.StatusBean;
+
 /**
  * ファイルの有無を確認してコマンドを実行する。
  */
