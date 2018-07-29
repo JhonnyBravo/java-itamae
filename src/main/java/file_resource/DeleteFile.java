@@ -2,6 +2,8 @@ package file_resource;
 
 import java.io.File;
 
+import status_resource.StatusController;
+
 /**
  * ファイルを削除する。
  */
