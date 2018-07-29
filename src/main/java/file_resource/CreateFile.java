@@ -3,6 +3,8 @@ package file_resource;
 import java.io.File;
 import java.io.IOException;
 
+import status_resource.StatusController;
+
 /**
  * ファイルを作成する。
  */
