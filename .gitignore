@@ -59,6 +59,9 @@ application.properties
 .classpath
 .project
 
+# Java
+src/test/resources
+
 # Gradle
 .gradle
 gradle
