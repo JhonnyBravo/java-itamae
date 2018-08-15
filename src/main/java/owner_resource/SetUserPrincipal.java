@@ -55,6 +55,7 @@ public class SetUserPrincipal extends StatusController {
         }
 
         // 新しいファイル所有者を設定する。
+        System.out.println("所有者を変更します。");
         Path p = new File(this.path).toPath();
 
         try {
@@ -63,6 +64,7 @@ public class SetUserPrincipal extends StatusController {
         } catch (IOException e) {
             this.setCode(1);
             this.setMessage("エラーが発生しました。 " + e.toString());
+            this.errorTerminate();
         }
     }
 }
