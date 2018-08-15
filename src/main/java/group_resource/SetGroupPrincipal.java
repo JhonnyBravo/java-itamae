@@ -56,6 +56,7 @@ public class SetGroupPrincipal extends StatusController {
         }
 
         // 新しいグループ所有者を設定する。
+        System.out.println("グループ所有者を変更します。");
         Path p = new File(this.path).toPath();
         PosixFileAttributeView pfa = Files.getFileAttributeView(p, PosixFileAttributeView.class);
 
@@ -65,6 +66,7 @@ public class SetGroupPrincipal extends StatusController {
         } catch (IOException e) {
             this.setCode(1);
             this.setMessage("エラーが発生しました。 " + e.toString());
+            this.errorTerminate();
         }
     }
 }
