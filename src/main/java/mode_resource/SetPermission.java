@@ -66,6 +66,7 @@ public class SetPermission extends StatusController {
         }
 
         // 新しいアクセス権限を設定する。
+        System.out.println("パーミッションを変更します。");
         Path p = new File(this.path).toPath();
 
         try {
