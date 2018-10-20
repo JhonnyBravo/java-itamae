@@ -1,11 +1,16 @@
 package file_resource;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 /**
- * ファイルを作成または削除する。
+ * ファイルの作成 / 削除とファイル所有者の変更 / グループ所有者の変更 / ファイルパーミッションの変更を実行する。
  */
+@SpringBootApplication
 public class Main {
     /**
      * @param args
@@ -18,6 +23,8 @@ public class Main {
      *             </ul>
      */
     public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+
         LongOpt[] longopts = new LongOpt[5];
         longopts[0] = new LongOpt("create", LongOpt.REQUIRED_ARGUMENT, null, 'c');
         longopts[1] = new LongOpt("delete", LongOpt.REQUIRED_ARGUMENT, null, 'd');
@@ -64,7 +71,8 @@ public class Main {
             }
         }
 
-        FileController fc = new FileController(path);
+        FileController fc = context.getBean(FileController.class);
+        fc.init(path);
 
         if (cFlag == 1) {
             fc.create();
