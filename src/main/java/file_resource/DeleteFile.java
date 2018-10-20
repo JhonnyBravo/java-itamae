@@ -2,19 +2,24 @@ package file_resource;
 
 import java.io.File;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import status_resource.StatusController;
 
 /**
  * ファイルを削除する。
  */
+@Service
 public class DeleteFile extends StatusController {
-    private String path;
+    @Autowired
+    private FileProperties fp;
 
     /**
      * @param path 削除対象とするファイルのパスを指定する。
      */
-    public DeleteFile(String path) {
-        this.path = path;
+    public void init(String path) {
+        fp.setPath(path);
     }
 
     /**
@@ -23,8 +28,15 @@ public class DeleteFile extends StatusController {
     public void runCommand() {
         this.initStatus();
 
-        new File(this.path).delete();
-        this.setCode(2);
+        File f = new File(fp.getPath());
+
+        if (f.isFile()) {
+            System.out.println(fp.getPath() + " を削除します。");
+            f.delete();
+            this.setCode(2);
+        } else {
+            return;
+        }
     }
 
 }
