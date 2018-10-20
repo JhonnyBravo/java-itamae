@@ -2,22 +2,44 @@ package file_resource;
 
 import java.io.File;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Service;
+
 import group_resource.SetGroupPrincipal;
 import mode_resource.SetPermission;
 import owner_resource.SetUserPrincipal;
-import status_resource.StatusBean;
+import status_resource.StatusController;
 
 /**
- * ファイルの有無を確認してコマンドを実行する。
+ * ファイルの作成 / 削除とファイル所有者の変更 / グループ所有者の変更 / ファイルパーミッションの変更を実行する。
  */
-public class FileController extends StatusBean {
-    private String path;
+@Service
+@Import({ SetGroupPrincipal.class, SetPermission.class, SetUserPrincipal.class })
+public class FileController extends StatusController {
+    @Autowired
+    private FileProperties fp;
+
+    @Autowired
+    private CreateFile cf;
+
+    @Autowired
+    private DeleteFile df;
+
+    @Autowired
+    private SetUserPrincipal sup;
+
+    @Autowired
+    private SetGroupPrincipal sgp;
+
+    @Autowired
+    private SetPermission sp;
 
     /**
      * @param path 操作対象とするファイルのパスを指定する。
      */
-    public FileController(String path) {
-        this.path = path;
+    public void init(String path) {
+        fp.setPath(path);
     }
 
     /**
@@ -27,15 +49,8 @@ public class FileController extends StatusBean {
      * </ul>
      */
     public void create() {
-        CreateFile cf = new CreateFile(this.path);
-
-        if (new File(this.path).isFile()) {
-            cf.initStatus();
-        } else {
-            System.out.println(this.path + " を作成します。");
-            cf.runCommand();
-        }
-
+        cf.init(fp.getPath());
+        cf.runCommand();
         this.setCode(cf.getCode());
     }
 
@@ -46,15 +61,8 @@ public class FileController extends StatusBean {
      * </ul>
      */
     public void delete() {
-        DeleteFile df = new DeleteFile(this.path);
-
-        if (new File(this.path).isFile()) {
-            System.out.println(this.path + " を削除します。");
-            df.runCommand();
-        } else {
-            df.initStatus();
-        }
-
+        df.init(fp.getPath());
+        df.runCommand();
         this.setCode(df.getCode());
     }
 
@@ -64,14 +72,16 @@ public class FileController extends StatusBean {
      * @param owner 新しい所有者として設定するユーザの名前を指定する。
      */
     public void setOwner(String owner) {
-        SetUserPrincipal sup = new SetUserPrincipal(this.path, owner);
+        File f = new File(fp.getPath());
 
-        if (new File(this.path).isFile()) {
-            sup.runCommand();
-        } else {
-            sup.initStatus();
+        if (!f.isFile()) {
+            this.setMessage(fp.getPath() + " が見つかりません。");
+            this.errorTerminate();
+            return;
         }
 
+        sup.init(fp.getPath(), owner);
+        sup.runCommand();
         this.setCode(sup.getCode());
     }
 
@@ -81,14 +91,16 @@ public class FileController extends StatusBean {
      * @param group 新しいグループ所有者として設定するグループの名前を指定する。
      */
     public void setGroup(String group) {
-        SetGroupPrincipal sgp = new SetGroupPrincipal(this.path, group);
+        File f = new File(fp.getPath());
 
-        if (new File(this.path).isFile()) {
-            sgp.runCommand();
-        } else {
-            sgp.initStatus();
+        if (!f.isFile()) {
+            this.setMessage(fp.getPath() + " が見つかりません。");
+            this.errorTerminate();
+            return;
         }
 
+        sgp.init(fp.getPath(), group);
+        sgp.runCommand();
         this.setCode(sgp.getCode());
     }
 
@@ -108,15 +120,16 @@ public class FileController extends StatusBean {
      *             </ul>
      */
     public void setMode(String mode) {
-        SetPermission sp = new SetPermission(this.path, mode);
+        File f = new File(fp.getPath());
 
-        if (new File(this.path).isFile()) {
-            sp.runCommand();
-        } else {
-            sp.initStatus();
+        if (!f.isFile()) {
+            this.setMessage(fp.getPath() + " が見つかりません。");
+            this.errorTerminate();
+            return;
         }
 
+        sp.init(fp.getPath(), mode);
+        sp.runCommand();
         this.setCode(sp.getCode());
     }
-
 }
