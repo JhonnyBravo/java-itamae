@@ -7,14 +7,24 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリのアクセス権限を変更する。
  */
+@Service
 public class SetPermission extends StatusController {
-    private String path;
-    private String mode;
+    @Autowired
+    private ModeProperties mp;
+
+    @Autowired
+    private GetPermission gp;
+
+    @Autowired
+    private CreatePermission cp;
 
     /**
      * @param path 操作対象とするファイルまたはディレクトリのパスを指定する。
@@ -30,9 +40,9 @@ public class SetPermission extends StatusController {
      *             <li>7: rwx</li>
      *             </ul>
      */
-    public SetPermission(String path, String mode) {
-        this.path = path;
-        this.mode = mode;
+    public void init(String path, String mode) {
+        mp.setPath(path);
+        mp.setMode(mode);
     }
 
     /**
@@ -42,7 +52,7 @@ public class SetPermission extends StatusController {
         this.initStatus();
 
         // 現在のアクセス権限を取得する。
-        GetPermission gp = new GetPermission(this.path);
+        gp.init(mp.getPath());
         Set<PosixFilePermission> curPermission = gp.runCommand();
 
         if (gp.getCode() == 1) {
@@ -50,8 +60,8 @@ public class SetPermission extends StatusController {
             return;
         }
 
-        // 新規設定するアクセス権限を取得する。
-        CreatePermission cp = new CreatePermission(this.mode);
+        // 新しく設定するアクセス権限を生成する。
+        cp.init(mp.getMode());
         Set<PosixFilePermission> newPermission = cp.runCommand();
 
         if (cp.getCode() == 1) {
@@ -67,13 +77,12 @@ public class SetPermission extends StatusController {
 
         // 新しいアクセス権限を設定する。
         System.out.println("パーミッションを変更します。");
-        Path p = new File(this.path).toPath();
+        Path p = new File(mp.getPath()).toPath();
 
         try {
             Files.setPosixFilePermissions(p, newPermission);
             this.setCode(2);
         } catch (IOException e) {
-            this.setCode(1);
             this.setMessage("エラーが発生しました。 " + e.toString());
             this.errorTerminate();
         }
