@@ -5,14 +5,18 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import status_resource.StatusController;
 
 /**
  * PosixFilePermission オブジェクトを生成する。
  */
+@Service
 public class CreatePermission extends StatusController {
-    private String mode;
+    @Autowired
+    private ModeProperties mp;
 
     /**
      * @param mode 生成するパーミッションを数値形式で指定する。
@@ -27,8 +31,8 @@ public class CreatePermission extends StatusController {
      *             <li>7: rwx</li>
      *             </ul>
      */
-    public CreatePermission(String mode) {
-        this.mode = mode;
+    public void init(String mode) {
+        mp.setMode(mode);
     }
 
     /**
@@ -42,27 +46,24 @@ public class CreatePermission extends StatusController {
         Set<PosixFilePermission> permission = null;
 
         // mode の入力値が 3 桁の数列であること。
-        if (NumberUtils.isDigits(this.mode) == false) {
-            this.setCode(1);
+        if (!NumberUtils.isDigits(mp.getMode())) {
             this.setMessage("mode は 3 桁の数列で指定してください。");
             this.errorTerminate();
             return permission;
         }
 
-        if (this.mode.replace("-", "").length() != 3 | this.mode.replace("+", "").length() != 3) {
-            this.setCode(1);
+        if (mp.getMode().replace("-", "").length() != 3 | mp.getMode().replace("+", "").length() != 3) {
             this.setMessage("mode は 3 桁の数列で指定してください。");
             this.errorTerminate();
             return permission;
         }
 
-        int userMode = Integer.parseInt(this.mode.substring(0, 1));
-        int groupMode = Integer.parseInt(this.mode.substring(1, 2));
-        int othersMode = Integer.parseInt(this.mode.substring(2, 3));
+        int userMode = Integer.parseInt(mp.getMode().substring(0, 1));
+        int groupMode = Integer.parseInt(mp.getMode().substring(1, 2));
+        int othersMode = Integer.parseInt(mp.getMode().substring(2, 3));
 
         // userMode, groupMode, othersMode が 0 から 7 の整数であること。
         if (userMode > 7 | groupMode > 7 | othersMode > 7) {
-            this.setCode(1);
             this.setMessage("mode は 0 から 7 までの整数で構成してください。");
             this.errorTerminate();
             return permission;
