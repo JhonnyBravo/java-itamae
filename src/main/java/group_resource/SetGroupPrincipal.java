@@ -7,22 +7,32 @@ import java.nio.file.Path;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリのグループ所有者を変更する。
  */
+@Service
 public class SetGroupPrincipal extends StatusController {
-    private String path;
-    private String group;
+    @Autowired
+    private GroupProperties properties;
+
+    @Autowired
+    private GetGroupPrincipal ggp;
+
+    @Autowired
+    private CreateGroupPrincipal cgp;
 
     /**
      * @param path  操作対象とするファイルまたはディレクトリのパスを指定する。
      * @param group 新しくグループ所有者として設定するグループの名前を指定する。
      */
-    public SetGroupPrincipal(String path, String group) {
-        this.path = path;
-        this.group = group;
+    public void init(String path, String group) {
+        properties.setPath(path);
+        properties.setGroup(group);
     }
 
     /**
@@ -32,7 +42,7 @@ public class SetGroupPrincipal extends StatusController {
         this.initStatus();
 
         // 現在のグループ所有者を取得する。
-        GetGroupPrincipal ggp = new GetGroupPrincipal(this.path);
+        ggp.init(properties.getPath());
         GroupPrincipal curPrincipal = ggp.runCommand();
 
         if (ggp.getCode() == 1) {
@@ -41,7 +51,7 @@ public class SetGroupPrincipal extends StatusController {
         }
 
         // 新規設定するグループ所有者を取得する。
-        CreateGroupPrincipal cgp = new CreateGroupPrincipal(this.group);
+        cgp.init(properties.getGroup());
         GroupPrincipal newPrincipal = cgp.runCommand();
 
         if (cgp.getCode() == 1) {
@@ -57,14 +67,13 @@ public class SetGroupPrincipal extends StatusController {
 
         // 新しいグループ所有者を設定する。
         System.out.println("グループ所有者を変更します。");
-        Path p = new File(this.path).toPath();
+        Path p = new File(properties.getPath()).toPath();
         PosixFileAttributeView pfa = Files.getFileAttributeView(p, PosixFileAttributeView.class);
 
         try {
             pfa.setGroup(newPrincipal);
             this.setCode(2);
         } catch (IOException e) {
-            this.setCode(1);
             this.setMessage("エラーが発生しました。 " + e.toString());
             this.errorTerminate();
         }
