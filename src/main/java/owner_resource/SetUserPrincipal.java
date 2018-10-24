@@ -6,22 +6,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリの所有者を変更する。
  */
+@Service
 public class SetUserPrincipal extends StatusController {
-    private String path;
-    private String owner;
+    @Autowired
+    private OwnerProperties op;
+
+    @Autowired
+    private GetUserPrincipal gup;
+
+    @Autowired
+    private CreateUserPrincipal cup;
 
     /**
      * @param path  操作対象とするファイルまたはディレクトリのパスを指定する。
      * @param owner 新しく所有者として設定するユーザの名前を指定する。
      */
-    public SetUserPrincipal(String path, String owner) {
-        this.path = path;
-        this.owner = owner;
+    public void init(String path, String owner) {
+        op.setPath(path);
+        op.setOwner(owner);
     }
 
     /**
@@ -31,7 +41,7 @@ public class SetUserPrincipal extends StatusController {
         this.initStatus();
 
         // 現在のファイル所有者を取得する。
-        GetUserPrincipal gup = new GetUserPrincipal(this.path);
+        gup.init(op.getPath());
         UserPrincipal curPrincipal = gup.runCommand();
 
         if (gup.getCode() == 1) {
@@ -40,7 +50,7 @@ public class SetUserPrincipal extends StatusController {
         }
 
         // 新規設定するファイル所有者を取得する。
-        CreateUserPrincipal cup = new CreateUserPrincipal(this.owner);
+        cup.init(op.getOwner());
         UserPrincipal newPrincipal = cup.runCommand();
 
         if (cup.getCode() == 1) {
@@ -56,13 +66,12 @@ public class SetUserPrincipal extends StatusController {
 
         // 新しいファイル所有者を設定する。
         System.out.println("所有者を変更します。");
-        Path p = new File(this.path).toPath();
+        Path p = new File(op.getPath()).toPath();
 
         try {
             Files.setOwner(p, newPrincipal);
             this.setCode(2);
         } catch (IOException e) {
-            this.setCode(1);
             this.setMessage("エラーが発生しました。 " + e.toString());
             this.errorTerminate();
         }
