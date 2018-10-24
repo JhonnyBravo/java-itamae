@@ -8,11 +8,28 @@ import java.nio.file.attribute.GroupPrincipal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * {@link group_resource.SetGroupPrincipal} の単体テスト。
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class SetGroupPrincipalTest {
+    @Autowired
+    private SetGroupPrincipal sgp;
+
+    @Autowired
+    private CreateGroupPrincipal cgp;
+
+    @Autowired
+    private GetGroupPrincipal ggp;
+
+    @Autowired
+    private GroupTestProperties gtp;
 
     /**
      * @throws java.lang.Exception
@@ -40,9 +57,9 @@ public class SetGroupPrincipalTest {
      */
     @Test
     public void test1() {
-        String groupName = new GetGroupNameFromProperties("src/test/resources/test.properties").getGroupName();
+        String groupName = gtp.getGroupName();
 
-        SetGroupPrincipal sgp = new SetGroupPrincipal("test/test.txt", groupName);
+        sgp.init("test/test.txt", groupName);
         sgp.runCommand();
 
         String osName = System.getProperty("os.name");
@@ -56,10 +73,10 @@ public class SetGroupPrincipalTest {
             assertEquals(2, sgp.getCode());
         }
 
-        CreateGroupPrincipal cgp = new CreateGroupPrincipal(groupName);
+        cgp.init(groupName);
         GroupPrincipal expectPrincipal = cgp.runCommand();
 
-        GetGroupPrincipal ggp = new GetGroupPrincipal("test/test.txt");
+        ggp.init("test/test.txt");
         GroupPrincipal actualPrincipal = ggp.runCommand();
 
         assertEquals(expectPrincipal, actualPrincipal);
@@ -73,9 +90,9 @@ public class SetGroupPrincipalTest {
     @Test
     public void test2() {
         // ディレクトリのグループ所有者を変更でき、終了ステータスが 2 であること。
-        String groupName = new GetGroupNameFromProperties("src/test/resources/test.properties").getGroupName();
+        String groupName = gtp.getGroupName();
 
-        SetGroupPrincipal sgp = new SetGroupPrincipal("test", groupName);
+        sgp.init("test", groupName);
         sgp.runCommand();
 
         String osName = System.getProperty("os.name");
@@ -89,10 +106,10 @@ public class SetGroupPrincipalTest {
             assertEquals(2, sgp.getCode());
         }
 
-        CreateGroupPrincipal cgp = new CreateGroupPrincipal(groupName);
+        cgp.init(groupName);
         GroupPrincipal expectPrincipal = cgp.runCommand();
 
-        GetGroupPrincipal ggp = new GetGroupPrincipal("test");
+        ggp.init("test");
         GroupPrincipal actualPrincipal = ggp.runCommand();
 
         assertEquals(expectPrincipal, actualPrincipal);
@@ -105,10 +122,9 @@ public class SetGroupPrincipalTest {
     @Test
     public void test3() {
         // 存在しないグループを指定した場合にエラーとなり、終了ステータスが 1 であること。
-        SetGroupPrincipal sgp = new SetGroupPrincipal("test", "NotExist");
+        sgp.init("test", "NotExist");
         sgp.runCommand();
 
         assertEquals(1, sgp.getCode());
     }
-
 }
