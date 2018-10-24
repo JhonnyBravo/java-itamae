@@ -6,19 +6,24 @@ import java.nio.file.FileSystems;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import status_resource.StatusController;
 
 /**
  * UserPrincipal オブジェクトを生成する。
  */
+@Service
 public class CreateUserPrincipal extends StatusController {
-    private String owner;
+    @Autowired
+    private OwnerProperties op;
 
     /**
      * @param owner 生成対象とするユーザの名前を指定する。
      */
-    public CreateUserPrincipal(String owner) {
-        this.owner = owner;
+    public void init(String owner) {
+        op.setOwner(owner);
     }
 
     /**
@@ -35,10 +40,9 @@ public class CreateUserPrincipal extends StatusController {
         UserPrincipal up = null;
 
         try {
-            up = upls.lookupPrincipalByName(this.owner);
+            up = upls.lookupPrincipalByName(op.getOwner());
             this.setCode(2);
         } catch (IOException e) {
-            this.setCode(1);
             this.setMessage("エラーが発生しました。 " + e.toString());
             this.errorTerminate();
         }
