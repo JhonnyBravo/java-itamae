@@ -8,11 +8,28 @@ import java.nio.file.attribute.UserPrincipal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * {@link owner_resource.SetUserPrincipal} の単体テスト。
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class SetUserPrincipalTest {
+    @Autowired
+    private OwnerTestProperties otp;
+
+    @Autowired
+    private SetUserPrincipal sup;
+
+    @Autowired
+    private GetUserPrincipal gup;
+
+    @Autowired
+    private CreateUserPrincipal cup;
 
     /**
      * @throws java.lang.Exception
@@ -41,17 +58,17 @@ public class SetUserPrincipalTest {
     @Test
     public void test1() {
         // ファイルの所有者を変更でき、終了ステータスが 2 であること。
-        String userName = new GetUserNameFromProperties("src/test/resources/test.properties").getUserName();
+        String userName = otp.getOwnerName();
 
-        SetUserPrincipal sup = new SetUserPrincipal("test/test.txt", userName);
+        sup.init("test/test.txt", userName);
         sup.runCommand();
 
         assertEquals(2, sup.getCode());
 
-        CreateUserPrincipal cup = new CreateUserPrincipal(userName);
+        cup.init(userName);
         UserPrincipal expectPrincipal = cup.runCommand();
 
-        GetUserPrincipal gup = new GetUserPrincipal("test/test.txt");
+        gup.init("test/test.txt");
         UserPrincipal actualPrincipal = gup.runCommand();
 
         assertEquals(expectPrincipal, actualPrincipal);
@@ -64,17 +81,17 @@ public class SetUserPrincipalTest {
     @Test
     public void test2() {
         // ディレクトリの所有者を変更でき、終了ステータスが 2 であること。
-        String userName = new GetUserNameFromProperties("src/test/resources/test.properties").getUserName();
+        String userName = otp.getOwnerName();
 
-        SetUserPrincipal sup = new SetUserPrincipal("test", userName);
+        sup.init("test", userName);
         sup.runCommand();
 
         assertEquals(2, sup.getCode());
 
-        CreateUserPrincipal cup = new CreateUserPrincipal(userName);
+        cup.init(userName);
         UserPrincipal expectPrincipal = cup.runCommand();
 
-        GetUserPrincipal gup = new GetUserPrincipal("test");
+        gup.init("test");
         UserPrincipal actualPrincipal = gup.runCommand();
 
         assertEquals(expectPrincipal, actualPrincipal);
@@ -87,7 +104,7 @@ public class SetUserPrincipalTest {
     @Test
     public void test3() {
         // 存在しないユーザを指定した場合にエラーとなり、終了ステータスが 1 であること。
-        SetUserPrincipal sup = new SetUserPrincipal("test", "NotExist");
+        sup.init("test", "NotExist");
         sup.runCommand();
 
         assertEquals(1, sup.getCode());
