@@ -6,19 +6,24 @@ import java.nio.file.FileSystems;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import status_resource.StatusController;
 
 /**
  * GroupPrincipal オブジェクトを生成する。
  */
+@Service
 public class CreateGroupPrincipal extends StatusController {
-    private String group;
+    @Autowired
+    private GroupProperties properties;
 
     /**
-     * @param group 生成対象とするグループの名前を指定する。
+     * @param group GroupPrincipal オブジェクト生成対象とするグループの名前を指定する。
      */
-    public CreateGroupPrincipal(String group) {
-        this.group = group;
+    public void init(String group) {
+        properties.setGroup(group);
     }
 
     /**
@@ -32,17 +37,16 @@ public class CreateGroupPrincipal extends StatusController {
         FileSystem fs = FileSystems.getDefault();
         UserPrincipalLookupService upls = fs.getUserPrincipalLookupService();
 
-        GroupPrincipal up = null;
+        GroupPrincipal principal = null;
 
         try {
-            up = upls.lookupPrincipalByGroupName(this.group);
+            principal = upls.lookupPrincipalByGroupName(properties.getGroup());
             this.setCode(2);
         } catch (IOException e) {
-            this.setCode(1);
             this.setMessage("エラーが発生しました。 " + e.toString());
             this.errorTerminate();
         }
 
-        return up;
+        return principal;
     }
 }
