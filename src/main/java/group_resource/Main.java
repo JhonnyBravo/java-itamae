@@ -1,13 +1,8 @@
 package group_resource;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-
 /**
  * ファイルまたはディレクトリのグループ所有者を変更する。
  */
-@SpringBootApplication
 public class Main {
     /**
      * @param args
@@ -17,8 +12,6 @@ public class Main {
      *             </ol>
      */
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
-
         String path = null;
         String group = null;
 
@@ -31,7 +24,7 @@ public class Main {
             path = args[0];
             group = args[1];
 
-            SetGroupPrincipal sgp = context.getBean(SetGroupPrincipal.class);
+            SetGroupPrincipal sgp = new SetGroupPrincipal();
             sgp.init(path, group);
             sgp.runCommand();
 
