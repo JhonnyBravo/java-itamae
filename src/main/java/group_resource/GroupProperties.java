@@ -1,11 +1,8 @@
 package group_resource;
 
-import org.springframework.stereotype.Service;
-
 /**
  * グループ所有者の変更に使用するプロパティを管理する。
  */
-@Service
 public class GroupProperties {
     private String path;
     private String group;
