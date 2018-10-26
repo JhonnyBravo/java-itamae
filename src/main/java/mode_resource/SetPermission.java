@@ -7,24 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリのアクセス権限を変更する。
  */
-@Service
 public class SetPermission extends StatusController {
-    @Autowired
-    private ModeProperties mp;
-
-    @Autowired
-    private GetPermission gp;
-
-    @Autowired
-    private CreatePermission cp;
+    private ModeProperties mp = new ModeProperties();
+    private GetPermission gp = new GetPermission();
+    private CreatePermission cp = new CreatePermission();
 
     /**
      * @param path 操作対象とするファイルまたはディレクトリのパスを指定する。
