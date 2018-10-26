@@ -1,13 +1,8 @@
 package mode_resource;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-
 /**
  * ファイルまたはディレクトリのパーミッション変更を実行する。
  */
-@SpringBootApplication
 public class Main {
     /**
      * ファイルまたはディレクトリのパーミッションを変更する。
@@ -19,8 +14,6 @@ public class Main {
      *             </ol>
      */
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
-
         String path = null;
         String mode = null;
 
@@ -33,7 +26,7 @@ public class Main {
             path = args[0];
             mode = args[1];
 
-            SetPermission sp = context.getBean(SetPermission.class);
+            SetPermission sp = new SetPermission();
             sp.init(path, mode);
             sp.runCommand();
 
