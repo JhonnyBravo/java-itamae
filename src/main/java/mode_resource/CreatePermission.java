@@ -5,18 +5,14 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import status_resource.StatusController;
 
 /**
  * PosixFilePermission オブジェクトを生成する。
  */
-@Service
 public class CreatePermission extends StatusController {
-    @Autowired
-    private ModeProperties mp;
+    private ModeProperties mp = new ModeProperties();
 
     /**
      * @param mode 生成するパーミッションを数値形式で指定する。
