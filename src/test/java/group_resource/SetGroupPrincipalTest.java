@@ -8,28 +8,16 @@ import java.nio.file.attribute.GroupPrincipal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * {@link group_resource.SetGroupPrincipal} の単体テスト。
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class SetGroupPrincipalTest {
-    @Autowired
-    private SetGroupPrincipal sgp;
-
-    @Autowired
-    private CreateGroupPrincipal cgp;
-
-    @Autowired
-    private GetGroupPrincipal ggp;
-
-    @Autowired
-    private GroupTestProperties gtp;
+    private SetGroupPrincipal sgp = new SetGroupPrincipal();
+    private CreateGroupPrincipal cgp = new CreateGroupPrincipal();
+    private GetGroupPrincipal ggp = new GetGroupPrincipal();
+    private GetTestProperties gtp = new GetTestProperties();
+    private String groupName;
 
     /**
      * @throws java.lang.Exception
@@ -38,6 +26,8 @@ public class SetGroupPrincipalTest {
     public void setUp() throws Exception {
         new File("test").mkdir();
         new File("test/test.txt").createNewFile();
+        gtp.init("src/test/resources/test.properties");
+        groupName = gtp.getGroupName();
     }
 
     /**
@@ -57,8 +47,6 @@ public class SetGroupPrincipalTest {
      */
     @Test
     public void test1() {
-        String groupName = gtp.getGroupName();
-
         sgp.init("test/test.txt", groupName);
         sgp.runCommand();
 
@@ -90,8 +78,6 @@ public class SetGroupPrincipalTest {
     @Test
     public void test2() {
         // ディレクトリのグループ所有者を変更でき、終了ステータスが 2 であること。
-        String groupName = gtp.getGroupName();
-
         sgp.init("test", groupName);
         sgp.runCommand();
 
