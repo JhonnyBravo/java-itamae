@@ -7,24 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリのグループ所有者を変更する。
  */
-@Service
 public class SetGroupPrincipal extends StatusController {
-    @Autowired
-    private GroupProperties properties;
-
-    @Autowired
-    private GetGroupPrincipal ggp;
-
-    @Autowired
-    private CreateGroupPrincipal cgp;
+    private GroupProperties properties = new GroupProperties();
+    private GetGroupPrincipal ggp = new GetGroupPrincipal();
+    private CreateGroupPrincipal cgp = new CreateGroupPrincipal();
 
     /**
      * @param path  操作対象とするファイルまたはディレクトリのパスを指定する。
