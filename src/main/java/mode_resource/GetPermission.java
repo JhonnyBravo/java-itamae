@@ -6,18 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリに現在設定されている PosixFilePermission オブジェクトを取得する。
  */
-@Service
 public class GetPermission extends StatusController {
-    @Autowired
-    private ModeProperties mp;
+    private ModeProperties mp = new ModeProperties();
 
     /**
      * @param path 操作対象とするファイルまたはディレクトリのパスを指定する。
