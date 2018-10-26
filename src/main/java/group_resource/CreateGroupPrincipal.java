@@ -6,18 +6,13 @@ import java.nio.file.FileSystems;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * GroupPrincipal オブジェクトを生成する。
  */
-@Service
 public class CreateGroupPrincipal extends StatusController {
-    @Autowired
-    private GroupProperties properties;
+    private GroupProperties properties = new GroupProperties();
 
     /**
      * @param group GroupPrincipal オブジェクト生成対象とするグループの名前を指定する。
