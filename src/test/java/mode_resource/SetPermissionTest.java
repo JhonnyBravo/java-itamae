@@ -7,19 +7,12 @@ import java.io.File;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * {@link mode_resource.SetPermission} の単体テスト。
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class SetPermissionTest {
-    @Autowired
-    private SetPermission sp;
+    private SetPermission sp = new SetPermission();
 
     /**
      * @throws java.lang.Exception
