@@ -6,18 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリに現在設定されている GroupPrincipal オブジェクト(グループ所有者を表すオブジェクト)を取得する。
  */
-@Service
 public class GetGroupPrincipal extends StatusController {
-    @Autowired
-    private GroupProperties properties;
+    private GroupProperties properties = new GroupProperties();
 
     /**
      * @param path 操作対象とするファイルまたはディレクトリのパスを指定する。
