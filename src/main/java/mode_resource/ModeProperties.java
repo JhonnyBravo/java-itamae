@@ -1,11 +1,8 @@
 package mode_resource;
 
-import org.springframework.stereotype.Service;
-
 /**
  * ファイル / ディレクトリのパーミッション変更に使用するプロパティを管理する。
  */
-@Service
 public class ModeProperties {
     private String path;
     private String mode;
