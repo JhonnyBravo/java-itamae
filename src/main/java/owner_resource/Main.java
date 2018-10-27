@@ -1,13 +1,8 @@
 package owner_resource;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-
 /**
  * ファイルまたはディレクトリの所有者を変更する。
  */
-@SpringBootApplication
 public class Main {
     /**
      * @param args
@@ -17,8 +12,6 @@ public class Main {
      *             </ol>
      */
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
-
         String path = null;
         String owner = null;
 
@@ -31,7 +24,7 @@ public class Main {
             path = args[0];
             owner = args[1];
 
-            SetUserPrincipal sup = context.getBean(SetUserPrincipal.class);
+            SetUserPrincipal sup = new SetUserPrincipal();
             sup.init(path, owner);
             sup.runCommand();
 
