@@ -6,24 +6,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリの所有者を変更する。
  */
-@Service
 public class SetUserPrincipal extends StatusController {
-    @Autowired
-    private OwnerProperties op;
-
-    @Autowired
-    private GetUserPrincipal gup;
-
-    @Autowired
-    private CreateUserPrincipal cup;
+    private OwnerProperties op = new OwnerProperties();
+    private GetUserPrincipal gup = new GetUserPrincipal();
+    private CreateUserPrincipal cup = new CreateUserPrincipal();
 
     /**
      * @param path  操作対象とするファイルまたはディレクトリのパスを指定する。
