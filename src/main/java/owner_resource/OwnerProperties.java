@@ -1,11 +1,8 @@
 package owner_resource;
 
-import org.springframework.stereotype.Service;
-
 /**
  * ファイルまたはディレクトリの所有者の変更に使用するプロパティを管理する。
  */
-@Service
 public class OwnerProperties {
     private String path;
     private String owner;
