@@ -6,18 +6,13 @@ import java.nio.file.FileSystems;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * UserPrincipal オブジェクトを生成する。
  */
-@Service
 public class CreateUserPrincipal extends StatusController {
-    @Autowired
-    private OwnerProperties op;
+    private OwnerProperties op = new OwnerProperties();
 
     /**
      * @param owner 生成対象とするユーザの名前を指定する。
