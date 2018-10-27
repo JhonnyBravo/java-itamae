@@ -5,18 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserPrincipal;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import status_resource.StatusController;
 
 /**
  * ファイルまたはディレクトリに現在設定されている UserPrincipal オブジェクト(所有者を表すオブジェクト)を取得する。
  */
-@Service
 public class GetUserPrincipal extends StatusController {
-    @Autowired
-    private OwnerProperties op;
+    private OwnerProperties op = new OwnerProperties();
 
     /**
      * @param path 操作対象とするファイルまたはディレクトリのパスを指定する。
