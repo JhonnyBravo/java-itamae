@@ -8,28 +8,17 @@ import java.nio.file.attribute.UserPrincipal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * {@link owner_resource.SetUserPrincipal} の単体テスト。
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class SetUserPrincipalTest {
-    @Autowired
-    private OwnerTestProperties otp;
+    private SetUserPrincipal sup = new SetUserPrincipal();
+    private GetUserPrincipal gup = new GetUserPrincipal();
+    private CreateUserPrincipal cup = new CreateUserPrincipal();
 
-    @Autowired
-    private SetUserPrincipal sup;
-
-    @Autowired
-    private GetUserPrincipal gup;
-
-    @Autowired
-    private CreateUserPrincipal cup;
+    private GetTestProperties gtp = new GetTestProperties();
+    private String ownerName;
 
     /**
      * @throws java.lang.Exception
@@ -38,6 +27,8 @@ public class SetUserPrincipalTest {
     public void setUp() throws Exception {
         new File("test").mkdir();
         new File("test/test.txt").createNewFile();
+        gtp.init("src/test/resources/test.properties");
+        ownerName = gtp.getOwnerName();
     }
 
     /**
@@ -58,14 +49,12 @@ public class SetUserPrincipalTest {
     @Test
     public void test1() {
         // ファイルの所有者を変更でき、終了ステータスが 2 であること。
-        String userName = otp.getOwnerName();
-
-        sup.init("test/test.txt", userName);
+        sup.init("test/test.txt", ownerName);
         sup.runCommand();
 
         assertEquals(2, sup.getCode());
 
-        cup.init(userName);
+        cup.init(ownerName);
         UserPrincipal expectPrincipal = cup.runCommand();
 
         gup.init("test/test.txt");
@@ -81,14 +70,12 @@ public class SetUserPrincipalTest {
     @Test
     public void test2() {
         // ディレクトリの所有者を変更でき、終了ステータスが 2 であること。
-        String userName = otp.getOwnerName();
-
-        sup.init("test", userName);
+        sup.init("test", ownerName);
         sup.runCommand();
 
         assertEquals(2, sup.getCode());
 
-        cup.init(userName);
+        cup.init(ownerName);
         UserPrincipal expectPrincipal = cup.runCommand();
 
         gup.init("test");
@@ -109,5 +96,4 @@ public class SetUserPrincipalTest {
 
         assertEquals(1, sup.getCode());
     }
-
 }
