@@ -2,22 +2,44 @@ package directory_resource;
 
 import java.io.File;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Service;
+
 import group_resource.SetGroupPrincipal;
 import mode_resource.SetPermission;
 import owner_resource.SetUserPrincipal;
-import status_resource.StatusBean;
+import status_resource.StatusController;
 
 /**
  * ディレクトリを作成または削除する。
  */
-public class DirectoryController extends StatusBean {
-    private String path;
+@Service
+@Import({ SetUserPrincipal.class, SetGroupPrincipal.class, SetPermission.class })
+public class DirectoryController extends StatusController {
+    @Autowired
+    private DirectoryProperties dp;
+
+    @Autowired
+    private CreateDirectory cd;
+
+    @Autowired
+    private DeleteDirectory dd;
+
+    @Autowired
+    private SetUserPrincipal sup;
+
+    @Autowired
+    private SetGroupPrincipal sgp;
+
+    @Autowired
+    private SetPermission sp;
 
     /**
      * @param path 操作対象とするディレクトリのパスを指定する。
      */
-    public DirectoryController(String path) {
-        this.path = path;
+    public void init(String path) {
+        dp.setPath(path);
     }
 
     /**
@@ -27,15 +49,8 @@ public class DirectoryController extends StatusBean {
      * </ul>
      */
     public void create() {
-        CreateDirectory cd = new CreateDirectory(this.path);
-
-        if (new File(this.path).isDirectory()) {
-            cd.initStatus();
-        } else {
-            System.out.println(this.path + " を作成します。");
-            cd.runCommand();
-        }
-
+        cd.init(dp.getPath());
+        cd.runCommand();
         this.setCode(cd.getCode());
     }
 
@@ -46,15 +61,8 @@ public class DirectoryController extends StatusBean {
      * </ul>
      */
     public void delete() {
-        DeleteDirectory dd = new DeleteDirectory(this.path);
-
-        if (new File(this.path).isDirectory()) {
-            System.out.println(this.path + " を削除します。");
-            dd.runCommand();
-        } else {
-            dd.initStatus();
-        }
-
+        dd.init(dp.getPath());
+        dd.runCommand();
         this.setCode(dd.getCode());
     }
 
@@ -64,14 +72,16 @@ public class DirectoryController extends StatusBean {
      * @param owner 新しい所有者として設定するユーザの名前を指定する。
      */
     public void setOwner(String owner) {
-        SetUserPrincipal sup = new SetUserPrincipal(this.path, owner);
+        File f = new File(dp.getPath());
 
-        if (new File(this.path).isDirectory()) {
-            sup.runCommand();
-        } else {
-            sup.initStatus();
+        if (!f.isDirectory()) {
+            this.setMessage(dp.getPath() + " が見つかりません。");
+            this.errorTerminate();
+            return;
         }
 
+        sup.init(dp.getPath(), owner);
+        sup.runCommand();
         this.setCode(sup.getCode());
     }
 
@@ -81,14 +91,16 @@ public class DirectoryController extends StatusBean {
      * @param group 新しいグループ所有者として設定するグループの名前を指定する。
      */
     public void setGroup(String group) {
-        SetGroupPrincipal sgp = new SetGroupPrincipal(this.path, group);
+        File f = new File(dp.getPath());
 
-        if (new File(this.path).isDirectory()) {
-            sgp.runCommand();
-        } else {
-            sgp.initStatus();
+        if (!f.isDirectory()) {
+            this.setMessage(dp.getPath() + " が見つかりません。");
+            this.errorTerminate();
+            return;
         }
 
+        sgp.init(dp.getPath(), group);
+        sgp.runCommand();
         this.setCode(sgp.getCode());
     }
 
@@ -108,14 +120,16 @@ public class DirectoryController extends StatusBean {
      *             </ul>
      */
     public void setMode(String mode) {
-        SetPermission sp = new SetPermission(this.path, mode);
+        File f = new File(dp.getPath());
 
-        if (new File(this.path).isDirectory()) {
-            sp.runCommand();
-        } else {
-            sp.initStatus();
+        if (!f.isDirectory()) {
+            this.setMessage(dp.getPath() + " が見つかりません。");
+            this.errorTerminate();
+            return;
         }
 
+        sp.init(dp.getPath(), mode);
+        sp.runCommand();
         this.setCode(sp.getCode());
     }
 }
