@@ -2,19 +2,24 @@ package directory_resource;
 
 import java.io.File;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import status_resource.StatusController;
 
 /**
  * ディレクトリを削除する。
  */
+@Service
 public class DeleteDirectory extends StatusController {
-    private String path;
+    @Autowired
+    private DirectoryProperties dp;
 
     /**
      * @param path 削除対象とするディレクトリのパスを指定する。
      */
-    public DeleteDirectory(String path) {
-        this.path = path;
+    public void init(String path) {
+        dp.setPath(path);
     }
 
     /**
@@ -23,8 +28,13 @@ public class DeleteDirectory extends StatusController {
     public void runCommand() {
         this.initStatus();
 
-        this.delete(new File(this.path));
-        this.setCode(2);
+        File f = new File(dp.getPath());
+
+        if (f.isDirectory()) {
+            System.out.println(dp.getPath() + " を削除します。");
+            this.delete(f);
+            this.setCode(2);
+        }
     }
 
     /**
