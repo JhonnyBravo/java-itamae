@@ -1,11 +1,16 @@
 package directory_resource;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 /**
- * ディレクトリを作成または削除する。
+ * ディレクトリの作成 / 削除と所有者の変更 / グループ所有者の変更 / パーミッションの変更を実行する。
  */
+@SpringBootApplication
 public class Main {
     /**
      * @param args
@@ -18,6 +23,8 @@ public class Main {
      *             </ul>
      */
     public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+
         LongOpt[] longopts = new LongOpt[5];
         longopts[0] = new LongOpt("create", LongOpt.REQUIRED_ARGUMENT, null, 'c');
         longopts[1] = new LongOpt("delete", LongOpt.REQUIRED_ARGUMENT, null, 'd');
@@ -64,7 +71,8 @@ public class Main {
             }
         }
 
-        DirectoryController dc = new DirectoryController(path);
+        DirectoryController dc = context.getBean(DirectoryController.class);
+        dc.init(path);
 
         if (cFlag == 1) {
             dc.create();
@@ -102,5 +110,4 @@ public class Main {
 
         System.exit(dc.getCode());
     }
-
 }
