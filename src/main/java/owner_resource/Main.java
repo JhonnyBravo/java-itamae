@@ -24,11 +24,9 @@ public class Main {
             path = args[0];
             owner = args[1];
 
-            SetUserPrincipal sup = new SetUserPrincipal();
-            sup.init(path, owner);
-            sup.runCommand();
-
-            System.exit(sup.getCode());
+            Owner resource = new Owner();
+            resource.setOwner(path, owner);
+            System.exit(resource.getCode());
         }
     }
 }
