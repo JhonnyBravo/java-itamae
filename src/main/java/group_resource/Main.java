@@ -24,11 +24,9 @@ public class Main {
             path = args[0];
             group = args[1];
 
-            SetGroupPrincipal sgp = new SetGroupPrincipal();
-            sgp.init(path, group);
-            sgp.runCommand();
-
-            System.exit(sgp.getCode());
+            Group resource = new Group();
+            resource.setGroup(path, group);
+            System.exit(resource.getCode());
         }
     }
 }
