@@ -6,21 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import status_resource.StatusController;
+import status_resource.Status;
 
 /**
  * テスト時に使用するプロパティを外部ファイルから取得する。
  */
-public class GetTestProperties extends StatusController {
-    GroupProperties gp = new GroupProperties();
+public class GetTestProperties extends Status {
     Properties p = new Properties();
-
-    /**
-     * @param path プロパティ取得対象とするファイルのパスを指定する。
-     */
-    public void init(String path) {
-        gp.setPath(path);
-    }
 
     /**
      * @param path InputStream 取得対象とするファイルのパスを指定する。
@@ -36,20 +28,20 @@ public class GetTestProperties extends StatusController {
             this.setCode(2);
             return input;
         } catch (FileNotFoundException e) {
-            this.setMessage("エラーが発生しました。 " + e.toString());
-            this.errorTerminate();
+            this.errorTerminate("エラーが発生しました。 " + e.toString());
             return input;
         }
     }
 
     /**
+     * @param path プロパティ取得対象とするファイルのパスを指定する。
      * @return groupName テスト時に使用するグループ名を返す。
      */
-    public String getGroupName() {
+    public String getGroupName(String path) {
         this.initStatus();
 
         String groupName = null;
-        InputStream input = getInputStream(gp.getPath());
+        InputStream input = getInputStream(path);
 
         if (this.getCode() == 1) {
             return groupName;
@@ -59,14 +51,12 @@ public class GetTestProperties extends StatusController {
             p.load(input);
             groupName = p.getProperty("groupName");
         } catch (IOException e) {
-            this.setMessage("エラーが発生しました。 " + e.toString());
-            this.errorTerminate();
+            this.errorTerminate("エラーが発生しました。 " + e.toString());
             return groupName;
         }
 
         if (groupName == null) {
-            this.setMessage("groupName プロパティが見つかりません。");
-            this.errorTerminate();
+            this.errorTerminate("groupName プロパティが見つかりません。");
             return groupName;
         }
 
