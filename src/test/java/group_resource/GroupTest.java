@@ -10,12 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * {@link group_resource.SetGroupPrincipal} の単体テスト。
+ * {@link group_resource.Group} の単体テスト。
  */
-public class SetGroupPrincipalTest {
-    private SetGroupPrincipal sgp = new SetGroupPrincipal();
-    private CreateGroupPrincipal cgp = new CreateGroupPrincipal();
-    private GetGroupPrincipal ggp = new GetGroupPrincipal();
+public class GroupTest {
+    private Group resource = new Group();
     private GetTestProperties gtp = new GetTestProperties();
     private String groupName;
 
@@ -26,8 +24,7 @@ public class SetGroupPrincipalTest {
     public void setUp() throws Exception {
         new File("test").mkdir();
         new File("test/test.txt").createNewFile();
-        gtp.init("src/test/resources/test.properties");
-        groupName = gtp.getGroupName();
+        groupName = gtp.getGroupName("src/test/resources/test.properties");
     }
 
     /**
@@ -40,77 +37,63 @@ public class SetGroupPrincipalTest {
     }
 
     /**
-     * {@link group_resource.CreateGroupPrincipal#runCommand()},
-     * {@link group_resource.GetGroupPrincipal#runCommand()},
-     * {@link group_resource.SetGroupPrincipal#runCommand()},
-     * {@link group_resource.SetGroupPrincipal#getCode()} のためのテスト・メソッド。
+     * {@link group_resource.Group#setGroup(String, String)},
+     * {@link group_resource.Group#getCode()} のためのテスト・メソッド。
      */
     @Test
     public void test1() {
-        sgp.init("test/test.txt", groupName);
-        sgp.runCommand();
+        resource.setGroup("test/test.txt", groupName);
 
         String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sgp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのグループ所有者を変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sgp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
-        cgp.init(groupName);
-        GroupPrincipal expectPrincipal = cgp.runCommand();
-
-        ggp.init("test/test.txt");
-        GroupPrincipal actualPrincipal = ggp.runCommand();
+        GroupPrincipal expectPrincipal = resource.createGroup(groupName);
+        GroupPrincipal actualPrincipal = resource.getGroup("test/test.txt");
 
         assertEquals(expectPrincipal, actualPrincipal);
 
         // 終了ステータスが 0 であること。
-        sgp.runCommand();
-        assertEquals(0, sgp.getCode());
-
+        resource.setGroup("test/test.txt", groupName);
+        assertEquals(0, resource.getCode());
     }
 
     @Test
     public void test2() {
         // ディレクトリのグループ所有者を変更でき、終了ステータスが 2 であること。
-        sgp.init("test", groupName);
-        sgp.runCommand();
+        resource.setGroup("test", groupName);
 
         String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sgp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ディレクトリのグループ所有者を変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sgp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
-        cgp.init(groupName);
-        GroupPrincipal expectPrincipal = cgp.runCommand();
-
-        ggp.init("test");
-        GroupPrincipal actualPrincipal = ggp.runCommand();
-
+        GroupPrincipal expectPrincipal = resource.createGroup(groupName);
+        GroupPrincipal actualPrincipal = resource.getGroup("test");
         assertEquals(expectPrincipal, actualPrincipal);
 
         // 終了ステータスが 0 であること。
-        sgp.runCommand();
-        assertEquals(0, sgp.getCode());
+        resource.setGroup("test", groupName);
+        assertEquals(0, resource.getCode());
     }
 
     @Test
     public void test3() {
         // 存在しないグループを指定した場合にエラーとなり、終了ステータスが 1 であること。
-        sgp.init("test", "NotExist");
-        sgp.runCommand();
-
-        assertEquals(1, sgp.getCode());
+        resource.setGroup("test", "NotExist");
+        assertEquals(1, resource.getCode());
     }
 }
