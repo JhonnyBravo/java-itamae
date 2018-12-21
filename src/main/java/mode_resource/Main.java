@@ -1,7 +1,7 @@
 package mode_resource;
 
 /**
- * ファイルまたはディレクトリのパーミッション変更を実行する。
+ * ファイルまたはディレクトリのパーミッション設定を変更する。
  */
 public class Main {
     /**
@@ -26,11 +26,9 @@ public class Main {
             path = args[0];
             mode = args[1];
 
-            SetPermission sp = new SetPermission();
-            sp.init(path, mode);
-            sp.runCommand();
-
-            System.exit(sp.getCode());
+            Mode resource = new Mode();
+            resource.setMode(path, mode);
+            System.exit(resource.getCode());
         }
     }
 }
