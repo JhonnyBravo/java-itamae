@@ -9,10 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * {@link mode_resource.SetPermission} の単体テスト。
+ * {@link mode_resource.Mode} の単体テスト。
  */
-public class SetPermissionTest {
-    private SetPermission sp = new SetPermission();
+public class ModeTest {
+    private Mode resource = new Mode();
 
     /**
      * @throws java.lang.Exception
@@ -34,10 +34,8 @@ public class SetPermissionTest {
 
     /**
      * <p>
-     * {@link mode_resource.CreatePermission#runCommand()},
-     * {@link mode_resource.GetPermission#runCommand()},
-     * {@link mode_resource.SetPermission#runCommand()},
-     * {@link mode_resource.SetPermission#getCode()} のためのテスト・メソッド。
+     * {@link mode_resource.Mode#setMode(String, String)},
+     * {@link mode_resource.Mode#getCode()} のためのテスト・メソッド。
      * </p>
      * 
      * <p>
@@ -51,298 +49,258 @@ public class SetPermissionTest {
      */
     @Test
     public void test1_1() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "000");
 
-        sp.init("test/test.txt", "000");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "000");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "000");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "000");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "000");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test1_2() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "100");
 
-        sp.init("test/test.txt", "100");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "100");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "100");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "100");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "100");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test1_3() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "200");
 
-        sp.init("test/test.txt", "200");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "200");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "200");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "200");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "200");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test1_4() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "300");
 
-        sp.init("test/test.txt", "300");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "300");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "300");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "300");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "300");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test1_5() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "400");
 
-        sp.init("test/test.txt", "400");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "400");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "400");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "400");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "400");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test1_6() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "500");
 
-        sp.init("test/test.txt", "500");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "500");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "500");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "500");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "500");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test1_7() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "600");
 
-        sp.init("test/test.txt", "600");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "600");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "600");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "600");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "600");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test1_8() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "700");
 
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "700");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "700");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "700");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "700");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     /**
@@ -357,13 +315,11 @@ public class SetPermissionTest {
      */
     @Test
     public void test1_9() {
-        sp.init("test/test.txt", "800");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test/test.txt", "800");
+        assertEquals(1, resource.getCode());
 
-        sp.init("test", "800");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test", "800");
+        assertEquals(1, resource.getCode());
     }
 
     /**
@@ -378,261 +334,226 @@ public class SetPermissionTest {
      */
     @Test
     public void test2_1() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "010");
 
-        sp.init("test/test.txt", "010");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "010");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "010");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "010");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "010");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test2_2() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "020");
 
-        sp.init("test/test.txt", "020");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "020");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "020");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "020");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "020");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test2_3() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "030");
 
-        sp.init("test/test.txt", "030");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "030");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "030");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "030");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "030");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test2_4() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "040");
 
-        sp.init("test/test.txt", "040");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "040");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "040");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "040");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "040");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test2_5() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "050");
 
-        sp.init("test/test.txt", "050");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "050");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "050");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "050");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "050");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test2_6() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "060");
 
-        sp.init("test/test.txt", "060");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "060");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "060");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "060");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "060");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test2_7() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "070");
 
-        sp.init("test/test.txt", "070");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "070");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "070");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "070");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "070");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     /**
@@ -647,13 +568,11 @@ public class SetPermissionTest {
      */
     @Test
     public void test2_8() {
-        sp.init("test/test.txt", "080");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test/test.txt", "080");
+        assertEquals(1, resource.getCode());
 
-        sp.init("test", "080");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test", "080");
+        assertEquals(1, resource.getCode());
     }
 
     /**
@@ -668,261 +587,226 @@ public class SetPermissionTest {
      */
     @Test
     public void test3_1() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "001");
 
-        sp.init("test/test.txt", "001");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "001");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "001");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "001");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "001");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test3_2() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "002");
 
-        sp.init("test/test.txt", "002");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "002");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "002");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "002");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "002");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test3_3() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "003");
 
-        sp.init("test/test.txt", "003");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "003");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "003");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "003");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "003");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test3_4() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "004");
 
-        sp.init("test/test.txt", "004");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "004");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "004");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "004");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "004");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test3_5() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "005");
 
-        sp.init("test/test.txt", "005");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "005");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "005");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "005");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "005");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test3_6() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "006");
 
-        sp.init("test/test.txt", "006");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "006");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "006");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "006");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "006");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     @Test
     public void test3_7() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "007");
 
-        sp.init("test/test.txt", "007");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "007");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "007");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "007");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "007");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     /**
@@ -937,13 +821,11 @@ public class SetPermissionTest {
      */
     @Test
     public void test3_8() {
-        sp.init("test/test.txt", "008");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test/test.txt", "008");
+        assertEquals(1, resource.getCode());
 
-        sp.init("test", "008");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test", "008");
+        assertEquals(1, resource.getCode());
     }
 
     /**
@@ -958,39 +840,34 @@ public class SetPermissionTest {
      */
     @Test
     public void test4_1() {
-        String osName = System.getProperty("os.name");
+        resource.setMode("test/test.txt", "640");
 
-        sp.init("test/test.txt", "640");
-        sp.runCommand();
+        String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
             // OS が Windows である場合にエラーとなり、終了ステータスが 1 であること。
-            assertEquals(1, sp.getCode());
+            assertEquals(1, resource.getCode());
             return;
         } else {
             // ファイルのパーミッションを変更でき、終了ステータスが 2 であること。
-            assertEquals(2, sp.getCode());
+            assertEquals(2, resource.getCode());
         }
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test/test.txt", "640");
+        assertEquals(0, resource.getCode());
 
         // ディレクトリのパーミッションを変更でき、終了ステータスが 2 であること。
-        sp.init("test", "740");
-        sp.runCommand();
-        assertEquals(2, sp.getCode());
+        resource.setMode("test", "740");
+        assertEquals(2, resource.getCode());
 
         // 終了ステータスが 0 であること。
-        sp.runCommand();
-        assertEquals(0, sp.getCode());
+        resource.setMode("test", "740");
+        assertEquals(0, resource.getCode());
 
         // 終了処理
-        sp.init("test", "700");
-        sp.runCommand();
-
-        sp.init("test/test.txt", "700");
-        sp.runCommand();
+        resource.setMode("test", "700");
+        resource.setMode("test/test.txt", "700");
     }
 
     /**
@@ -1005,31 +882,25 @@ public class SetPermissionTest {
      */
     @Test
     public void test5_1() {
-        sp.init("test/test.txt", "a66");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test/test.txt", "a66");
+        assertEquals(1, resource.getCode());
 
-        sp.init("test", "7a0");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test", "7a0");
+        assertEquals(1, resource.getCode());
     }
 
     @Test
     public void test5_2() {
-        sp.init("test/test.txt", "+66");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test/test.txt", "+66");
+        assertEquals(1, resource.getCode());
 
-        sp.init("test/test.txt", "7766");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test/test.txt", "7766");
+        assertEquals(1, resource.getCode());
 
-        sp.init("test", "-70");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test", "-70");
+        assertEquals(1, resource.getCode());
 
-        sp.init("test", "7670");
-        sp.runCommand();
-        assertEquals(1, sp.getCode());
+        resource.setMode("test", "7670");
+        assertEquals(1, resource.getCode());
     }
 }
