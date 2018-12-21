@@ -22,13 +22,13 @@ public class FileControllerTest {
     private FileController fc;
 
     /**
-     * {@link file_resource.FileController#create()},
+     * {@link file_resource.FileController#createFile()},
      * {@link file_resource.FileController#getCode()} の単体テスト。
      */
     @Test
     public void test1() {
-        fc.init("test.txt");
-        fc.create();
+        fc.setPath("test.txt");
+        fc.createFile();
 
         File f = new File("test.txt");
         // ファイルが作成されていること。
@@ -36,15 +36,15 @@ public class FileControllerTest {
         // 終了コードが 2 であること。
         assertEquals(2, fc.getCode());
 
-        fc.create();
+        fc.createFile();
         // 終了コードが 0 であること。
         assertEquals(0, fc.getCode());
     }
 
     @Test
     public void test2() {
-        fc.init("notExist/test.txt");
-        fc.create();
+        fc.setPath("notExist/test.txt");
+        fc.createFile();
 
         File f = new File("notExist/test.txt");
         // ファイル作成されていないこと。
@@ -54,13 +54,13 @@ public class FileControllerTest {
     }
 
     /**
-     * {@link file_resource.FileController#delete()},
+     * {@link file_resource.FileController#deleteFile()},
      * {@link file_resource.FileController#getCode()} の単体テスト。
      */
     @Test
     public void test3() {
-        fc.init("test.txt");
-        fc.delete();
+        fc.setPath("test.txt");
+        fc.deleteFile();
 
         File f = new File("test.txt");
         // ファイルが削除されていること。
@@ -68,7 +68,7 @@ public class FileControllerTest {
         // 終了コードが 2 であること。
         assertEquals(2, fc.getCode());
 
-        fc.delete();
+        fc.deleteFile();
         // 終了コードが 0 であること。
         assertEquals(0, fc.getCode());
     }
