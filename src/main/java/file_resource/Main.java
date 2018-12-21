@@ -72,10 +72,10 @@ public class Main {
         }
 
         FileController fc = context.getBean(FileController.class);
-        fc.init(path);
+        fc.setPath(path);
 
         if (cFlag == 1) {
-            fc.create();
+            fc.createFile();
 
             if (fc.getCode() == 1) {
                 System.exit(fc.getCode());
@@ -105,7 +105,7 @@ public class Main {
                 }
             }
         } else if (dFlag == 1) {
-            fc.delete();
+            fc.deleteFile();
         }
 
         System.exit(fc.getCode());
