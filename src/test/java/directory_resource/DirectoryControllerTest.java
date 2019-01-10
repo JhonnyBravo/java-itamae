@@ -30,8 +30,8 @@ public class DirectoryControllerTest {
     public void test1() {
         // 単一のディレクトリを新規作成できること。
         // 終了ステータスが 2 であること。
-        dc.init("test");
-        dc.create();
+        dc.setPath("test");
+        dc.createDirectory();
 
         File f = new File("test");
 
@@ -39,7 +39,7 @@ public class DirectoryControllerTest {
         assertEquals(2, dc.getCode());
 
         // 終了ステータスが 0 であること。
-        dc.create();
+        dc.createDirectory();
         assertEquals(0, dc.getCode());
     }
 
@@ -47,8 +47,8 @@ public class DirectoryControllerTest {
     public void test2() {
         // 単一のディレクトリを削除できること。
         // 終了ステータスが 2 であること。
-        dc.init("test");
-        dc.delete();
+        dc.setPath("test");
+        dc.deleteDirectory();
 
         File f = new File("test");
 
@@ -56,7 +56,7 @@ public class DirectoryControllerTest {
         assertEquals(2, dc.getCode());
 
         // 終了ステータスが 0 であること。
-        dc.delete();
+        dc.deleteDirectory();
         assertEquals(0, dc.getCode());
     }
 
@@ -64,8 +64,8 @@ public class DirectoryControllerTest {
     public void test3() {
         // 複数階層のディレクトリを新規作成できること。
         // 終了ステータスが 2 であること。
-        dc.init("test/sub1/sub2");
-        dc.create();
+        dc.setPath("test/sub1/sub2");
+        dc.createDirectory();
 
         File f = new File("test");
 
@@ -73,7 +73,7 @@ public class DirectoryControllerTest {
         assertEquals(2, dc.getCode());
 
         // 終了ステータスが 0 であること。
-        dc.create();
+        dc.createDirectory();
         assertEquals(0, dc.getCode());
     }
 
@@ -81,8 +81,8 @@ public class DirectoryControllerTest {
     public void test4() {
         // 複数階層のディレクトリを削除できること。
         // 終了ステータスが 2 であること。
-        dc.init("test");
-        dc.delete();
+        dc.setPath("test");
+        dc.deleteDirectory();
 
         File f = new File("test");
 
@@ -90,7 +90,7 @@ public class DirectoryControllerTest {
         assertEquals(2, dc.getCode());
 
         // 終了ステータスが 0 であること。
-        dc.delete();
+        dc.deleteDirectory();
         assertEquals(0, dc.getCode());
     }
 }
