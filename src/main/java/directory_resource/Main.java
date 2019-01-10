@@ -72,10 +72,10 @@ public class Main {
         }
 
         DirectoryController dc = context.getBean(DirectoryController.class);
-        dc.init(path);
+        dc.setPath(path);
 
         if (cFlag == 1) {
-            dc.create();
+            dc.createDirectory();
 
             if (dc.getCode() == 1) {
                 System.exit(dc.getCode());
@@ -105,7 +105,7 @@ public class Main {
                 }
             }
         } else if (dFlag == 1) {
-            dc.delete();
+            dc.deleteDirectory();
         }
 
         System.exit(dc.getCode());
