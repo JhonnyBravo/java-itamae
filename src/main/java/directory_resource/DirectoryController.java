@@ -6,130 +6,152 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 
-import group_resource.SetGroupPrincipal;
-import mode_resource.SetPermission;
-import owner_resource.SetUserPrincipal;
-import status_resource.StatusController;
+import group_resource.Group;
+import mode_resource.Mode;
+import owner_resource.Owner;
+import status_resource.Status;
 
 /**
- * ディレクトリを作成または削除する。
+ * @see directory_resource.DirectoryResource
  */
 @Service
-@Import({ SetUserPrincipal.class, SetGroupPrincipal.class, SetPermission.class })
-public class DirectoryController extends StatusController {
-    @Autowired
-    private DirectoryProperties dp;
+@Import({ Owner.class, Group.class, Mode.class })
+public class DirectoryController extends Status implements DirectoryResource {
+    private String path = null;
+    private File file = null;
 
     @Autowired
-    private CreateDirectory cd;
+    private Owner ownerResource;
 
     @Autowired
-    private DeleteDirectory dd;
+    private Group groupResource;
 
     @Autowired
-    private SetUserPrincipal sup;
-
-    @Autowired
-    private SetGroupPrincipal sgp;
-
-    @Autowired
-    private SetPermission sp;
+    private Mode modeResource;
 
     /**
-     * @param path 操作対象とするディレクトリのパスを指定する。
+     * @see directory_resource.DirectoryResource#setOwner(String)
      */
-    public void init(String path) {
-        dp.setPath(path);
-    }
-
-    /**
-     * <ul>
-     * <li>ディレクトリが既に存在する場合: 何もしない。</li>
-     * <li>ディレクトリが存在しない場合: ディレクトリを新規作成する。</li>
-     * </ul>
-     */
-    public void create() {
-        cd.init(dp.getPath());
-        cd.runCommand();
-        this.setCode(cd.getCode());
-    }
-
-    /**
-     * <ul>
-     * <li>ディレクトリが存在する場合: ディレクトリを削除する。</li>
-     * <li>ディレクトリが存在しない場合: 何もしない。</li>
-     * </ul>
-     */
-    public void delete() {
-        dd.init(dp.getPath());
-        dd.runCommand();
-        this.setCode(dd.getCode());
-    }
-
-    /**
-     * ディレクトリの所有書を変更する。
-     * 
-     * @param owner 新しい所有者として設定するユーザの名前を指定する。
-     */
+    @Override
     public void setOwner(String owner) {
-        File f = new File(dp.getPath());
+        this.initStatus();
 
-        if (!f.isDirectory()) {
-            this.setMessage(dp.getPath() + " が見つかりません。");
-            this.errorTerminate();
+        if (this.path == null) {
+            this.errorTerminate("path を指定してください。");
             return;
         }
 
-        sup.init(dp.getPath(), owner);
-        sup.runCommand();
-        this.setCode(sup.getCode());
+        if (!this.file.isDirectory()) {
+            this.errorTerminate(this.path + " が見つかりません。");
+            return;
+        }
+
+        ownerResource.setOwner(this.path, owner);
+        this.setCode(ownerResource.getCode());
     }
 
     /**
-     * ディレクトリのグループ所有者を変更する。
-     * 
-     * @param group 新しいグループ所有者として設定するグループの名前を指定する。
+     * @see directory_resource.DirectoryResource#setGroup(String)
      */
+    @Override
     public void setGroup(String group) {
-        File f = new File(dp.getPath());
+        this.initStatus();
 
-        if (!f.isDirectory()) {
-            this.setMessage(dp.getPath() + " が見つかりません。");
-            this.errorTerminate();
+        if (this.path == null) {
+            this.errorTerminate("path を指定してください。");
             return;
         }
 
-        sgp.init(dp.getPath(), group);
-        sgp.runCommand();
-        this.setCode(sgp.getCode());
+        if (!this.file.isDirectory()) {
+            this.errorTerminate(this.path + " が見つかりません。");
+            return;
+        }
+
+        groupResource.setGroup(this.path, group);
+        this.setCode(groupResource.getCode());
     }
 
     /**
-     * ディレクトリのパーミッションを変更する。
-     * 
-     * @param mode 新しく設定するパーミッションを 3 桁の数列で指定する。
-     *             <ul>
-     *             <li>0: ---</li>
-     *             <li>1: --x</li>
-     *             <li>2: -w-</li>
-     *             <li>3: -wx</li>
-     *             <li>4: r--</li>
-     *             <li>5: r-x</li>
-     *             <li>6: rw-</li>
-     *             <li>7: rwx</li>
-     *             </ul>
+     * @see directory_resource.DirectoryResource#setMode(String)
      */
+    @Override
     public void setMode(String mode) {
-        File f = new File(dp.getPath());
+        this.initStatus();
 
-        if (!f.isDirectory()) {
-            this.setMessage(dp.getPath() + " が見つかりません。");
-            this.errorTerminate();
+        if (this.path == null) {
+            this.errorTerminate("path を指定してください。");
             return;
         }
 
-        sp.init(dp.getPath(), mode);
-        sp.runCommand();
-        this.setCode(sp.getCode());
+        if (!this.file.isDirectory()) {
+            this.errorTerminate(this.path + " が見つかりません。");
+            return;
+        }
+
+        modeResource.setMode(this.path, mode);
+        this.setCode(modeResource.getCode());
+    }
+
+    /**
+     * @see directory_resource.DirectoryResource#setPath(String)
+     */
+    @Override
+    public void setPath(String path) {
+        this.path = path;
+        this.file = new File(path);
+    }
+
+    /**
+     * @see directory_resource.DirectoryResource#createDirectory()
+     */
+    @Override
+    public void createDirectory() {
+        this.initStatus();
+
+        if (this.path == null) {
+            this.errorTerminate("path を指定してください。");
+            return;
+        }
+
+        if (!this.file.isDirectory()) {
+            System.out.println(this.path + " を作成します。");
+            this.file.mkdirs();
+            this.setCode(2);
+        }
+    }
+
+    /**
+     * ディレクトリを再帰的に削除する。
+     * 
+     * @param directory 削除対象とするディレクトリを指定する。
+     */
+    private void delete(File directory) {
+        for (File f : directory.listFiles()) {
+            delete(f);
+        }
+
+        directory.delete();
+    }
+
+    /**
+     * @see directory_resource.DirectoryResource#deleteDirectory()
+     */
+    @Override
+    public void deleteDirectory() {
+        this.initStatus();
+
+        if (this.path == null) {
+            this.errorTerminate("path を指定してください。");
+            return;
+        }
+
+        if (!this.file.isDirectory()) {
+            this.initStatus();
+            return;
+        } else {
+            System.out.println(this.path + " を削除します。");
+            this.delete(this.file);
+            this.setCode(2);
+        }
     }
 }
