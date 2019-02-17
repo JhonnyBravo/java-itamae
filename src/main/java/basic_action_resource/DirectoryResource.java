@@ -2,12 +2,18 @@ package basic_action_resource;
 
 import java.io.File;
 
+import attribute_resource.AttributeResource;
+import attribute_resource.GroupResource;
+import attribute_resource.ModeResource;
+import attribute_resource.OwnerResource;
+
 /**
  * ディレクトリを作成または削除する。
  */
 public class DirectoryResource extends ActionResource {
     private String path;
     private File file;
+    private AttributeResource attribute;
 
     /**
      * @param path 操作対象とするディレクトリのパスを指定する。
@@ -60,6 +66,48 @@ public class DirectoryResource extends ActionResource {
         }
 
         directory.delete();
+    }
+
+    @Override
+    public void setOwner(String owner) {
+        this.initStatus();
+
+        if (!this.file.isDirectory()) {
+            this.errorTerminate(this.path + " はディレクトリではありません。");
+            return;
+        }
+
+        attribute = new OwnerResource(this.path, owner);
+        attribute.setAttribute();
+        this.setCode(attribute.getCode());
+    }
+
+    @Override
+    public void setGroup(String group) {
+        this.initStatus();
+
+        if (!this.file.isDirectory()) {
+            this.errorTerminate(this.path + " はディレクトリではありません。");
+            return;
+        }
+
+        attribute = new GroupResource(this.path, group);
+        attribute.setAttribute();
+        this.setCode(attribute.getCode());
+    }
+
+    @Override
+    public void setMode(String mode) {
+        this.initStatus();
+
+        if (!this.file.isDirectory()) {
+            this.errorTerminate(this.path + " はディレクトリではありません。");
+            return;
+        }
+
+        attribute = new ModeResource(this.path, mode);
+        attribute.setAttribute();
+        this.setCode(attribute.getCode());
     }
 
 }
