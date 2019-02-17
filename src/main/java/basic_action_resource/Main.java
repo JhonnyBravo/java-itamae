@@ -1,9 +1,5 @@
 package basic_action_resource;
 
-import attribute_resource.AttributeResource;
-import attribute_resource.GroupResource;
-import attribute_resource.ModeResource;
-import attribute_resource.OwnerResource;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
@@ -15,14 +11,16 @@ public class Main {
     /**
      * @param args
      *             <ul>
-     *             <li>-F &lt;path&gt; path に指定したファイルを操作対象とする。</li>
-     *             <li>-D &lt;path&gt; path に指定したディレクトリを操作対象とする。</li>
-     *             <li>-c ファイルまたはディレクトリを新規作成する。</li>
-     *             <li>-d ファイルまたはディレクトリを削除する。</li>
-     *             <li>-o &lt;owner&gt; ファイルまたはディレクトリの所有者を owner に指定したユーザへ変更する。</li>
-     *             <li>-g &lt;group&gt; ファイルまたはディレクトリのグループ所有者を group
+     *             <li>-F, --file &lt;path&gt; path に指定したファイルを操作対象とする。</li>
+     *             <li>-D, --directory &lt;path&gt; path に指定したディレクトリを操作対象とする。</li>
+     *             <li>-c, --create ファイルまたはディレクトリを新規作成する。</li>
+     *             <li>-d, --delete ファイルまたはディレクトリを削除する。</li>
+     *             <li>-o, --owner &lt;owner&gt; ファイルまたはディレクトリの所有者を owner
      *             に指定したユーザへ変更する。</li>
-     *             <li>-m &lt;mode&gt; ファイルまたはディレクトリのパーミッションを mode に指定した値へ変更する。</li>
+     *             <li>-g, --group &lt;group&gt; ファイルまたはディレクトリのグループ所有者を group
+     *             に指定したユーザへ変更する。</li>
+     *             <li>-m, --mode &lt;mode&gt; ファイルまたはディレクトリのパーミッションを mode
+     *             に指定した値へ変更する。</li>
      *             </ul>
      */
     public static void main(String[] args) {
@@ -37,8 +35,10 @@ public class Main {
 
         Getopt options = new Getopt("Main", args, "F:D:cdo:g:m:", longopts);
 
-        String filePath = null;
-        String dirPath = null;
+        ActionResource file = null;
+        ActionResource directory = null;
+        ActionResource resource = null;
+
         String owner = null;
         String group = null;
         String mode = null;
@@ -55,11 +55,11 @@ public class Main {
         while ((c = options.getopt()) != -1) {
             switch (c) {
             case 'F':
-                filePath = options.getOptarg();
+                file = new FileResource(options.getOptarg());
                 fileFlag = 1;
                 break;
             case 'D':
-                dirPath = options.getOptarg();
+                directory = new DirectoryResource(options.getOptarg());
                 dirFlag = 1;
                 break;
             case 'c':
@@ -83,77 +83,63 @@ public class Main {
             }
         }
 
-        ActionResource actResource = null;
-        AttributeResource attrResource = null;
-        String path = null;
-        int status = 0;
-
         if (fileFlag == 0 && dirFlag == 0) {
             System.err.println("file オプションまたは directory オプションを指定してください。");
             System.exit(1);
         }
 
-        if (createFlag == 1) {
-            if (fileFlag == 1) {
-                actResource = new FileResource(filePath);
-                path = filePath;
-            } else if (dirFlag == 1) {
-                actResource = new DirectoryResource(dirPath);
-                path = dirPath;
-            }
-
-            actResource.create();
-            status = actResource.getCode();
-
-            if (status == 1) {
-                System.exit(status);
-            }
-
-            if (ownerFlag == 1) {
-                attrResource = new OwnerResource(path, owner);
-                attrResource.setAttribute();
-                status = attrResource.getCode();
-
-                if (status == 1) {
-                    System.exit(status);
-                }
-            }
-
-            if (groupFlag == 1) {
-                attrResource = new GroupResource(path, group);
-                attrResource.setAttribute();
-                status = attrResource.getCode();
-
-                if (status == 1) {
-                    System.exit(status);
-                }
-            }
-
-            if (modeFlag == 1) {
-                attrResource = new ModeResource(path, mode);
-                attrResource.setAttribute();
-                status = attrResource.getCode();
-
-                if (status == 1) {
-                    System.exit(status);
-                }
-            }
-        } else if (deleteFlag == 1) {
-            if (fileFlag == 1) {
-                actResource = new FileResource(filePath);
-            } else if (dirFlag == 1) {
-                actResource = new DirectoryResource(dirPath);
-            }
-
-            actResource.delete();
-            status = actResource.getCode();
-
-            if (status == 1) {
-                System.exit(status);
-            }
+        if (createFlag == 0 && (ownerFlag == 1 || groupFlag == 1 || modeFlag == 1)) {
+            System.err.println("create オプションを指定してください。");
+            System.exit(1);
         }
 
-        System.exit(status);
+        if (fileFlag == 1) {
+            resource = file;
+        } else if (dirFlag == 1) {
+            resource = directory;
+        }
+
+        if (createFlag == 1) {
+            // リソース作成
+            resource.create();
+
+            if (resource.getCode() == 1) {
+                System.exit(resource.getCode());
+            }
+
+            // 所有者変更
+            if (ownerFlag == 1) {
+                resource.setOwner(owner);
+
+                if (resource.getCode() == 1) {
+                    System.exit(resource.getCode());
+                }
+            }
+
+            // グループ所有者変更
+            if (groupFlag == 1) {
+                resource.setGroup(group);
+
+                if (resource.getCode() == 1) {
+                    System.exit(resource.getCode());
+                }
+            }
+
+            // パーミッション変更
+            if (modeFlag == 1) {
+                resource.setMode(mode);
+
+                if (resource.getCode() == 1) {
+                    System.exit(resource.getCode());
+                }
+            }
+
+            System.exit(resource.getCode());
+        } else if (deleteFlag == 1) {
+            // リソース削除
+            resource.delete();
+            System.exit(resource.getCode());
+        }
     }
 
 }
