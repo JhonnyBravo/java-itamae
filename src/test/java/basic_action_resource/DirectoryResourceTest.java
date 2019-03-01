@@ -1,82 +1,102 @@
 package basic_action_resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 
-/**
- * {@link basic_action_resource.DirectoryResource} の単体テスト。
- */
+@RunWith(Enclosed.class)
 public class DirectoryResourceTest {
-    private ActionResource resource;
-    private File file;
+    public static class ディレクトリが存在しない場合 {
+        private ActionResource resource;
+        private File file;
 
-    /**
-     * {@link basic_action_resource.DirectoryResource#create()},
-     * {@link basic_action_resource.DirectoryResource#delete()} のためのテスト・メソッド。
-     */
-    @Test
-    public final void test1() {
-        // ディレクトリを新規作成でき、終了コードが 2 であること。
-        file = new File("test");
-        resource = new DirectoryResource("test");
-        resource.create();
+        @Before
+        public void setUp() throws Exception {
+            file = new File("testDir");
+            resource = new DirectoryResource("testDir");
+        }
 
-        assertTrue(file.isDirectory());
-        assertEquals(2, resource.getCode());
+        @After
+        public void tearDown() throws Exception {
+            resource = new DirectoryResource("testDir");
+            resource.delete();
+        }
 
-        // 終了コードが 0 であること。
-        resource.create();
-        assertEquals(0, resource.getCode());
+        @Test
+        public void 単一階層のディレクトリを作成できて終了コードが2であること() {
+            resource.create();
+            assertThat(file.isDirectory(), is(true));
+            assertThat(resource.getCode(), is(2));
+        }
+
+        @Test
+        public void 複数階層のディレクトリを一括作成できて終了コードが2であること() {
+            file = new File("testDir/sub1/sub2");
+            resource = new DirectoryResource("testDir/sub1/sub2");
+            resource.create();
+
+            assertThat(file.isDirectory(), is(true));
+            assertThat(resource.getCode(), is(2));
+        }
+
+        @Test
+        public void 何も実行せず終了コードが0であること() {
+            resource.delete();
+            assertThat(file.isDirectory(), is(false));
+            assertThat(resource.getCode(), is(0));
+        }
     }
 
-    @Test
-    public final void test2() {
-        // ディレクトリを削除でき、終了コードが 2 であること。
-        file = new File("test");
-        resource = new DirectoryResource("test");
-        resource.delete();
+    public static class ディレクトリが既に存在する場合 {
+        private ActionResource resource;
+        private File file;
 
-        assertFalse(file.isDirectory());
-        assertEquals(2, resource.getCode());
+        @Before
+        public void setUp() throws Exception {
+            file = new File("testDir");
+            file.mkdir();
 
-        // 終了コードが 0 であること。
-        resource.delete();
-        assertEquals(0, resource.getCode());
+            resource = new DirectoryResource("testDir");
+        }
+
+        @After
+        public void tearDown() throws Exception {
+            if (file.isDirectory()) {
+                file.delete();
+            }
+        }
+
+        @Test
+        public void 単一階層のディレクトリを削除できて終了コードが2であること() {
+            resource.delete();
+            assertThat(file.isDirectory(), is(false));
+            assertThat(resource.getCode(), is(2));
+        }
+
+        @Test
+        public void 複数階層のディレクトリを一括削除できて終了コードが2であること() {
+            file = new File("testDir/sub1/sub2");
+            file.mkdirs();
+
+            resource.delete();
+
+            file = new File("testDir");
+            assertThat(file.isDirectory(), is(false));
+            assertThat(resource.getCode(), is(2));
+        }
+
+        @Test
+        public void 何も実行せず終了コードが0であること() {
+            resource.create();
+            assertThat(file.isDirectory(), is(true));
+            assertThat(resource.getCode(), is(0));
+        }
     }
-
-    @Test
-    public final void test3() {
-        // ディレクトリを新規作成でき、終了コードが 2 であること。
-        file = new File("test/sub1/sub2");
-        resource = new DirectoryResource("test/sub1/sub2");
-        resource.create();
-
-        assertTrue(file.isDirectory());
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.create();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void test4() {
-        // ディレクトリを削除でき、終了コードが 2 であること。
-        file = new File("test");
-        resource = new DirectoryResource("test");
-        resource.delete();
-
-        assertFalse(file.isDirectory());
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.delete();
-        assertEquals(0, resource.getCode());
-    }
-
 }
