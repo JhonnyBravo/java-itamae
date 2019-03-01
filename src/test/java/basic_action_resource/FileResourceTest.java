@@ -1,64 +1,99 @@
 package basic_action_resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 
-/**
- * @author sanfr
- *
- */
+@RunWith(Enclosed.class)
 public class FileResourceTest {
-    private ActionResource resource;
-    private File file;
+    public static class ファイルが存在しない場合 {
+        private ActionResource resource;
+        private File file;
 
-    /**
-     * {@link basic_action_resource.FileResource#create()},
-     * {@link basic_action_resource.FileResource#delete()} のためのテスト・メソッド。
-     */
-    @Test
-    public final void test1() {
-        // ファイルを新規作成でき、終了コードが 2 であること。
-        file = new File("test.txt");
-        resource = new FileResource("test.txt");
-        resource.create();
+        @Before
+        public void setUp() throws Exception {
+            file = new File("test.txt");
+            resource = new FileResource("test.txt");
+        }
 
-        assertTrue(file.isFile());
-        assertEquals(2, resource.getCode());
+        @After
+        public void tearDown() throws Exception {
+            if (file.isFile()) {
+                file.delete();
+            }
+        }
 
-        // 終了コードが 0 であること。
-        resource.create();
-        assertEquals(0, resource.getCode());
+        @Test
+        public void ファイルを作成できて終了コードが2であること() {
+            resource.create();
+            assertThat(file.isFile(), is(true));
+            assertThat(resource.getCode(), is(2));
+        }
+
+        @Test
+        public void 何も実行せず終了コードが0であること() {
+            resource.delete();
+            assertThat(file.isFile(), is(false));
+            assertThat(resource.getCode(), is(0));
+        }
     }
 
-    @Test
-    public final void test2() {
-        // ファイルを削除でき、終了コードが 2 であること。
-        file = new File("test.txt");
-        resource = new FileResource("test.txt");
-        resource.delete();
+    public static class ファイルが既に存在する場合 {
+        private ActionResource resource;
+        private File file;
 
-        assertFalse(file.isFile());
-        assertEquals(2, resource.getCode());
+        @Before
+        public void setUp() throws Exception {
+            file = new File("test.txt");
+            file.createNewFile();
 
-        // 終了コードが 0 であること。
-        resource.delete();
-        assertEquals(0, resource.getCode());
+            resource = new FileResource("test.txt");
+        }
+
+        @After
+        public void tearDown() throws Exception {
+            if (file.isFile()) {
+                file.delete();
+            }
+        }
+
+        @Test
+        public void ファイルを削除できて終了コードが2であること() {
+            resource.delete();
+            assertThat(file.isFile(), is(false));
+            assertThat(resource.getCode(), is(2));
+        }
+
+        @Test
+        public void 何も実行せず終了コードが0であること() {
+            resource.create();
+            assertThat(file.isFile(), is(true));
+            assertThat(resource.getCode(), is(0));
+        }
     }
 
-    @Test
-    public final void test3() {
-        // エラーが発生した場合に終了コードが 1 であること。
-        file = new File("NotExist/test.txt");
-        resource = new FileResource("NotExist/test.txt");
-        resource.create();
+    public static class エラーが発生した場合 {
+        private ActionResource resource;
+        private File file;
 
-        assertFalse(file.isFile());
-        assertEquals(1, resource.getCode());
+        @Before
+        public void setUp() throws Exception {
+            file = new File("NotExist/test.txt");
+            resource = new FileResource("NotExist/test.txt");
+        }
+
+        @Test
+        public void 処理が中断されて終了コードが1であること() {
+            resource.create();
+            assertThat(file.isFile(), is(false));
+            assertThat(resource.getCode(), is(1));
+        }
     }
-
 }
