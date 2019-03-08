@@ -1,760 +1,390 @@
 package attribute_resource;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.experimental.theories.DataPoint;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
 
-/**
- * {@link attribute_resource.ModeResource} の単体テスト。
- */
+@RunWith(Enclosed.class)
 public class ModeResourceTest {
-    private File testDir = new File("test");
-    private File testFile = new File("test/test.txt");
-    private AttributeResource resource;
+    public static class エラーテスト {
+        /**
+         * OS が Windows であるかどうかを確認する。
+         * 
+         * @return boolean
+         *         <ul>
+         *         <li>true: OS が Windows であることを表す。</li>
+         *         <li>false: OS が Windows ではないことを表す。</li>
+         *         </ul>
+         */
+        private boolean isWindows() {
+            String osName = System.getProperty("os.name");
+            boolean result;
 
-    /**
-     * OS が Windows であるかどうかを確認する。
-     * 
-     * @return boolean
-     *         <ul>
-     *         <li>true: OS が Windows であることを表す。</li>
-     *         <li>false: OS が Windows ではないことを表す。</li>
-     *         </ul>
-     */
-    private boolean isWindows() {
-        String osName = System.getProperty("os.name");
-        boolean result;
+            if (osName.substring(0, 3).equals("Win")) {
+                result = true;
+            } else {
+                result = false;
+            }
 
-        if (osName.substring(0, 3).equals("Win")) {
-            result = true;
-        } else {
-            result = false;
+            return result;
         }
 
-        return result;
-    }
+        @Test
+        public void Windowsでファイルのパーミッション設定を変更しようとした場合にエラーとなり終了コードが1であること() {
+            if (isWindows()) {
+                File file = new File("test.txt");
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        testDir.mkdir();
-        testFile.createNewFile();
-    }
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    fail("エラーが発生しました。 " + e);
+                }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        testFile.delete();
-        testDir.delete();
-    }
+                AttributeResource ar = new ModeResource("test.txt", "700");
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(1));
 
-    /**
-     * <p>
-     * {@link attribute_resource.ModeResource#setAttribute()},
-     * {@link attribute_resource.ModeResource#getCode()} のためのテスト・メソッド。
-     * </p>
-     * <p>
-     * Others パーミッションの設定値を変更できることを確認する。
-     * </p>
-     */
-    @Test
-    public final void testOthers1() {
-        resource = new ModeResource("test/test.txt", "001");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+                file.delete();
+            }
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        @Test
+        public void Windowsでディレクトリのパーミッション設定を変更しようとした場合にエラーとなり終了コードが1であること() {
+            if (isWindows()) {
+                File file = new File("testDir");
+                file.mkdir();
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+                AttributeResource ar = new ModeResource("testDir", "700");
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(1));
 
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "001");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOthers2() {
-        resource = new ModeResource("test/test.txt", "002");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+                file.delete();
+            }
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "002");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOthers3() {
-        resource = new ModeResource("test/test.txt", "003");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+        @Test
+        public void 存在しないファイルのパーミッション設定を変更しようとした場合にエラーとなり終了コードが1であること() {
+            if (!isWindows()) {
+                AttributeResource ar = new ModeResource("test.txt", "640");
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(1));
+            }
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "003");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+        @Test
+        public void 存在しないディレクトリのパーミッション設定を変更しようとした場合にエラーとなり終了コードが1であること() {
+            if (!isWindows()) {
+                AttributeResource ar = new ModeResource("testDir", "640");
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(1));
+            }
+        }
     }
 
-    @Test
-    public final void testOthers4() {
-        resource = new ModeResource("test/test.txt", "004");
-        resource.setAttribute();
+    @RunWith(Theories.class)
+    public static class ファイルのパーミッション設定を変更する場合 {
+        private File file = new File("test.txt");
 
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+        @Before
+        public void setUp() throws Exception {
+            file.createNewFile();
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "004");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOthers5() {
-        resource = new ModeResource("test/test.txt", "005");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+        @After
+        public void tearDown() throws Exception {
+            file.delete();
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        /**
+         * OS が Windows であるかどうかを確認する。
+         * 
+         * @return boolean
+         *         <ul>
+         *         <li>true: OS が Windows であることを表す。</li>
+         *         <li>false: OS が Windows ではないことを表す。</li>
+         *         </ul>
+         */
+        private boolean isWindows() {
+            String osName = System.getProperty("os.name");
+            boolean result;
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+            if (osName.substring(0, 3).equals("Win")) {
+                result = true;
+            } else {
+                result = false;
+            }
 
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "005");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOthers6() {
-        resource = new ModeResource("test/test.txt", "006");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+            return result;
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        // owner パーミッションの変更テスト
+        @DataPoint
+        public static String OWNER_PERM1 = "100";
+        @DataPoint
+        public static String OWNER_PERM2 = "200";
+        @DataPoint
+        public static String OWNER_PERM3 = "300";
+        @DataPoint
+        public static String OWNER_PERM4 = "400";
+        @DataPoint
+        public static String OWNER_PERM5 = "500";
+        @DataPoint
+        public static String OWNER_PERM6 = "600";
+        @DataPoint
+        public static String OWNER_PERM7 = "700";
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+        // group パーミッションの変更テスト
+        @DataPoint
+        public static String GROUP_PERM1 = "010";
+        @DataPoint
+        public static String GROUP_PERM2 = "020";
+        @DataPoint
+        public static String GROUP_PERM3 = "030";
+        @DataPoint
+        public static String GROUP_PERM4 = "040";
+        @DataPoint
+        public static String GROUP_PERM5 = "050";
+        @DataPoint
+        public static String GROUP_PERM6 = "060";
+        @DataPoint
+        public static String GROUP_PERM7 = "070";
 
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "006");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
+        // others パーミッションの変更テスト
+        @DataPoint
+        public static String OTHERS_PERM1 = "001";
+        @DataPoint
+        public static String OTHERS_PERM2 = "002";
+        @DataPoint
+        public static String OTHERS_PERM3 = "003";
+        @DataPoint
+        public static String OTHERS_PERM4 = "004";
+        @DataPoint
+        public static String OTHERS_PERM5 = "005";
+        @DataPoint
+        public static String OTHERS_PERM6 = "006";
+        @DataPoint
+        public static String OTHERS_PERM7 = "007";
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
+        // owner, group, others パーミッションの同時変更。
+        @DataPoint
+        public static String ALL1 = "740";
 
-    @Test
-    public final void testOthers7() {
-        resource = new ModeResource("test/test.txt", "007");
-        resource.setAttribute();
+        @Theory
+        public void ファイルのパーミッション設定を変更できて終了コードが2であること(String mode) {
+            if (!isWindows()) {
+                System.out.println("パーミッション: " + mode);
 
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+                AttributeResource ar = new ModeResource("test.txt", mode);
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(2));
+            }
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        @Theory
+        public void 新しいパーミッションとして設定しようとしている値が現在のパーミッション設定と同一である場合に終了コードが0であること(String mode) {
+            if (!isWindows()) {
+                System.out.println("パーミッション: " + mode);
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "007");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+                AttributeResource ar = new ModeResource("test.txt", mode);
+                ar.setAttribute();
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(0));
+            }
+        }
     }
 
-    @Test
-    public final void testOthers8() {
-        // Others パーミッションに不正な値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test", "008");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
+    @RunWith(Theories.class)
+    public static class ディレクトリのパーミッション設定を変更する場合 {
+        private File file = new File("testDir");
 
-    /**
-     * Group パーミッションの設定値を変更できることを確認する。
-     */
-    @Test
-    public final void testGroup1() {
-        resource = new ModeResource("test/test.txt", "010");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+        @Before
+        public void setUp() throws Exception {
+            file.createNewFile();
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "010");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testGroup2() {
-        resource = new ModeResource("test/test.txt", "020");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+        @After
+        public void tearDown() throws Exception {
+            file.delete();
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        /**
+         * OS が Windows であるかどうかを確認する。
+         * 
+         * @return boolean
+         *         <ul>
+         *         <li>true: OS が Windows であることを表す。</li>
+         *         <li>false: OS が Windows ではないことを表す。</li>
+         *         </ul>
+         */
+        private boolean isWindows() {
+            String osName = System.getProperty("os.name");
+            boolean result;
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+            if (osName.substring(0, 3).equals("Win")) {
+                result = true;
+            } else {
+                result = false;
+            }
 
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "020");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testGroup3() {
-        resource = new ModeResource("test/test.txt", "030");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+            return result;
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        // owner パーミッションの変更テスト
+        @DataPoint
+        public static String OWNER_PERM1 = "100";
+        @DataPoint
+        public static String OWNER_PERM2 = "200";
+        @DataPoint
+        public static String OWNER_PERM3 = "300";
+        @DataPoint
+        public static String OWNER_PERM4 = "400";
+        @DataPoint
+        public static String OWNER_PERM5 = "500";
+        @DataPoint
+        public static String OWNER_PERM6 = "600";
+        @DataPoint
+        public static String OWNER_PERM7 = "700";
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+        // group パーミッションの変更テスト
+        @DataPoint
+        public static String GROUP_PERM1 = "010";
+        @DataPoint
+        public static String GROUP_PERM2 = "020";
+        @DataPoint
+        public static String GROUP_PERM3 = "030";
+        @DataPoint
+        public static String GROUP_PERM4 = "040";
+        @DataPoint
+        public static String GROUP_PERM5 = "050";
+        @DataPoint
+        public static String GROUP_PERM6 = "060";
+        @DataPoint
+        public static String GROUP_PERM7 = "070";
 
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "030");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
+        // others パーミッションの変更テスト
+        @DataPoint
+        public static String OTHERS_PERM1 = "001";
+        @DataPoint
+        public static String OTHERS_PERM2 = "002";
+        @DataPoint
+        public static String OTHERS_PERM3 = "003";
+        @DataPoint
+        public static String OTHERS_PERM4 = "004";
+        @DataPoint
+        public static String OTHERS_PERM5 = "005";
+        @DataPoint
+        public static String OTHERS_PERM6 = "006";
+        @DataPoint
+        public static String OTHERS_PERM7 = "007";
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
+        // owner, group, others パーミッションの同時変更。
+        @DataPoint
+        public static String ALL1 = "740";
 
-    @Test
-    public final void testGroup4() {
-        resource = new ModeResource("test/test.txt", "040");
-        resource.setAttribute();
+        @Theory
+        public void ディレクトリのパーミッション設定を変更できて終了コードが2であること(String mode) {
+            if (!isWindows()) {
+                System.out.println("パーミッション: " + mode);
 
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+                AttributeResource ar = new ModeResource("testDir", mode);
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(2));
+            }
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        @Theory
+        public void 新しいパーミッションとして設定しようとしている値が現在のパーミッション設定と同一である場合に終了コードが0であること(String mode) {
+            if (!isWindows()) {
+                System.out.println("パーミッション: " + mode);
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "040");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+                AttributeResource ar = new ModeResource("testDir", mode);
+                ar.setAttribute();
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(0));
+            }
+        }
     }
 
-    @Test
-    public final void testGroup5() {
-        resource = new ModeResource("test/test.txt", "050");
-        resource.setAttribute();
+    @RunWith(Theories.class)
+    public static class 不正なパーミッション値が指定されている場合 {
+        private File file = new File("test.txt");
 
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+        @Before
+        public void setUp() throws Exception {
+            file.createNewFile();
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "050");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testGroup6() {
-        resource = new ModeResource("test/test.txt", "060");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+        @After
+        public void tearDown() throws Exception {
+            file.delete();
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        /**
+         * OS が Windows であるかどうかを確認する。
+         * 
+         * @return boolean
+         *         <ul>
+         *         <li>true: OS が Windows であることを表す。</li>
+         *         <li>false: OS が Windows ではないことを表す。</li>
+         *         </ul>
+         */
+        private boolean isWindows() {
+            String osName = System.getProperty("os.name");
+            boolean result;
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+            if (osName.substring(0, 3).equals("Win")) {
+                result = true;
+            } else {
+                result = false;
+            }
 
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "060");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testGroup7() {
-        resource = new ModeResource("test/test.txt", "070");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+            return result;
         }
 
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
+        // パーミッション値が 3 桁の数列ではない場合
+        @DataPoint
+        public static String ERROR1 = "6410";
+        @DataPoint
+        public static String ERROR2 = "64";
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
+        // パーミッション値に数字以外の文字列が含まれている場合
+        @DataPoint
+        public static String ERROR3 = "a42";
+        @DataPoint
+        public static String ERROR4 = "-42";
+        @DataPoint
+        public static String ERROR5 = "+42";
 
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "070");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
+        // 7 より大きい数値が含まれている場合
+        @DataPoint
+        public static String ERROR6 = "871";
+        @DataPoint
+        public static String ERROR7 = "781";
+        @DataPoint
+        public static String ERROR8 = "768";
 
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
+        @Theory
+        public void 不正なパーミッションを指定した場合にエラーとなり終了コードが1であること(String mode) {
+            if (!isWindows()) {
+                System.out.println("パーミッション: " + mode);
 
-    @Test
-    public final void testGroup8() {
-        // Group パーミッションに不正な値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test", "080");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
-
-    /**
-     * Owner パーミッションの設定値を変更できることを確認する。
-     */
-    @Test
-    public final void testOwner1() {
-        resource = new ModeResource("test/test.txt", "100");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
+                AttributeResource ar = new ModeResource("test.txt", mode);
+                ar.setAttribute();
+                assertThat(ar.getCode(), is(1));
+            }
         }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "100");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
     }
-
-    @Test
-    public final void testOwner2() {
-        resource = new ModeResource("test/test.txt", "200");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
-        }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "200");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOwner3() {
-        resource = new ModeResource("test/test.txt", "300");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
-        }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "300");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOwner4() {
-        resource = new ModeResource("test/test.txt", "400");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
-        }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "400");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOwner5() {
-        resource = new ModeResource("test/test.txt", "500");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
-        }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "500");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOwner6() {
-        resource = new ModeResource("test/test.txt", "600");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
-        }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "600");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOwner7() {
-        resource = new ModeResource("test/test.txt", "700");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
-        }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "700");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    @Test
-    public final void testOwner8() {
-        // Owner パーミッションに不正な値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test", "800");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
-
-    /**
-     * Owner パーミッション, Group パーミッション, Others パーミッションの設定値を同時に変更できることを確認する。
-     */
-    @Test
-    public final void testAll1() {
-        resource = new ModeResource("test/test.txt", "740");
-        resource.setAttribute();
-
-        if (this.isWindows()) {
-            // OS が Windows である場合にエラーとなり、終了コードが 1 であること。
-            assertEquals(1, resource.getCode());
-            return;
-        }
-
-        // ファイルのパーミッション設定を変更でき、終了コードが 2 であること。
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-
-        // ディレクトリのパーミッション設定を変更でき、終了コードが 2 であること。
-        resource = new ModeResource("test", "740");
-        resource.setAttribute();
-        assertEquals(2, resource.getCode());
-
-        // 終了コードが 0 であること。
-        resource.setAttribute();
-        assertEquals(0, resource.getCode());
-    }
-
-    /**
-     * パーミッションの設定値に不正な値が指定されている場合にエラーとなることを確認する。
-     */
-    @Test
-    public final void testError1() {
-        // 不正なパーミッション値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test/test.txt", "7a0");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
-
-    @Test
-    public final void testError2() {
-        // 不正なパーミッション値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test/test.txt", "+66");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
-
-    @Test
-    public final void testError3() {
-        // 不正なパーミッション値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test/test.txt", "-70");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
-
-    @Test
-    public final void testError4() {
-        // 不正なパーミッション値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test/test.txt", "10");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
-
-    @Test
-    public final void testError5() {
-        // 不正なパーミッション値が指定されている場合にエラーとなり、終了コードが 1 であること。
-        resource = new ModeResource("test/test.txt", "7670");
-        resource.setAttribute();
-        assertEquals(1, resource.getCode());
-    }
-
 }
