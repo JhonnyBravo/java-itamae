@@ -2,8 +2,10 @@ package basic_action_resource;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -97,6 +99,69 @@ public class DirectoryResourceTest {
             resource.create();
             assertThat(file.isDirectory(), is(true));
             assertThat(resource.getCode(), is(0));
+        }
+    }
+
+    public static class ファイル一覧取得テスト {
+        private DirectoryResource resource;
+
+        @Before
+        public void setUp() throws Exception {
+            resource = new DirectoryResource("src/test/resources");
+        }
+
+        @Test
+        public void 拡張子を指定しない場合にディレクトリ直下に存在するファイルを全て一覧取得できて終了コードが2であること() {
+            File[] files = resource.getFiles();
+            assertThat(files.length, is(3));
+            assertThat(resource.getCode(), is(2));
+
+            for (File f : files) {
+                try {
+                    System.out.println(f.getCanonicalPath());
+                } catch (IOException e) {
+                    fail("エラーが発生しました。 " + e);
+                }
+            }
+        }
+
+        @Test
+        public void 拡張子を指定した場合に該当するファイルのみを一覧取得できて終了コードがで2あること() {
+            resource.setFileFilter("txt");
+            File[] files = resource.getFiles();
+            assertThat(files.length, is(2));
+            assertThat(resource.getCode(), is(2));
+
+            for (File f : files) {
+                try {
+                    System.out.println(f.getCanonicalPath());
+                } catch (IOException e) {
+                    fail("エラーが発生しました。 " + e);
+                }
+            }
+        }
+
+        @Test
+        public void ファイルが存在しない場合に終了コードが0であること() {
+            resource.setFileFilter("md");
+            File[] files = resource.getFiles();
+            assertThat(files.length, is(0));
+            assertThat(resource.getCode(), is(0));
+
+            for (File f : files) {
+                try {
+                    System.out.println(f.getCanonicalPath());
+                } catch (IOException e) {
+                    fail("エラーが発生しました。 " + e);
+                }
+            }
+        }
+
+        @Test
+        public void ディレクトリが存在しない場合にエラーとなり終了コードが1であること() {
+            resource = new DirectoryResource("NotExist");
+            resource.getFiles();
+            assertThat(resource.getCode(), is(1));
         }
     }
 }
