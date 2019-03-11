@@ -1,6 +1,7 @@
 package basic_action_resource;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import attribute_resource.AttributeResource;
 import attribute_resource.GroupResource;
@@ -14,6 +15,7 @@ public class DirectoryResource extends ActionResource {
     private String path;
     private File file;
     private AttributeResource attribute;
+    private FilenameFilter filter;
 
     /**
      * @param path 操作対象とするディレクトリのパスを指定する。
@@ -21,6 +23,7 @@ public class DirectoryResource extends ActionResource {
     public DirectoryResource(String path) {
         this.path = path;
         this.file = new File(path);
+        this.filter = null;
     }
 
     /**
@@ -110,4 +113,46 @@ public class DirectoryResource extends ActionResource {
         this.setCode(attribute.getCode());
     }
 
+    /**
+     * @param extension 取得対象とするファイルの拡張子を指定する。
+     */
+    public void setFileFilter(String extension) {
+        this.filter = new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                if (name.toLowerCase().endsWith(extension)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+    }
+
+    /**
+     * @return ディレクトリの直下に存在するファイルの一覧を取得して返す。
+     */
+    public File[] getFiles() {
+        File[] result = null;
+
+        this.initStatus();
+
+        if (!this.file.isDirectory()) {
+            this.errorTerminate(this.path + " が見つかりません。");
+            return result;
+        }
+
+        if (this.filter == null) {
+            result = this.file.listFiles();
+        } else {
+            result = this.file.listFiles(filter);
+        }
+
+        if (result.length > 0) {
+            this.setCode(2);
+        }
+
+        return result;
+    }
 }
