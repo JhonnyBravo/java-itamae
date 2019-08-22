@@ -1,19 +1,23 @@
 package attribute_resource;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
 
 /**
  * ファイルまたはディレクトリのパーミッション設定を管理する。
  */
-public class ModeResource extends AttributeResource {
-    private String path;
-    private String mode;
-    private File file;
+public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
+    private final Logger logger;
+    private final String path;
+    private final String mode;
+    private final File file;
 
     /**
      * @param path 操作対象とするファイルまたはディレクトリのパスを指定する。
@@ -31,53 +35,29 @@ public class ModeResource extends AttributeResource {
      */
     public ModeResource(String path, String mode) {
         this.path = path;
-        this.file = new File(path);
+        file = new File(path);
         this.mode = mode;
+
+        logger = Logger.getLogger(this.getClass().getName());
+        logger.addHandler(new ConsoleHandler());
     }
 
     /**
-     * @return Object ファイルまたはディレクトリに現在のパーミッションとして設定されている PosixFilePermission を取得する。
-     * 
-     * @see attribute_resource.AttributeResource#getAttribute()
-     */
-    @Override
-    protected Object getAttribute() {
-        this.initStatus();
-
-        Set<PosixFilePermission> permission = null;
-
-        if (!this.file.exists()) {
-            this.errorTerminate(this.path + " が見つかりません。");
-            return permission;
-        }
-
-        try {
-            permission = Files.getPosixFilePermissions(this.file.toPath());
-            this.setCode(2);
-        } catch (IOException e) {
-            this.errorTerminate("エラーが発生しました。 " + e);
-        }
-
-        return permission;
-    }
-
-    /**
-     * @return Object 新規生成された PosixFilePermission を返す。
-     * 
+     * @return Set&lt;PosixFilePermission&gt; 新規生成された PosixFilePermission を返す。
+     *
      * @see attribute_resource.AttributeResource#createAttribute()
      */
     @Override
-    protected Object createAttribute() {
-        this.initStatus();
-
+    protected Set<PosixFilePermission> createAttribute() {
         Set<PosixFilePermission> permission = null;
 
-        if (!this.mode.matches("[0-7]{3}")) {
-            this.errorTerminate("mode の値が不正です。 0 から 7 までの整数のみで構成された 3 桁の数列を指定してください。");
+        if (!mode.matches("[0-7]{3}")) {
+            logger.entering(this.getClass().getName(), "createAttribute");
+            logger.warning("mode の値が不正です。 0 から 7 までの整数のみで構成された 3 桁の数列を指定してください。");
             return permission;
         }
 
-        String converted = this.mode.replaceAll("0", "---").replaceAll("1", "--x").replaceAll("2", "-w-")
+        final String converted = mode.replaceAll("0", "---").replaceAll("1", "--x").replaceAll("2", "-w-")
                 .replaceAll("3", "-wx").replaceAll("4", "r--").replaceAll("5", "r-x").replaceAll("6", "rw-")
                 .replaceAll("7", "rwx");
         permission = PosixFilePermissions.fromString(converted);
@@ -86,48 +66,68 @@ public class ModeResource extends AttributeResource {
     }
 
     /**
-     * ファイルまたはディレクトリのパーミッション設定を変更する。
-     * 
-     * @see attribute_resource.AttributeResource#setAttribute()
+     * @return Set&lt;PosixFilePermission&gt; ファイルまたはディレクトリに現在のパーミッションとして設定されている
+     *         PosixFilePermission を取得する。
+     * @throws IOException           {@link java.io.IOException}
+     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     *
+     * @see attribute_resource.AttributeResource#getAttribute()
      */
     @Override
-    public void setAttribute() {
-        this.initStatus();
+    protected Set<PosixFilePermission> getAttribute() throws FileNotFoundException, IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException(path + " が見つかりません。");
+        }
 
-        String osName = System.getProperty("os.name");
+        final Set<PosixFilePermission> permission = Files.getPosixFilePermissions(file.toPath());
+        return permission;
+    }
+
+    /**
+     * ファイルまたはディレクトリのパーミッション設定を変更する。
+     *
+     * @throws IOException           {@link java.io.IOException}
+     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     *
+     * @see attribute_resource.AttributeResource#setAttribute()
+     * @return status
+     *         <ul>
+     *         <li>true: ファイルまたはディレクトリのパーミッション設定を変更したことを表す。</li>
+     *         <li>false: ファイルまたはディレクトリのパーミッション設定を変更していないことを表す。</li>
+     *         </ul>
+     */
+    @Override
+    public boolean setAttribute() throws FileNotFoundException, IOException {
+        boolean status = false;
+        logger.entering(this.getClass().getName(), "setAttribute");
+
+        final String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
-            this.errorTerminate(osName + " ではパーミッションの取得 / 設定はサポートしていません。");
-            return;
+            logger.warning(osName + " ではパーミッションの取得 / 設定はサポートしていません。");
+            return status;
         }
 
-        @SuppressWarnings("unchecked")
-        Set<PosixFilePermission> curPermission = (Set<PosixFilePermission>) this.getAttribute();
+        final Set<PosixFilePermission> curPermission = getAttribute();
+        final Set<PosixFilePermission> newPermission = createAttribute();
 
-        if (this.getCode() == 1) {
-            return;
-        }
-
-        @SuppressWarnings("unchecked")
-        Set<PosixFilePermission> newPermission = (Set<PosixFilePermission>) this.createAttribute();
-
-        if (this.getCode() == 1) {
-            return;
+        if (newPermission == null) {
+            return status;
         }
 
         if (curPermission.equals(newPermission)) {
-            this.initStatus();
-            return;
+            return status;
         }
 
-        System.out.println("パーミッションを変更します。");
+        logger.info("パーミッションを変更します。");
 
         try {
-            Files.setPosixFilePermissions(this.file.toPath(), newPermission);
-            this.setCode(2);
-        } catch (IOException e) {
-            this.errorTerminate("エラーが発生しました。 " + e);
+            Files.setPosixFilePermissions(file.toPath(), newPermission);
+            status = true;
+            return status;
+        } catch (final IOException e) {
+            logger.throwing(this.getClass().getName(), "setAttribute", e);
+            throw e;
         }
     }
-
 }
