@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.junit.After;
@@ -17,29 +19,13 @@ import context_resource.PropertiesResource;
 
 @RunWith(Enclosed.class)
 public class GroupResourceTest {
-    public static class ファイルのグループ所有者を変更する場合 {
+    public static class ディレクトリのグループ所有者を変更する場合 {
         private String groupName;
-        private File file = new File("test.txt");
-
-        @Before
-        public void setUp() throws Exception {
-            ContextResource cr = new PropertiesResource("src/test/resources/test.properties");
-            cr.openContext();
-            Properties p = (Properties) cr.getContext();
-            groupName = p.getProperty("groupName");
-            cr.closeContext();
-
-            file.createNewFile();
-        }
-
-        @After
-        public void tearDown() throws Exception {
-            file.delete();
-        }
+        private final File file = new File("testDir");
 
         /**
          * OS が Windows であるかどうかを確認する。
-         * 
+         *
          * @return boolean
          *         <ul>
          *         <li>true: OS が Windows であることを表す。</li>
@@ -47,7 +33,7 @@ public class GroupResourceTest {
          *         </ul>
          */
         private boolean isWindows() {
-            String osName = System.getProperty("os.name");
+            final String osName = System.getProperty("os.name");
             boolean result;
 
             if (osName.substring(0, 3).equals("Win")) {
@@ -60,61 +46,19 @@ public class GroupResourceTest {
         }
 
         @Test
-        public void OSがWindowsである場合にエラーとなり終了コードが1であること() {
+        public void OSがWindowsである場合にエラーとなり終了ステータスがfalseであること() throws FileNotFoundException, IOException {
             if (isWindows()) {
-                AttributeResource ar = new GroupResource("test.txt", groupName);
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(1));
+                final AttributeResource<?> ar = new GroupResource("testDir", groupName);
+                final boolean status = ar.setAttribute();
+                assertThat(status, is(false));
             }
         }
-
-        @Test
-        public void ファイルのグループ所有者を変更できて終了コードが2であること() {
-            if (!isWindows()) {
-                AttributeResource ar = new GroupResource("test.txt", groupName);
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(2));
-            }
-        }
-
-        @Test
-        public void 新しいグループ所有者として設定するグループ名が現在設定されているグループ所有者のグループ名と同一である場合に終了コードが0であること() {
-            if (!isWindows()) {
-                AttributeResource ar = new GroupResource("test.txt", groupName);
-                ar.setAttribute();
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(0));
-            }
-        }
-
-        @Test
-        public void 存在しないファイルのグループ所有者を変更しようとした場合にエラーとなり終了コードがで1あること() {
-            if (!isWindows()) {
-                AttributeResource ar = new GroupResource("NotExist.txt", groupName);
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(1));
-            }
-        }
-
-        @Test
-        public void 新しいグループ所有者として存在しないグループの名前を設定しようとした場合にエラーとなり終了コードが1であること() {
-            if (!isWindows()) {
-                AttributeResource ar = new GroupResource("test.txt", "NotExist");
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(1));
-            }
-        }
-    }
-
-    public static class ディレクトリのグループ所有者を変更する場合 {
-        private String groupName;
-        private File file = new File("testDir");
 
         @Before
         public void setUp() throws Exception {
-            ContextResource cr = new PropertiesResource("src/test/resources/test.properties");
+            final ContextResource cr = new PropertiesResource("src/test/resources/test.properties");
             cr.openContext();
-            Properties p = (Properties) cr.getContext();
+            final Properties p = (Properties) cr.getContext();
             groupName = p.getProperty("groupName");
             cr.closeContext();
 
@@ -126,9 +70,52 @@ public class GroupResourceTest {
             file.delete();
         }
 
+        @Test
+        public void ディレクトリのグループ所有者を変更できて終了ステータスがtrueであること() throws FileNotFoundException, IOException {
+            if (!isWindows()) {
+                final AttributeResource<?> ar = new GroupResource("testDir", groupName);
+                final boolean status = ar.setAttribute();
+                assertThat(status, is(true));
+            }
+        }
+
+        @Test(expected = IOException.class)
+        public void 新しいグループ所有者として存在しないグループの名前を設定しようとした場合にエラーとなりIOExceptionが送出されること()
+                throws FileNotFoundException, IOException {
+            if (!isWindows()) {
+                final AttributeResource<?> ar = new GroupResource("testDir", "NotExist");
+                ar.setAttribute();
+            }
+        }
+
+        @Test
+        public void 新規設定するグループ所有者のグループ名が現在のグループ所有者のグループ名と同一である場合に終了ステータスがfalseであること()
+                throws FileNotFoundException, IOException {
+            if (!isWindows()) {
+                final AttributeResource<?> ar = new GroupResource("testDir", groupName);
+                ar.setAttribute();
+                final boolean status = ar.setAttribute();
+                assertThat(status, is(false));
+            }
+        }
+
+        @Test(expected = FileNotFoundException.class)
+        public void 存在しないディレクトリのグループ所有者を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること()
+                throws FileNotFoundException, IOException {
+            if (!isWindows()) {
+                final AttributeResource<?> ar = new GroupResource("NotExist", groupName);
+                ar.setAttribute();
+            }
+        }
+    }
+
+    public static class ファイルのグループ所有者を変更する場合 {
+        private String groupName;
+        private final File file = new File("test.txt");
+
         /**
          * OS が Windows であるかどうかを確認する。
-         * 
+         *
          * @return boolean
          *         <ul>
          *         <li>true: OS が Windows であることを表す。</li>
@@ -136,7 +123,7 @@ public class GroupResourceTest {
          *         </ul>
          */
         private boolean isWindows() {
-            String osName = System.getProperty("os.name");
+            final String osName = System.getProperty("os.name");
             boolean result;
 
             if (osName.substring(0, 3).equals("Win")) {
@@ -149,48 +136,65 @@ public class GroupResourceTest {
         }
 
         @Test
-        public void OSがWindowsである場合にエラーとなり終了コードが1であること() {
+        public void OSがWindowsである場合にエラーとなり終了ステータスがfalseであること() throws FileNotFoundException, IOException {
             if (isWindows()) {
-                AttributeResource ar = new GroupResource("testDir", groupName);
+                final AttributeResource<?> ar = new GroupResource("test.txt", groupName);
+                final boolean status = ar.setAttribute();
+                assertThat(status, is(false));
+            }
+        }
+
+        @Before
+        public void setUp() throws Exception {
+            final ContextResource cr = new PropertiesResource("src/test/resources/test.properties");
+            cr.openContext();
+            final Properties p = (Properties) cr.getContext();
+            groupName = p.getProperty("groupName");
+            cr.closeContext();
+
+            file.createNewFile();
+        }
+
+        @After
+        public void tearDown() throws Exception {
+            file.delete();
+        }
+
+        @Test
+        public void ファイルのグループ所有者を変更できて終了ステータスがtrueであること() throws FileNotFoundException, IOException {
+            if (!isWindows()) {
+                final AttributeResource<?> ar = new GroupResource("test.txt", groupName);
+                final boolean status = ar.setAttribute();
+                assertThat(status, is(true));
+            }
+        }
+
+        @Test(expected = IOException.class)
+        public void 新しいグループ所有者として存在しないグループの名前を設定しようとした場合にエラーとなりIOExceptionが送出されること()
+                throws FileNotFoundException, IOException {
+            if (!isWindows()) {
+                final AttributeResource<?> ar = new GroupResource("test.txt", "NotExist");
                 ar.setAttribute();
-                assertThat(ar.getCode(), is(1));
             }
         }
 
         @Test
-        public void ディレクトリのグループ所有者を変更できて終了コードが2であること() {
+        public void 新規設定するグループ所有者のグループ名が現在のグループ所有者のグループ名と同一である場合に終了ステータスがfalseであること()
+                throws FileNotFoundException, IOException {
             if (!isWindows()) {
-                AttributeResource ar = new GroupResource("testDir", groupName);
+                final AttributeResource<?> ar = new GroupResource("test.txt", groupName);
                 ar.setAttribute();
-                assertThat(ar.getCode(), is(2));
+                final boolean status = ar.setAttribute();
+                assertThat(status, is(false));
             }
         }
 
-        @Test
-        public void 新しいグループ所有者として設定するグループ名が現在設定されているグループ所有者のグループ名と同一である場合に終了コードが0であること() {
+        @Test(expected = FileNotFoundException.class)
+        public void 存在しないファイルのグループ所有者を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること()
+                throws FileNotFoundException, IOException {
             if (!isWindows()) {
-                AttributeResource ar = new GroupResource("testDir", groupName);
+                final AttributeResource<?> ar = new GroupResource("NotExist.txt", groupName);
                 ar.setAttribute();
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(0));
-            }
-        }
-
-        @Test
-        public void 存在しないディレクトリのグループ所有者を変更しようとした場合にエラーとなり終了コードがで1あること() {
-            if (!isWindows()) {
-                AttributeResource ar = new GroupResource("NotExist", groupName);
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(1));
-            }
-        }
-
-        @Test
-        public void 新しいグループ所有者として存在しないグループの名前を設定しようとした場合にエラーとなり終了コードが1であること() {
-            if (!isWindows()) {
-                AttributeResource ar = new GroupResource("testDir", "NotExist");
-                ar.setAttribute();
-                assertThat(ar.getCode(), is(1));
             }
         }
     }
