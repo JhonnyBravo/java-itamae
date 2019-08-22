@@ -1,20 +1,24 @@
 package attribute_resource;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
 
 /**
  * ファイルまたはディレクトリの所有者を管理する。
  */
-public class OwnerResource extends AttributeResource {
-    private String path;
-    private String owner;
-    private File file;
+public class OwnerResource extends AttributeResource<UserPrincipal> {
+    private final Logger logger;
+
+    private final String path;
+    private final String owner;
+    private final File file;
 
     /**
      * @param path  操作対象とするファイルまたはディレクトリのパスを指定する。
@@ -22,93 +26,77 @@ public class OwnerResource extends AttributeResource {
      */
     public OwnerResource(String path, String owner) {
         this.path = path;
-        this.file = new File(path);
+        file = new File(path);
         this.owner = owner;
+
+        logger = Logger.getLogger(this.getClass().getName());
+        logger.addHandler(new ConsoleHandler());
     }
 
     /**
-     * @return Object ファイルまたはディレクトリに現在の所有者として設定されている UserPrincipal を返す。
-     * 
-     * @see attribute_resource.AttributeResource#getAttribute()
+     * @return UserPrincipal 新規生成された UserPrincipal を返す。
+     * @throws IOException {@link java.io.IOException}
+     *
+     * @see attribute_resource.AttributeResource#createAttribute()
      */
     @Override
-    protected Object getAttribute() {
-        this.initStatus();
-
-        UserPrincipal up = null;
-
-        if (!this.file.exists()) {
-            this.errorTerminate(this.path + " が見つかりません。");
-            return up;
-        }
-
-        try {
-            up = Files.getOwner(this.file.toPath());
-            this.setCode(2);
-        } catch (IOException e) {
-            this.errorTerminate("エラーが発生しました。 " + e);
-        }
+    protected UserPrincipal createAttribute() throws IOException {
+        final UserPrincipalLookupService upls = FileSystems.getDefault().getUserPrincipalLookupService();
+        final UserPrincipal up = upls.lookupPrincipalByName(owner);
 
         return up;
     }
 
     /**
-     * @return Object 新規生成された UserPrincipal を返す。
-     * 
-     * @see attribute_resource.AttributeResource#createAttribute()
+     * @return UserPrincipal ファイルまたはディレクトリに現在の所有者として設定されている UserPrincipal を返す。
+     * @throws IOException           {@link java.io.IOException}
+     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     * @see attribute_resource.AttributeResource#getAttribute()
      */
     @Override
-    protected Object createAttribute() {
-        this.initStatus();
-
-        FileSystem fs = FileSystems.getDefault();
-        UserPrincipalLookupService upls = fs.getUserPrincipalLookupService();
-        UserPrincipal up = null;
-
-        try {
-            up = upls.lookupPrincipalByName(this.owner);
-            this.setCode(2);
-        } catch (IOException e) {
-            this.errorTerminate("エラーが発生しました。 " + e);
+    protected UserPrincipal getAttribute() throws FileNotFoundException, IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException(path + " が見つかりません。");
         }
 
+        final UserPrincipal up = Files.getOwner(file.toPath());
         return up;
     }
 
     /**
      * ファイルまたはディレクトリの所有者を変更する。
-     * 
+     *
+     * @throws IOException           {@link java.io.IOException}
+     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     *
      * @see attribute_resource.AttributeResource#setAttribute()
+     * @return status
+     *         <ul>
+     *         <li>true: ファイルまたはディレクトリの所有者を変更したことを表す。</li>
+     *         <li>false: ファイルまたはディレクトリの所有者を変更していないことを表す。</li>
+     *         </ul>
      */
     @Override
-    public void setAttribute() {
-        this.initStatus();
+    public boolean setAttribute() throws FileNotFoundException, IOException {
+        boolean status = false;
 
-        UserPrincipal curOwner = (UserPrincipal) this.getAttribute();
-
-        if (this.getCode() == 1) {
-            return;
-        }
-
-        UserPrincipal newOwner = (UserPrincipal) this.createAttribute();
-
-        if (this.getCode() == 1) {
-            return;
-        }
+        final UserPrincipal curOwner = getAttribute();
+        final UserPrincipal newOwner = createAttribute();
 
         if (curOwner.equals(newOwner)) {
-            this.initStatus();
-            return;
+            return status;
         }
 
-        System.out.println("所有者を変更します。");
+        logger.entering(this.getClass().getName(), "setAttribute");
+        logger.info("所有者を変更します。");
 
         try {
-            Files.setOwner(this.file.toPath(), newOwner);
-            this.setCode(2);
-        } catch (IOException e) {
-            this.errorTerminate("エラーが発生しました。" + e);
+            Files.setOwner(file.toPath(), newOwner);
+            status = true;
+            return status;
+        } catch (final IOException e) {
+            logger.throwing(this.getClass().getName(), "setAttribute", e);
+            throw e;
         }
     }
-
 }
