@@ -1,14 +1,15 @@
 package attribute_resource;
 
-import status_resource.Status;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * リソースの属性を管理する。
  */
-public abstract class AttributeResource extends Status {
-    protected abstract Object getAttribute();
+public abstract class AttributeResource<T> {
+    protected abstract T createAttribute() throws IOException;
 
-    protected abstract Object createAttribute();
+    protected abstract T getAttribute() throws FileNotFoundException, IOException;
 
-    public abstract void setAttribute();
+    public abstract boolean setAttribute() throws FileNotFoundException, IOException;
 }
