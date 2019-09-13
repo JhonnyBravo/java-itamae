@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,17 +32,17 @@ public class FileResourceTest {
         }
 
         @Test
-        public void ファイルを作成できて終了コードが2であること() {
-            resource.create();
+        public void ファイルを作成できて終了ステータスがtrueであること() throws IOException {
+            final boolean status = resource.create();
             assertThat(file.isFile(), is(true));
-            assertThat(resource.getCode(), is(2));
+            assertThat(status, is(true));
         }
 
         @Test
-        public void 何も実行せず終了コードが0であること() {
-            resource.delete();
+        public void 何も実行せず終了ステータスがfalseであること() {
+            final boolean status = resource.delete();
             assertThat(file.isFile(), is(false));
-            assertThat(resource.getCode(), is(0));
+            assertThat(status, is(false));
         }
     }
 
@@ -65,35 +66,31 @@ public class FileResourceTest {
         }
 
         @Test
-        public void ファイルを削除できて終了コードが2であること() {
-            resource.delete();
+        public void ファイルを削除できて終了ステータスがtrueであること() {
+            final boolean status = resource.delete();
             assertThat(file.isFile(), is(false));
-            assertThat(resource.getCode(), is(2));
+            assertThat(status, is(true));
         }
 
         @Test
-        public void 何も実行せず終了コードが0であること() {
-            resource.create();
+        public void 何も実行せず終了ステータスがfalseであること() throws IOException {
+            final boolean status = resource.create();
             assertThat(file.isFile(), is(true));
-            assertThat(resource.getCode(), is(0));
+            assertThat(status, is(false));
         }
     }
 
     public static class エラーが発生した場合 {
         private ActionResource resource;
-        private File file;
 
         @Before
         public void setUp() throws Exception {
-            file = new File("NotExist/test.txt");
             resource = new FileResource("NotExist/test.txt");
         }
 
-        @Test
-        public void 処理が中断されて終了コードが1であること() {
+        @Test(expected = IOException.class)
+        public void 処理が中断されてIOExceptionが送出されること() throws IOException {
             resource.create();
-            assertThat(file.isFile(), is(false));
-            assertThat(resource.getCode(), is(1));
         }
     }
 }
