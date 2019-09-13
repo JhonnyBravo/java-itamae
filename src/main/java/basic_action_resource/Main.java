@@ -1,5 +1,9 @@
 package basic_action_resource;
 
+import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
+
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
@@ -18,13 +22,13 @@ public class Main {
      *             <li>-o, --owner &lt;owner&gt; ファイルまたはディレクトリの所有者を owner
      *             に指定したユーザへ変更する。</li>
      *             <li>-g, --group &lt;group&gt; ファイルまたはディレクトリのグループ所有者を group
-     *             に指定したユーザへ変更する。</li>
+     *             に指定したグループへ変更する。</li>
      *             <li>-m, --mode &lt;mode&gt; ファイルまたはディレクトリのパーミッションを mode
      *             に指定した値へ変更する。</li>
      *             </ul>
      */
     public static void main(String[] args) {
-        LongOpt[] longopts = new LongOpt[7];
+        final LongOpt[] longopts = new LongOpt[7];
         longopts[0] = new LongOpt("file", LongOpt.REQUIRED_ARGUMENT, null, 'F');
         longopts[1] = new LongOpt("directory", LongOpt.REQUIRED_ARGUMENT, null, 'D');
         longopts[2] = new LongOpt("create", LongOpt.NO_ARGUMENT, null, 'c');
@@ -33,11 +37,15 @@ public class Main {
         longopts[5] = new LongOpt("group", LongOpt.REQUIRED_ARGUMENT, null, 'g');
         longopts[6] = new LongOpt("mode", LongOpt.REQUIRED_ARGUMENT, null, 'm');
 
-        Getopt options = new Getopt("Main", args, "F:D:cdo:g:m:", longopts);
+        final Getopt options = new Getopt("Main", args, "F:D:cdo:g:m:", longopts);
 
         ActionResource file = null;
         ActionResource directory = null;
         ActionResource resource = null;
+
+        final Logger logger = Logger.getLogger(Main.class.getName());
+        logger.addHandler(new ConsoleHandler());
+        logger.setUseParentHandlers(false);
 
         String owner = null;
         String group = null;
@@ -84,12 +92,12 @@ public class Main {
         }
 
         if (fileFlag == 0 && dirFlag == 0) {
-            System.err.println("file オプションまたは directory オプションを指定してください。");
+            logger.warning("file オプションまたは directory オプションを指定してください。");
             System.exit(1);
         }
 
         if (createFlag == 0 && (ownerFlag == 1 || groupFlag == 1 || modeFlag == 1)) {
-            System.err.println("create オプションを指定してください。");
+            logger.warning("create オプションを指定してください。");
             System.exit(1);
         }
 
@@ -99,47 +107,54 @@ public class Main {
             resource = directory;
         }
 
+        boolean status = false;
+
         if (createFlag == 1) {
             // リソース作成
-            resource.create();
-
-            if (resource.getCode() == 1) {
-                System.exit(resource.getCode());
+            try {
+                status = resource.create();
+            } catch (final IOException e) {
+                logger.warning(e.toString());
+                System.exit(1);
             }
 
             // 所有者変更
             if (ownerFlag == 1) {
-                resource.setOwner(owner);
-
-                if (resource.getCode() == 1) {
-                    System.exit(resource.getCode());
+                try {
+                    status = resource.setOwner(owner);
+                } catch (final IOException e) {
+                    logger.warning(e.toString());
+                    System.exit(1);
                 }
             }
 
             // グループ所有者変更
             if (groupFlag == 1) {
-                resource.setGroup(group);
-
-                if (resource.getCode() == 1) {
-                    System.exit(resource.getCode());
+                try {
+                    status = resource.setGroup(group);
+                } catch (final IOException e) {
+                    logger.warning(e.toString());
+                    System.exit(1);
                 }
             }
 
             // パーミッション変更
             if (modeFlag == 1) {
-                resource.setMode(mode);
-
-                if (resource.getCode() == 1) {
-                    System.exit(resource.getCode());
+                try {
+                    status = resource.setMode(mode);
+                } catch (final IOException e) {
+                    logger.warning(e.toString());
+                    System.exit(1);
                 }
             }
-
-            System.exit(resource.getCode());
         } else if (deleteFlag == 1) {
-            // リソース削除
-            resource.delete();
-            System.exit(resource.getCode());
+            status = resource.delete();
+        }
+
+        if (status) {
+            System.exit(2);
+        } else {
+            System.exit(0);
         }
     }
-
 }
