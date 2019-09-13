@@ -40,6 +40,7 @@ public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
 
         logger = Logger.getLogger(this.getClass().getName());
         logger.addHandler(new ConsoleHandler());
+        logger.setUseParentHandlers(false);
     }
 
     /**
