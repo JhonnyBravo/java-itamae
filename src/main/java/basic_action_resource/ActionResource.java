@@ -1,18 +1,19 @@
 package basic_action_resource;
 
-import status_resource.Status;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
- * リソースを作成または削除する。
+ * リソースの作成・削除と、所有者・グループ所有者・パーミッションの設定変更を実行する。
  */
-public abstract class ActionResource extends Status {
-    public abstract void create();
+public abstract class ActionResource {
+    public abstract boolean create() throws IOException;
 
-    public abstract void delete();
+    public abstract boolean delete();
 
-    public abstract void setOwner(String owner);
+    public abstract boolean setOwner(String owner) throws FileNotFoundException, IOException;
 
-    public abstract void setGroup(String group);
+    public abstract boolean setGroup(String group) throws FileNotFoundException, IOException;
 
-    public abstract void setMode(String mode);
+    public abstract boolean setMode(String mode) throws FileNotFoundException, IOException;
 }
