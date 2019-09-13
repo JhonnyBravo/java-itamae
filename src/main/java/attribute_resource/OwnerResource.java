@@ -31,6 +31,7 @@ public class OwnerResource extends AttributeResource<UserPrincipal> {
 
         logger = Logger.getLogger(this.getClass().getName());
         logger.addHandler(new ConsoleHandler());
+        logger.setUseParentHandlers(false);
     }
 
     /**
