@@ -31,6 +31,7 @@ public class GroupResource extends AttributeResource<GroupPrincipal> {
 
         logger = Logger.getLogger(this.getClass().getName());
         logger.addHandler(new ConsoleHandler());
+        logger.setUseParentHandlers(false);
     }
 
     /**
