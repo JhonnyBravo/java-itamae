@@ -1,7 +1,11 @@
 package basic_action_resource;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
 
 import attribute_resource.AttributeResource;
 import attribute_resource.GroupResource;
@@ -9,123 +13,176 @@ import attribute_resource.ModeResource;
 import attribute_resource.OwnerResource;
 
 /**
- * ディレクトリを作成または削除する。
+ * ディレクトリの作成・削除と、所有者・グループ所有者・パーミッションの設定変更を実行する。
  */
 public class DirectoryResource extends ActionResource {
-    private String path;
-    private File file;
-    private AttributeResource attribute;
+    private final String path;
+    private final File file;
     private FilenameFilter filter;
+
+    private final Logger logger;
+    private AttributeResource<?> attribute;
 
     /**
      * @param path 操作対象とするディレクトリのパスを指定する。
      */
     public DirectoryResource(String path) {
         this.path = path;
-        this.file = new File(path);
-        this.filter = null;
+        file = new File(path);
+        filter = null;
+
+        logger = Logger.getLogger(this.getClass().getName());
+        logger.addHandler(new ConsoleHandler());
+        logger.setUseParentHandlers(false);
     }
 
     /**
      * ディレクトリを作成する。
-     * 
-     * @see basic_action_resource.ActionResource#create()
+     *
+     * @return status
+     *         <ul>
+     *         <li>true: ディレクトリが作成されたことを表す。</li>
+     *         <li>false: ディレクトリが作成されなかったことを表す。</li>
+     *         </ul>
      */
     @Override
-    public void create() {
-        this.initStatus();
+    public boolean create() {
+        boolean status = false;
 
-        if (!this.file.isDirectory()) {
-            System.out.println(this.path + " を作成します。");
-            this.file.mkdirs();
-            this.setCode(2);
+        if (!file.isDirectory()) {
+            logger.info(path + " を作成します。");
+            status = file.mkdirs();
         }
+
+        return status;
     }
 
     /**
      * ディレクトリを削除する。
-     * 
-     * @see basic_action_resource.ActionResource#delete()
+     *
+     * @return status
+     *         <ul>
+     *         <li>true: ディレクトリが削除されたことを表す。</li>
+     *         <li>false: ディレクトリが削除されなかったことを表す。</li>
+     *         </ul>
      */
     @Override
-    public void delete() {
-        this.initStatus();
+    public boolean delete() {
+        boolean status = false;
 
-        if (this.file.isDirectory()) {
-            System.out.println(this.path + " を削除します。");
-            this.deleteDirectory(this.file);
-            this.setCode(2);
+        if (file.isDirectory()) {
+            logger.info(path + " を削除します。");
+            status = deleteDirectory(file);
         }
+
+        return status;
     }
 
     /**
      * ディレクトリを再帰的に削除する。
-     * 
+     *
      * @param directory 削除対象とするディレクトリの File オブジェクトを指定する。
+     * @return status
+     *         <ul>
+     *         <li>true: ディレクトリが削除されたことを表す。</li>
+     *         <li>false: ディレクトリが削除されなかったことを表す。</li>
+     *         </ul>
      */
-    private void deleteDirectory(File directory) {
-        for (File f : directory.listFiles()) {
+    private boolean deleteDirectory(File directory) {
+        boolean status = false;
+
+        for (final File f : directory.listFiles()) {
             deleteDirectory(f);
         }
 
-        directory.delete();
-    }
-
-    @Override
-    public void setOwner(String owner) {
-        this.initStatus();
-
-        if (!this.file.isDirectory()) {
-            this.errorTerminate(this.path + " はディレクトリではありません。");
-            return;
-        }
-
-        attribute = new OwnerResource(this.path, owner);
-        attribute.setAttribute();
-        this.setCode(attribute.getCode());
-    }
-
-    @Override
-    public void setGroup(String group) {
-        this.initStatus();
-
-        if (!this.file.isDirectory()) {
-            this.errorTerminate(this.path + " はディレクトリではありません。");
-            return;
-        }
-
-        attribute = new GroupResource(this.path, group);
-        attribute.setAttribute();
-        this.setCode(attribute.getCode());
-    }
-
-    @Override
-    public void setMode(String mode) {
-        this.initStatus();
-
-        if (!this.file.isDirectory()) {
-            this.errorTerminate(this.path + " はディレクトリではありません。");
-            return;
-        }
-
-        attribute = new ModeResource(this.path, mode);
-        attribute.setAttribute();
-        this.setCode(attribute.getCode());
+        status = directory.delete();
+        return status;
     }
 
     /**
+     * ディレクトリの所有者を変更する。
+     *
+     * @param owner 新しい所有者として設定するユーザ名を指定する。
+     * @return status
+     *         <ul>
+     *         <li>true: 所有者が変更されたことを表す。</li>
+     *         <li>false: 所有者が変更されなかったことを表す。</li>
+     *         </ul>
+     */
+    @Override
+    public boolean setOwner(String owner) throws FileNotFoundException, IOException {
+        boolean status = false;
+
+        if (!file.isDirectory()) {
+            logger.warning(path + " はディレクトリではありません。");
+            return status;
+        } else {
+            attribute = new OwnerResource(path, owner);
+            status = attribute.setAttribute();
+        }
+
+        return status;
+    }
+
+    /**
+     * ディレクトリのグループ所有者を変更する。
+     *
+     * @param group 新しいグループ所有者として設定するグループ名を指定する。
+     * @return status
+     *         <ul>
+     *         <li>true: グループ所有者が変更されたことを表す。</li>
+     *         <li>false: グループ所有者が変更されなかったことを表す。</li>
+     *         </ul>
+     */
+    @Override
+    public boolean setGroup(String group) throws FileNotFoundException, IOException {
+        boolean status = false;
+
+        if (!file.isDirectory()) {
+            logger.warning(path + " はディレクトリではありません。");
+        } else {
+            attribute = new GroupResource(path, group);
+            status = attribute.setAttribute();
+        }
+
+        return status;
+    }
+
+    /**
+     * ディレクトリのパーミッション設定を変更する。
+     *
+     * @param mode 新しく設定するパーミッション値を 3 桁の整数で指定する。
+     * @return status
+     *         <ul>
+     *         <li>true: パーミッションが変更されたことを表す。</li>
+     *         <li>false: パーミッションが変更されなかったことを表す。</li>
+     *         </ul>
+     */
+    @Override
+    public boolean setMode(String mode) throws FileNotFoundException, IOException {
+        boolean status = false;
+
+        if (!file.isDirectory()) {
+            logger.warning(path + " はディレクトリではありません。");
+        } else {
+            attribute = new ModeResource(path, mode);
+            status = attribute.setAttribute();
+        }
+
+        return status;
+    }
+
+    /**
+     * FileFilter を生成する。
+     *
      * @param extension 取得対象とするファイルの拡張子を指定する。
      */
     public void setFileFilter(String extension) {
-        this.filter = new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                if (name.toLowerCase().endsWith(extension)) {
-                    return true;
-                } else {
-                    return false;
-                }
+        filter = (dir, name) -> {
+            if (name.toLowerCase().endsWith(extension)) {
+                return true;
+            } else {
+                return false;
             }
         };
     }
@@ -136,21 +193,16 @@ public class DirectoryResource extends ActionResource {
     public File[] getFiles() {
         File[] result = null;
 
-        this.initStatus();
-
-        if (!this.file.isDirectory()) {
-            this.errorTerminate(this.path + " が見つかりません。");
+        if (!file.isDirectory()) {
+            logger.warning(path + " が見つかりません。");
+            result = new File[0];
             return result;
         }
 
-        if (this.filter == null) {
-            result = this.file.listFiles();
+        if (filter == null) {
+            result = file.listFiles();
         } else {
-            result = this.file.listFiles(filter);
-        }
-
-        if (result.length > 0) {
-            this.setCode(2);
+            result = file.listFiles(filter);
         }
 
         return result;
