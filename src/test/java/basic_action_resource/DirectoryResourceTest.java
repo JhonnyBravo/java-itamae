@@ -32,27 +32,27 @@ public class DirectoryResourceTest {
         }
 
         @Test
-        public void 単一階層のディレクトリを作成できて終了コードが2であること() {
-            resource.create();
+        public void 単一階層のディレクトリを作成できて終了ステータスがtrueであること() throws IOException {
+            final boolean status = resource.create();
             assertThat(file.isDirectory(), is(true));
-            assertThat(resource.getCode(), is(2));
+            assertThat(status, is(true));
         }
 
         @Test
-        public void 複数階層のディレクトリを一括作成できて終了コードが2であること() {
+        public void 複数階層のディレクトリを一括作成できて終了ステータスがtrueであること() throws IOException {
             file = new File("testDir/sub1/sub2");
             resource = new DirectoryResource("testDir/sub1/sub2");
-            resource.create();
+            final boolean status = resource.create();
 
             assertThat(file.isDirectory(), is(true));
-            assertThat(resource.getCode(), is(2));
+            assertThat(status, is(true));
         }
 
         @Test
-        public void 何も実行せず終了コードが0であること() {
-            resource.delete();
+        public void 何も実行せず終了ステータスがfalseであること() {
+            final boolean status = resource.delete();
             assertThat(file.isDirectory(), is(false));
-            assertThat(resource.getCode(), is(0));
+            assertThat(status, is(false));
         }
     }
 
@@ -76,29 +76,29 @@ public class DirectoryResourceTest {
         }
 
         @Test
-        public void 単一階層のディレクトリを削除できて終了コードが2であること() {
-            resource.delete();
+        public void 単一階層のディレクトリを削除できて終了ステータスがtrueであること() {
+            final boolean status = resource.delete();
             assertThat(file.isDirectory(), is(false));
-            assertThat(resource.getCode(), is(2));
+            assertThat(status, is(true));
         }
 
         @Test
-        public void 複数階層のディレクトリを一括削除できて終了コードが2であること() {
+        public void 複数階層のディレクトリを一括削除できて終了ステータスがtrueであること() {
             file = new File("testDir/sub1/sub2");
             file.mkdirs();
 
-            resource.delete();
+            final boolean status = resource.delete();
 
             file = new File("testDir");
             assertThat(file.isDirectory(), is(false));
-            assertThat(resource.getCode(), is(2));
+            assertThat(status, is(true));
         }
 
         @Test
-        public void 何も実行せず終了コードが0であること() {
-            resource.create();
+        public void 何も実行せず終了ステータスがfalseであること() throws IOException {
+            final boolean status = resource.create();
             assertThat(file.isDirectory(), is(true));
-            assertThat(resource.getCode(), is(0));
+            assertThat(status, is(false));
         }
     }
 
@@ -111,57 +111,54 @@ public class DirectoryResourceTest {
         }
 
         @Test
-        public void 拡張子を指定しない場合にディレクトリ直下に存在するファイルを全て一覧取得できて終了コードが2であること() {
-            File[] files = resource.getFiles();
+        public void 拡張子を指定しない場合にディレクトリ直下に存在するファイルを全て一覧取得できること() {
+            final File[] files = resource.getFiles();
             assertThat(files.length, is(3));
-            assertThat(resource.getCode(), is(2));
 
-            for (File f : files) {
+            for (final File f : files) {
                 try {
                     System.out.println(f.getCanonicalPath());
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     fail("エラーが発生しました。 " + e);
                 }
             }
         }
 
         @Test
-        public void 拡張子を指定した場合に該当するファイルのみを一覧取得できて終了コードがで2あること() {
+        public void 拡張子を指定した場合に該当するファイルのみを一覧取得できること() {
             resource.setFileFilter("txt");
-            File[] files = resource.getFiles();
+            final File[] files = resource.getFiles();
             assertThat(files.length, is(2));
-            assertThat(resource.getCode(), is(2));
 
-            for (File f : files) {
+            for (final File f : files) {
                 try {
                     System.out.println(f.getCanonicalPath());
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     fail("エラーが発生しました。 " + e);
                 }
             }
         }
 
         @Test
-        public void ファイルが存在しない場合に終了コードが0であること() {
+        public void ファイルが存在しない場合に空の配列が返ること() {
             resource.setFileFilter("md");
-            File[] files = resource.getFiles();
+            final File[] files = resource.getFiles();
             assertThat(files.length, is(0));
-            assertThat(resource.getCode(), is(0));
 
-            for (File f : files) {
+            for (final File f : files) {
                 try {
                     System.out.println(f.getCanonicalPath());
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     fail("エラーが発生しました。 " + e);
                 }
             }
         }
 
         @Test
-        public void ディレクトリが存在しない場合にエラーとなり終了コードが1であること() {
+        public void ディレクトリが存在しない場合にエラーとなり空の配列が返ること() {
             resource = new DirectoryResource("NotExist");
-            resource.getFiles();
-            assertThat(resource.getCode(), is(1));
+            final File[] files = resource.getFiles();
+            assertThat(files.length, is(0));
         }
     }
 }
