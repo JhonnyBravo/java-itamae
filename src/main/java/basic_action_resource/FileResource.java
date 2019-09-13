@@ -1,7 +1,10 @@
 package basic_action_resource;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
 
 import attribute_resource.AttributeResource;
 import attribute_resource.GroupResource;
@@ -9,98 +12,144 @@ import attribute_resource.ModeResource;
 import attribute_resource.OwnerResource;
 
 /**
- * ファイルを作成または削除する。
+ * ファイルの作成・削除と、所有者・グループ所有者・パーミッションの設定変更を実行する。
  */
 public class FileResource extends ActionResource {
-    private String path;
-    private File file;
-    private AttributeResource attribute;
+    private final String path;
+    private final File file;
+
+    private final Logger logger;
+    private AttributeResource<?> attribute;
 
     /**
      * @param path 操作対象とするファイルのパスを指定する。
      */
     public FileResource(String path) {
         this.path = path;
-        this.file = new File(path);
+        file = new File(path);
+
+        logger = Logger.getLogger(this.getClass().getName());
+        logger.addHandler(new ConsoleHandler());
+        logger.setUseParentHandlers(false);
     }
 
     /**
      * ファイルを新規作成する。
-     * 
-     * @see basic_action_resource.ActionResource#create()
+     *
+     * @return status
+     *         <ul>
+     *         <li>true: ファイルが作成されたことを表す。</li>
+     *         <li>false: ファイルが作成されなかったことを表す。</li>
+     *         </ul>
      */
     @Override
-    public void create() {
-        this.initStatus();
+    public boolean create() throws IOException {
+        boolean status = false;
 
-        if (!this.file.isFile()) {
-            System.out.println(this.path + " を作成します。");
+        if (!file.isFile()) {
+            logger.info(path + " を作成します。");
 
             try {
-                this.file.createNewFile();
-                this.setCode(2);
-            } catch (IOException e) {
-                this.errorTerminate("エラーが発生しました。" + e);
+                status = file.createNewFile();
+            } catch (final IOException e) {
+                logger.throwing(this.getClass().getName(), "create", e);
+                throw e;
             }
         }
+
+        return status;
     }
 
     /**
      * ファイルを削除する。
-     * 
-     * @see basic_action_resource.ActionResource#delete()
+     *
+     * @return status
+     *         <ul>
+     *         <li>true: ファイルが削除されたことを表す。</li>
+     *         <li>true: ファイルが削除されなかったことを表す。</li>
+     *         </ul>
      */
     @Override
-    public void delete() {
-        this.initStatus();
+    public boolean delete() {
+        boolean status = false;
 
-        if (this.file.isFile()) {
-            System.out.println(this.path + " を削除します。");
-            this.file.delete();
-            this.setCode(2);
+        if (file.isFile()) {
+            logger.info(path + " を削除します。");
+            status = file.delete();
         }
+
+        return status;
     }
 
+    /**
+     * ファイルの所有者を変更する。
+     *
+     * @param owner 新しい所有者として設定するユーザ名を指定する。
+     * @return status
+     *         <ul>
+     *         <li>true: 所有者が変更されたことを表す。</li>
+     *         <li>true: 所有者が変更されなかったことを表す。</li>
+     *         </ul>
+     */
     @Override
-    public void setOwner(String owner) {
-        this.initStatus();
+    public boolean setOwner(String owner) throws FileNotFoundException, IOException {
+        boolean status = false;
 
-        if (!this.file.isFile()) {
-            this.errorTerminate(this.path + " はファイルではありません。");
-            return;
+        if (!file.isFile()) {
+            logger.warning(path + " はファイルではありません。");
+        } else {
+            attribute = new OwnerResource(path, owner);
+            status = attribute.setAttribute();
         }
 
-        attribute = new OwnerResource(this.path, owner);
-        attribute.setAttribute();
-        this.setCode(attribute.getCode());
+        return status;
     }
 
+    /**
+     * ファイルのグループ所有者を変更する。
+     *
+     * @param group 新しいグループ所有者として設定するグループ名を指定する。
+     * @return status
+     *         <ul>
+     *         <li>true: グループ所有者が変更されたことを表す。</li>
+     *         <li>false: グループ所有者が変更されなかったことを表す。</li>
+     *         </ul>
+     */
     @Override
-    public void setGroup(String group) {
-        this.initStatus();
+    public boolean setGroup(String group) throws FileNotFoundException, IOException {
+        boolean status = false;
 
-        if (!this.file.isFile()) {
-            this.errorTerminate(this.path + " はファイルではありません。");
-            return;
+        if (!file.isFile()) {
+            logger.warning(path + " はファイルではありません。");
+        } else {
+            attribute = new GroupResource(path, group);
+            status = attribute.setAttribute();
         }
 
-        attribute = new GroupResource(this.path, group);
-        attribute.setAttribute();
-        this.setCode(attribute.getCode());
+        return status;
     }
 
+    /**
+     * ファイルのパーミッション設定を変更する。
+     *
+     * @param mode 新しく設定するパーミッション値を 3 桁の整数で指定する。
+     * @return status
+     *         <ul>
+     *         <li>パーミッション設定が変更されたことを表す。</li>
+     *         <li>パーミッション設定が変更されなかったことを表す。</li>
+     *         </ul>
+     */
     @Override
-    public void setMode(String mode) {
-        this.initStatus();
+    public boolean setMode(String mode) throws FileNotFoundException, IOException {
+        boolean status = false;
 
-        if (!this.file.isFile()) {
-            this.errorTerminate(this.path + " はファイルではありません。");
-            return;
+        if (!file.isFile()) {
+            logger.warning(path + " はファイルではありません。");
+        } else {
+            attribute = new ModeResource(path, mode);
+            status = attribute.setAttribute();
         }
 
-        attribute = new ModeResource(this.path, mode);
-        attribute.setAttribute();
-        this.setCode(attribute.getCode());
+        return status;
     }
-
 }
