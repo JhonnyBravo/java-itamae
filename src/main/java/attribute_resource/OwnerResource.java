@@ -7,13 +7,14 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ファイルまたはディレクトリの所有者を管理する。
  */
-public class OwnerResource extends AttributeResource<UserPrincipal> {
+public class OwnerResource implements AttributeResource<UserPrincipal> {
     private final Logger logger;
 
     private final String path;
@@ -28,10 +29,7 @@ public class OwnerResource extends AttributeResource<UserPrincipal> {
         this.path = path;
         file = new File(path);
         this.owner = owner;
-
-        logger = Logger.getLogger(this.getClass().getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
+        logger = LoggerFactory.getLogger(this.getClass());
     }
 
     /**
@@ -41,7 +39,7 @@ public class OwnerResource extends AttributeResource<UserPrincipal> {
      * @see attribute_resource.AttributeResource#createAttribute()
      */
     @Override
-    protected UserPrincipal createAttribute() throws IOException {
+    public UserPrincipal createAttribute() throws IOException {
         final UserPrincipalLookupService upls = FileSystems.getDefault().getUserPrincipalLookupService();
         final UserPrincipal up = upls.lookupPrincipalByName(owner);
 
@@ -50,12 +48,11 @@ public class OwnerResource extends AttributeResource<UserPrincipal> {
 
     /**
      * @return UserPrincipal ファイルまたはディレクトリに現在の所有者として設定されている UserPrincipal を返す。
-     * @throws IOException           {@link java.io.IOException}
-     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     * @throws IOException {@link java.io.IOException}
      * @see attribute_resource.AttributeResource#getAttribute()
      */
     @Override
-    protected UserPrincipal getAttribute() throws FileNotFoundException, IOException {
+    public UserPrincipal getAttribute() throws IOException {
         if (!file.exists()) {
             throw new FileNotFoundException(path + " が見つかりません。");
         }
@@ -67,8 +64,7 @@ public class OwnerResource extends AttributeResource<UserPrincipal> {
     /**
      * ファイルまたはディレクトリの所有者を変更する。
      *
-     * @throws IOException           {@link java.io.IOException}
-     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     * @throws IOException {@link java.io.IOException}
      *
      * @see attribute_resource.AttributeResource#setAttribute()
      * @return status
@@ -78,7 +74,7 @@ public class OwnerResource extends AttributeResource<UserPrincipal> {
      *         </ul>
      */
     @Override
-    public boolean setAttribute() throws FileNotFoundException, IOException {
+    public boolean setAttribute() throws IOException {
         boolean status = false;
 
         final UserPrincipal curOwner = getAttribute();
@@ -88,16 +84,10 @@ public class OwnerResource extends AttributeResource<UserPrincipal> {
             return status;
         }
 
-        logger.entering(this.getClass().getName(), "setAttribute");
         logger.info("所有者を変更します。");
+        Files.setOwner(file.toPath(), newOwner);
 
-        try {
-            Files.setOwner(file.toPath(), newOwner);
-            status = true;
-            return status;
-        } catch (final IOException e) {
-            logger.throwing(this.getClass().getName(), "setAttribute", e);
-            throw e;
-        }
+        status = true;
+        return status;
     }
 }
