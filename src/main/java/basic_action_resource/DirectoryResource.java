@@ -1,11 +1,10 @@
 package basic_action_resource;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import attribute_resource.AttributeResource;
 import attribute_resource.GroupResource;
@@ -15,7 +14,7 @@ import attribute_resource.OwnerResource;
 /**
  * ディレクトリの作成・削除と、所有者・グループ所有者・パーミッションの設定変更を実行する。
  */
-public class DirectoryResource extends ActionResource {
+public class DirectoryResource implements ActionResource {
     private final String path;
     private final File file;
     private FilenameFilter filter;
@@ -30,10 +29,7 @@ public class DirectoryResource extends ActionResource {
         this.path = path;
         file = new File(path);
         filter = null;
-
-        logger = Logger.getLogger(this.getClass().getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
+        logger = LoggerFactory.getLogger(this.getClass());
     }
 
     /**
@@ -108,13 +104,14 @@ public class DirectoryResource extends ActionResource {
      *         <li>true: 所有者が変更されたことを表す。</li>
      *         <li>false: 所有者が変更されなかったことを表す。</li>
      *         </ul>
+     * @throws Exception {@link java.lang.Exception}
      */
     @Override
-    public boolean setOwner(String owner) throws FileNotFoundException, IOException {
+    public boolean setOwner(String owner) throws Exception {
         boolean status = false;
 
         if (!file.isDirectory()) {
-            logger.warning(path + " はディレクトリではありません。");
+            logger.warn(path + " はディレクトリではありません。");
             return status;
         } else {
             attribute = new OwnerResource(path, owner);
@@ -133,13 +130,14 @@ public class DirectoryResource extends ActionResource {
      *         <li>true: グループ所有者が変更されたことを表す。</li>
      *         <li>false: グループ所有者が変更されなかったことを表す。</li>
      *         </ul>
+     * @throws Exception {@link java.lang.Exception}
      */
     @Override
-    public boolean setGroup(String group) throws FileNotFoundException, IOException {
+    public boolean setGroup(String group) throws Exception {
         boolean status = false;
 
         if (!file.isDirectory()) {
-            logger.warning(path + " はディレクトリではありません。");
+            logger.warn(path + " はディレクトリではありません。");
         } else {
             attribute = new GroupResource(path, group);
             status = attribute.setAttribute();
@@ -157,13 +155,14 @@ public class DirectoryResource extends ActionResource {
      *         <li>true: パーミッションが変更されたことを表す。</li>
      *         <li>false: パーミッションが変更されなかったことを表す。</li>
      *         </ul>
+     * @throws Exception {@link java.lang.Exception}
      */
     @Override
-    public boolean setMode(String mode) throws FileNotFoundException, IOException {
+    public boolean setMode(String mode) throws Exception {
         boolean status = false;
 
         if (!file.isDirectory()) {
-            logger.warning(path + " はディレクトリではありません。");
+            logger.warn(path + " はディレクトリではありません。");
         } else {
             attribute = new ModeResource(path, mode);
             status = attribute.setAttribute();
@@ -194,7 +193,7 @@ public class DirectoryResource extends ActionResource {
         File[] result = null;
 
         if (!file.isDirectory()) {
-            logger.warning(path + " が見つかりません。");
+            logger.warn(path + " が見つかりません。");
             result = new File[0];
             return result;
         }
