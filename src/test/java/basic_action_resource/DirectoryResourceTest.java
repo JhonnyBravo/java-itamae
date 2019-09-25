@@ -32,14 +32,14 @@ public class DirectoryResourceTest {
         }
 
         @Test
-        public void 単一階層のディレクトリを作成できて終了ステータスがtrueであること() throws IOException {
+        public void 単一階層のディレクトリを作成できて終了ステータスがtrueであること() throws Exception {
             final boolean status = resource.create();
             assertThat(file.isDirectory(), is(true));
             assertThat(status, is(true));
         }
 
         @Test
-        public void 複数階層のディレクトリを一括作成できて終了ステータスがtrueであること() throws IOException {
+        public void 複数階層のディレクトリを一括作成できて終了ステータスがtrueであること() throws Exception {
             file = new File("testDir/sub1/sub2");
             resource = new DirectoryResource("testDir/sub1/sub2");
             final boolean status = resource.create();
@@ -95,7 +95,7 @@ public class DirectoryResourceTest {
         }
 
         @Test
-        public void 何も実行せず終了ステータスがfalseであること() throws IOException {
+        public void 何も実行せず終了ステータスがfalseであること() throws Exception {
             final boolean status = resource.create();
             assertThat(file.isDirectory(), is(true));
             assertThat(status, is(false));
