@@ -7,13 +7,14 @@ import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ファイルまたはディレクトリのパーミッション設定を管理する。
  */
-public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
+public class ModeResource implements AttributeResource<Set<PosixFilePermission>> {
     private final Logger logger;
     private final String path;
     private final String mode;
@@ -37,10 +38,7 @@ public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
         this.path = path;
         file = new File(path);
         this.mode = mode;
-
-        logger = Logger.getLogger(this.getClass().getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
+        logger = LoggerFactory.getLogger(this.getClass());
     }
 
     /**
@@ -49,12 +47,11 @@ public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
      * @see attribute_resource.AttributeResource#createAttribute()
      */
     @Override
-    protected Set<PosixFilePermission> createAttribute() {
+    public Set<PosixFilePermission> createAttribute() {
         Set<PosixFilePermission> permission = null;
 
         if (!mode.matches("[0-7]{3}")) {
-            logger.entering(this.getClass().getName(), "createAttribute");
-            logger.warning("mode の値が不正です。 0 から 7 までの整数のみで構成された 3 桁の数列を指定してください。");
+            logger.warn("mode の値が不正です。 0 から 7 までの整数のみで構成された 3 桁の数列を指定してください。");
             return permission;
         }
 
@@ -69,13 +66,11 @@ public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
     /**
      * @return Set&lt;PosixFilePermission&gt; ファイルまたはディレクトリに現在のパーミッションとして設定されている
      *         PosixFilePermission を取得する。
-     * @throws IOException           {@link java.io.IOException}
-     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
-     *
+     * @throws IOException {@link java.io.IOException}
      * @see attribute_resource.AttributeResource#getAttribute()
      */
     @Override
-    protected Set<PosixFilePermission> getAttribute() throws FileNotFoundException, IOException {
+    public Set<PosixFilePermission> getAttribute() throws IOException {
         if (!file.exists()) {
             throw new FileNotFoundException(path + " が見つかりません。");
         }
@@ -87,8 +82,7 @@ public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
     /**
      * ファイルまたはディレクトリのパーミッション設定を変更する。
      *
-     * @throws IOException           {@link java.io.IOException}
-     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     * @throws IOException {@link java.io.IOException}
      *
      * @see attribute_resource.AttributeResource#setAttribute()
      * @return status
@@ -98,14 +92,12 @@ public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
      *         </ul>
      */
     @Override
-    public boolean setAttribute() throws FileNotFoundException, IOException {
+    public boolean setAttribute() throws IOException {
         boolean status = false;
-        logger.entering(this.getClass().getName(), "setAttribute");
-
         final String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
-            logger.warning(osName + " ではパーミッションの取得 / 設定はサポートしていません。");
+            logger.warn(osName + " ではパーミッションの取得 / 設定はサポートしていません。");
             return status;
         }
 
@@ -121,14 +113,9 @@ public class ModeResource extends AttributeResource<Set<PosixFilePermission>> {
         }
 
         logger.info("パーミッションを変更します。");
+        Files.setPosixFilePermissions(file.toPath(), newPermission);
 
-        try {
-            Files.setPosixFilePermissions(file.toPath(), newPermission);
-            status = true;
-            return status;
-        } catch (final IOException e) {
-            logger.throwing(this.getClass().getName(), "setAttribute", e);
-            throw e;
-        }
+        status = true;
+        return status;
     }
 }
