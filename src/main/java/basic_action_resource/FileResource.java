@@ -1,10 +1,10 @@
 package basic_action_resource;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import attribute_resource.AttributeResource;
 import attribute_resource.GroupResource;
@@ -14,7 +14,7 @@ import attribute_resource.OwnerResource;
 /**
  * ファイルの作成・削除と、所有者・グループ所有者・パーミッションの設定変更を実行する。
  */
-public class FileResource extends ActionResource {
+public class FileResource implements ActionResource {
     private final String path;
     private final File file;
 
@@ -27,10 +27,7 @@ public class FileResource extends ActionResource {
     public FileResource(String path) {
         this.path = path;
         file = new File(path);
-
-        logger = Logger.getLogger(this.getClass().getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
+        logger = LoggerFactory.getLogger(this.getClass());
     }
 
     /**
@@ -41,6 +38,7 @@ public class FileResource extends ActionResource {
      *         <li>true: ファイルが作成されたことを表す。</li>
      *         <li>false: ファイルが作成されなかったことを表す。</li>
      *         </ul>
+     * @throws IOException {@link java.io.IOException}
      */
     @Override
     public boolean create() throws IOException {
@@ -48,13 +46,7 @@ public class FileResource extends ActionResource {
 
         if (!file.isFile()) {
             logger.info(path + " を作成します。");
-
-            try {
-                status = file.createNewFile();
-            } catch (final IOException e) {
-                logger.throwing(this.getClass().getName(), "create", e);
-                throw e;
-            }
+            status = file.createNewFile();
         }
 
         return status;
@@ -90,13 +82,14 @@ public class FileResource extends ActionResource {
      *         <li>true: 所有者が変更されたことを表す。</li>
      *         <li>true: 所有者が変更されなかったことを表す。</li>
      *         </ul>
+     * @throws Exception {@link java.lang.Exception}
      */
     @Override
-    public boolean setOwner(String owner) throws FileNotFoundException, IOException {
+    public boolean setOwner(String owner) throws Exception {
         boolean status = false;
 
         if (!file.isFile()) {
-            logger.warning(path + " はファイルではありません。");
+            logger.warn(path + " はファイルではありません。");
         } else {
             attribute = new OwnerResource(path, owner);
             status = attribute.setAttribute();
@@ -114,13 +107,14 @@ public class FileResource extends ActionResource {
      *         <li>true: グループ所有者が変更されたことを表す。</li>
      *         <li>false: グループ所有者が変更されなかったことを表す。</li>
      *         </ul>
+     * @throws Exception {@link java.lang.Exception}
      */
     @Override
-    public boolean setGroup(String group) throws FileNotFoundException, IOException {
+    public boolean setGroup(String group) throws Exception {
         boolean status = false;
 
         if (!file.isFile()) {
-            logger.warning(path + " はファイルではありません。");
+            logger.warn(path + " はファイルではありません。");
         } else {
             attribute = new GroupResource(path, group);
             status = attribute.setAttribute();
@@ -138,13 +132,14 @@ public class FileResource extends ActionResource {
      *         <li>パーミッション設定が変更されたことを表す。</li>
      *         <li>パーミッション設定が変更されなかったことを表す。</li>
      *         </ul>
+     * @throws Exception {@link java.lang.Exception}
      */
     @Override
-    public boolean setMode(String mode) throws FileNotFoundException, IOException {
+    public boolean setMode(String mode) throws Exception {
         boolean status = false;
 
         if (!file.isFile()) {
-            logger.warning(path + " はファイルではありません。");
+            logger.warn(path + " はファイルではありません。");
         } else {
             attribute = new ModeResource(path, mode);
             status = attribute.setAttribute();
