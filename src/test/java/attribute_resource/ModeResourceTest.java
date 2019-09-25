@@ -43,8 +43,7 @@ public class ModeResourceTest {
         }
 
         @Test
-        public void Windowsでディレクトリのパーミッション設定を変更しようとした場合にエラーとなり終了ステータスがfalseであること()
-                throws FileNotFoundException, IOException {
+        public void Windowsでディレクトリのパーミッション設定を変更しようとした場合にエラーとなり終了ステータスがfalseであること() throws Exception {
             if (isWindows()) {
                 final File file = new File("testDir");
                 file.mkdir();
@@ -58,8 +57,7 @@ public class ModeResourceTest {
         }
 
         @Test
-        public void Windowsでファイルのパーミッション設定を変更しようとした場合にエラーとなり終了ステータスがfalseであること()
-                throws FileNotFoundException, IOException {
+        public void Windowsでファイルのパーミッション設定を変更しようとした場合にエラーとなり終了ステータスがfalseであること() throws Exception {
             if (isWindows()) {
                 final File file = new File("test.txt");
 
@@ -79,8 +77,7 @@ public class ModeResourceTest {
         }
 
         @Test(expected = FileNotFoundException.class)
-        public void 存在しないディレクトリのパーミッション設定を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること()
-                throws FileNotFoundException, IOException {
+        public void 存在しないディレクトリのパーミッション設定を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること() throws Exception {
             if (!isWindows()) {
                 final AttributeResource<?> ar = new ModeResource("testDir", "640");
                 ar.setAttribute();
@@ -88,8 +85,7 @@ public class ModeResourceTest {
         }
 
         @Test(expected = FileNotFoundException.class)
-        public void 存在しないファイルのパーミッション設定を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること()
-                throws FileNotFoundException, IOException {
+        public void 存在しないファイルのパーミッション設定を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること() throws Exception {
             if (!isWindows()) {
                 final AttributeResource<?> ar = new ModeResource("test.txt", "640");
                 ar.setAttribute();
@@ -188,7 +184,7 @@ public class ModeResourceTest {
         }
 
         @Theory
-        public void ディレクトリのパーミッション設定を変更できて終了ステータスがtrueであること(String mode) throws FileNotFoundException, IOException {
+        public void ディレクトリのパーミッション設定を変更できて終了ステータスがtrueであること(String mode) throws Exception {
             if (!isWindows()) {
                 System.out.println("パーミッション: " + mode);
 
@@ -199,8 +195,7 @@ public class ModeResourceTest {
         }
 
         @Theory
-        public void 新しいパーミッションとして設定しようとしている値が現在のパーミッション設定と同一である場合に終了ステータスがfalseであること(String mode)
-                throws FileNotFoundException, IOException {
+        public void 新しいパーミッションとして設定しようとしている値が現在のパーミッション設定と同一である場合に終了ステータスがfalseであること(String mode) throws Exception {
             if (!isWindows()) {
                 System.out.println("パーミッション: " + mode);
 
@@ -303,7 +298,7 @@ public class ModeResourceTest {
         }
 
         @Theory
-        public void ファイルのパーミッション設定を変更できて終了ステータスがtrueであること(String mode) throws FileNotFoundException, IOException {
+        public void ファイルのパーミッション設定を変更できて終了ステータスがtrueであること(String mode) throws Exception {
             if (!isWindows()) {
                 System.out.println("パーミッション: " + mode);
 
@@ -314,8 +309,7 @@ public class ModeResourceTest {
         }
 
         @Theory
-        public void 新しいパーミッションとして設定しようとしている値が現在のパーミッション設定と同一である場合に終了ステータスがfalseであること(String mode)
-                throws FileNotFoundException, IOException {
+        public void 新しいパーミッションとして設定しようとしている値が現在のパーミッション設定と同一である場合に終了ステータスがfalseであること(String mode) throws Exception {
             if (!isWindows()) {
                 System.out.println("パーミッション: " + mode);
 
@@ -388,7 +382,7 @@ public class ModeResourceTest {
         }
 
         @Theory
-        public void 不正なパーミッションを指定した場合にエラーとなり終了ステータスがfalseであること(String mode) throws FileNotFoundException, IOException {
+        public void 不正なパーミッションを指定した場合にエラーとなり終了ステータスがfalseであること(String mode) throws Exception {
             if (!isWindows()) {
                 System.out.println("パーミッション: " + mode);
 
