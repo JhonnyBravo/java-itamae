@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import context_resource.ContextResource;
-import context_resource.PropertiesResource;
+import content_resource.ContentResource;
+import property_resource.PropertyResource;
 
 @RunWith(Enclosed.class)
 public class OwnerResourceTest {
@@ -25,11 +25,9 @@ public class OwnerResourceTest {
 
         @Before
         public void setUp() throws Exception {
-            final ContextResource cr = new PropertiesResource("src/test/resources/test.properties");
-            cr.openContext();
-            final Properties p = (Properties) cr.getContext();
-            ownerName = p.getProperty("ownerName");
-            cr.closeContext();
+            final ContentResource<Map<String, String>> cr = new PropertyResource("src/test/resources/test.properties");
+            final Map<String, String> properties = cr.getContent();
+            ownerName = properties.get("ownerName");
 
             file.mkdir();
         }
@@ -40,22 +38,20 @@ public class OwnerResourceTest {
         }
 
         @Test
-        public void ディレクトリ所有者の変更ができて終了ステータスがtrueであること() throws FileNotFoundException, IOException {
+        public void ディレクトリ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("testDir", ownerName);
             final boolean status = ar.setAttribute();
             assertThat(status, is(true));
         }
 
         @Test(expected = IOException.class)
-        public void 新しいディレクトリ所有者として存在しないユーザの名前を指定した場合にエラーとなりIOExceptionが送出されること()
-                throws FileNotFoundException, IOException {
+        public void 新しいディレクトリ所有者として存在しないユーザの名前を指定した場合にエラーとなりIOExceptionが送出されること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("testDir", "NotExist");
             ar.setAttribute();
         }
 
         @Test
-        public void 新規設定するディレクトリ所有者のユーザ名が現在設定されているディレクトリ所有者のユーザ名と同一である場合に終了ステータスがfalseであること()
-                throws FileNotFoundException, IOException {
+        public void 新規設定するディレクトリ所有者のユーザ名が現在設定されているディレクトリ所有者のユーザ名と同一である場合に終了ステータスがfalseであること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("testDir", ownerName);
             ar.setAttribute();
             final boolean status = ar.setAttribute();
@@ -63,8 +59,7 @@ public class OwnerResourceTest {
         }
 
         @Test(expected = FileNotFoundException.class)
-        public void 存在しないディレクトリの所有者を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること()
-                throws FileNotFoundException, IOException {
+        public void 存在しないディレクトリの所有者を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("NotExist", ownerName);
             ar.setAttribute();
         }
@@ -76,11 +71,9 @@ public class OwnerResourceTest {
 
         @Before
         public void setUp() throws Exception {
-            final ContextResource cr = new PropertiesResource("src/test/resources/test.properties");
-            cr.openContext();
-            final Properties p = (Properties) cr.getContext();
-            ownerName = p.getProperty("ownerName");
-            cr.closeContext();
+            final ContentResource<Map<String, String>> cr = new PropertyResource("src/test/resources/test.properties");
+            final Map<String, String> properties = cr.getContent();
+            ownerName = properties.get("ownerName");
 
             file.createNewFile();
         }
@@ -91,22 +84,20 @@ public class OwnerResourceTest {
         }
 
         @Test
-        public void ファイル所有者の変更ができて終了ステータスがtrueであること() throws FileNotFoundException, IOException {
+        public void ファイル所有者の変更ができて終了ステータスがtrueであること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("test.txt", ownerName);
             final boolean status = ar.setAttribute();
             assertThat(status, is(true));
         }
 
         @Test(expected = IOException.class)
-        public void 新しいファイル所有者として存在しないユーザの名前を指定した場合にエラーとなりIOExceptionが送出されること()
-                throws FileNotFoundException, IOException {
+        public void 新しいファイル所有者として存在しないユーザの名前を指定した場合にエラーとなりIOExceptionが送出されること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("test.txt", "NotExist");
             ar.setAttribute();
         }
 
         @Test
-        public void 新規設定するファイル所有者のユーザ名が現在のファイル所有者のユーザ名と同一である場合に終了ステータスがfalseであること()
-                throws FileNotFoundException, IOException {
+        public void 新規設定するファイル所有者のユーザ名が現在のファイル所有者のユーザ名と同一である場合に終了ステータスがfalseであること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("test.txt", ownerName);
             ar.setAttribute();
             final boolean status = ar.setAttribute();
@@ -114,8 +105,7 @@ public class OwnerResourceTest {
         }
 
         @Test(expected = FileNotFoundException.class)
-        public void 存在しないファイルのファイル所有者を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること()
-                throws FileNotFoundException, IOException {
+        public void 存在しないファイルのファイル所有者を変更しようとした場合にエラーとなりFileNotFoundExceptionが送出されること() throws Exception {
             final AttributeResource<?> ar = new OwnerResource("NotExist.txt", ownerName);
             ar.setAttribute();
         }
