@@ -1,15 +1,12 @@
 package attribute_resource;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 /**
  * リソースの属性を管理する。
  */
-public abstract class AttributeResource<T> {
-    protected abstract T createAttribute() throws IOException;
+public interface AttributeResource<T> {
+    public abstract T createAttribute() throws Exception;
 
-    protected abstract T getAttribute() throws FileNotFoundException, IOException;
+    public abstract T getAttribute() throws Exception;
 
-    public abstract boolean setAttribute() throws FileNotFoundException, IOException;
+    public abstract boolean setAttribute() throws Exception;
 }
