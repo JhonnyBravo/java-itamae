@@ -1,8 +1,7 @@
 package basic_action_resource;
 
-import java.io.IOException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
@@ -38,14 +37,11 @@ public class Main {
         longopts[6] = new LongOpt("mode", LongOpt.REQUIRED_ARGUMENT, null, 'm');
 
         final Getopt options = new Getopt("Main", args, "F:D:cdo:g:m:", longopts);
+        final Logger logger = LoggerFactory.getLogger(Main.class);
 
         ActionResource file = null;
         ActionResource directory = null;
         ActionResource resource = null;
-
-        final Logger logger = Logger.getLogger(Main.class.getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
 
         String owner = null;
         String group = null;
@@ -92,12 +88,12 @@ public class Main {
         }
 
         if (fileFlag == 0 && dirFlag == 0) {
-            logger.warning("file オプションまたは directory オプションを指定してください。");
+            logger.warn("file オプションまたは directory オプションを指定してください。");
             System.exit(1);
         }
 
         if (createFlag == 0 && (ownerFlag == 1 || groupFlag == 1 || modeFlag == 1)) {
-            logger.warning("create オプションを指定してください。");
+            logger.warn("create オプションを指定してください。");
             System.exit(1);
         }
 
@@ -109,46 +105,31 @@ public class Main {
 
         boolean status = false;
 
-        if (createFlag == 1) {
-            // リソース作成
-            try {
+        try {
+            if (createFlag == 1) {
+                // リソース作成
                 status = resource.create();
-            } catch (final IOException e) {
-                logger.warning(e.toString());
-                System.exit(1);
-            }
 
-            // 所有者変更
-            if (ownerFlag == 1) {
-                try {
+                // 所有者変更
+                if (ownerFlag == 1) {
                     status = resource.setOwner(owner);
-                } catch (final IOException e) {
-                    logger.warning(e.toString());
-                    System.exit(1);
                 }
-            }
 
-            // グループ所有者変更
-            if (groupFlag == 1) {
-                try {
+                // グループ所有者変更
+                if (groupFlag == 1) {
                     status = resource.setGroup(group);
-                } catch (final IOException e) {
-                    logger.warning(e.toString());
-                    System.exit(1);
                 }
-            }
 
-            // パーミッション変更
-            if (modeFlag == 1) {
-                try {
+                // パーミッション変更
+                if (modeFlag == 1) {
                     status = resource.setMode(mode);
-                } catch (final IOException e) {
-                    logger.warning(e.toString());
-                    System.exit(1);
                 }
+            } else if (deleteFlag == 1) {
+                status = resource.delete();
             }
-        } else if (deleteFlag == 1) {
-            status = resource.delete();
+        } catch (final Exception e) {
+            logger.warn("エラーが発生しました。", e);
+            System.exit(1);
         }
 
         if (status) {
