@@ -8,13 +8,14 @@ import java.nio.file.Files;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.UserPrincipalLookupService;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ファイルまたはディレクトリのグループ所有者を管理する。
  */
-public class GroupResource extends AttributeResource<GroupPrincipal> {
+public class GroupResource implements AttributeResource<GroupPrincipal> {
     private final Logger logger;
     private final String path;
     private final String group;
@@ -28,10 +29,7 @@ public class GroupResource extends AttributeResource<GroupPrincipal> {
         this.path = path;
         this.group = group;
         file = new File(path);
-
-        logger = Logger.getLogger(this.getClass().getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
+        logger = LoggerFactory.getLogger(this.getClass());
     }
 
     /**
@@ -41,7 +39,7 @@ public class GroupResource extends AttributeResource<GroupPrincipal> {
      * @see attribute_resource.AttributeResource#createAttribute()
      */
     @Override
-    protected GroupPrincipal createAttribute() throws IOException {
+    public GroupPrincipal createAttribute() throws IOException {
         final UserPrincipalLookupService upls = FileSystems.getDefault().getUserPrincipalLookupService();
         final GroupPrincipal gp = upls.lookupPrincipalByGroupName(group);
 
@@ -51,12 +49,11 @@ public class GroupResource extends AttributeResource<GroupPrincipal> {
     /**
      * @return GroupPrincipal ファイルまたはディレクトリに現在のグループ所有者として設定されている GroupPrincipal
      *         を取得する。
-     * @throws IOException           {@link java.io.IOException}
-     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
+     * @throws IOException {@link java.io.IOException}
      * @see attribute_resource.AttributeResource#getAttribute()
      */
     @Override
-    protected GroupPrincipal getAttribute() throws FileNotFoundException, IOException {
+    public GroupPrincipal getAttribute() throws IOException {
         if (!file.exists()) {
             throw new FileNotFoundException(path + " が見つかりません。");
         }
@@ -70,8 +67,7 @@ public class GroupResource extends AttributeResource<GroupPrincipal> {
     /**
      * ファイルまたはディレクトリのグループ所有者を変更する。
      *
-     * @throws FileNotFoundException {@link java.io.FileNotFoundException}
-     * @throws IOException           {@link java.io.IOException}
+     * @throws IOException {@link java.io.IOException}
      * @see attribute_resource.AttributeResource#setAttribute()
      * @return status
      *         <ul>
@@ -80,14 +76,12 @@ public class GroupResource extends AttributeResource<GroupPrincipal> {
      *         </ul>
      */
     @Override
-    public boolean setAttribute() throws FileNotFoundException, IOException {
+    public boolean setAttribute() throws IOException {
         boolean status = false;
-        logger.entering(this.getClass().getName(), "setAttribute");
-
         final String osName = System.getProperty("os.name");
 
         if (osName.substring(0, 3).equals("Win")) {
-            logger.warning(osName + " ではグループ所有者の取得 / 設定はサポートしていません。");
+            logger.warn(osName + " ではグループ所有者の取得 / 設定はサポートしていません。");
             return status;
         }
 
@@ -99,16 +93,10 @@ public class GroupResource extends AttributeResource<GroupPrincipal> {
         }
 
         logger.info("グループ所有者を変更します。");
-
         final PosixFileAttributeView pfav = Files.getFileAttributeView(file.toPath(), PosixFileAttributeView.class);
+        pfav.setGroup(newGroup);
 
-        try {
-            pfav.setGroup(newGroup);
-            status = true;
-            return status;
-        } catch (final IOException e) {
-            logger.throwing(this.getClass().getName(), "setAttribute", e);
-            throw e;
-        }
+        status = true;
+        return status;
     }
 }
