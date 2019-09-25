@@ -32,7 +32,7 @@ public class FileResourceTest {
         }
 
         @Test
-        public void ファイルを作成できて終了ステータスがtrueであること() throws IOException {
+        public void ファイルを作成できて終了ステータスがtrueであること() throws Exception {
             final boolean status = resource.create();
             assertThat(file.isFile(), is(true));
             assertThat(status, is(true));
@@ -73,7 +73,7 @@ public class FileResourceTest {
         }
 
         @Test
-        public void 何も実行せず終了ステータスがfalseであること() throws IOException {
+        public void 何も実行せず終了ステータスがfalseであること() throws Exception {
             final boolean status = resource.create();
             assertThat(file.isFile(), is(true));
             assertThat(status, is(false));
@@ -89,7 +89,7 @@ public class FileResourceTest {
         }
 
         @Test(expected = IOException.class)
-        public void 処理が中断されてIOExceptionが送出されること() throws IOException {
+        public void 処理が中断されてIOExceptionが送出されること() throws Exception {
             resource.create();
         }
     }
