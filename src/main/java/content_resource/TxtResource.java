@@ -4,23 +4,16 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
 
 /**
  * テキストファイルの読み書きを管理する。
  */
-public class TxtResource extends ContentResource<List<String>> {
-    private final Logger logger;
-
+public class TxtResource extends IOStreamResource implements ContentResource<List<String>> {
     /**
      * @param path 操作対象とするファイルのパスを指定する。
      */
     public TxtResource(String path) {
         super(path);
-        logger = Logger.getLogger(this.getClass().getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
     }
 
     /**
@@ -44,9 +37,6 @@ public class TxtResource extends ContentResource<List<String>> {
             }
 
             status = true;
-        } catch (final Exception e) {
-            logger.throwing(this.getClass().getName(), "setContent", e);
-            throw e;
         }
 
         return status;
@@ -65,9 +55,6 @@ public class TxtResource extends ContentResource<List<String>> {
             while ((line = buffer.readLine()) != null) {
                 contents.add(line);
             }
-        } catch (final Exception e) {
-            logger.throwing(this.getClass().getName(), "getContent", e);
-            throw e;
         }
 
         return contents;
@@ -75,7 +62,7 @@ public class TxtResource extends ContentResource<List<String>> {
 
     /**
      * ファイルの内容を削除する。
-     * 
+     *
      * @return status
      *         <ul>
      *         <li>true: 削除に成功したことを表す。</li>
@@ -89,9 +76,6 @@ public class TxtResource extends ContentResource<List<String>> {
         try (BufferedWriter buffer = new BufferedWriter(getWriter())) {
             buffer.write("");
             status = true;
-        } catch (final Exception e) {
-            logger.throwing(this.getClass().getName(), "deleteContent", e);
-            throw e;
         }
 
         return status;
