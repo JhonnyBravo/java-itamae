@@ -45,7 +45,7 @@ public class TxtResourceTest {
     }
 
     public static class ファイルが存在するが空である場合 {
-        private final ContentResource<List<String>> resource = new TxtResource("test.txt");
+        private final TxtResource resource = new TxtResource("test.txt");
         private final File file = new File("test.txt");
 
         @Before
@@ -113,7 +113,7 @@ public class TxtResourceTest {
     }
 
     public static class ファイルが存在して空ではない場合 {
-        private final ContentResource<List<String>> resource = new TxtResource("test.txt");
+        private final TxtResource resource = new TxtResource("test.txt");
         private final File file = new File("test.txt");
 
         @Before
@@ -194,7 +194,7 @@ public class TxtResourceTest {
 
     public static class 不正な文字エンコーディングを指定した場合 {
         private final File file = new File("encoding_test.txt");
-        private final ContentResource<List<String>> resource = new TxtResource("encoding_test.txt");
+        private final TxtResource resource = new TxtResource("encoding_test.txt");
 
         @Before
         public void setUp() throws Exception {
