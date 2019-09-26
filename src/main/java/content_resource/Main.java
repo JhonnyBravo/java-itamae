@@ -3,8 +3,9 @@ package content_resource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
@@ -33,10 +34,7 @@ public class Main {
         longopts[4] = new LongOpt("read", LongOpt.NO_ARGUMENT, null, 'r');
 
         final Getopt options = new Getopt("Main", args, "p:c:u:dr", longopts);
-
-        final Logger logger = Logger.getLogger(Main.class.getName());
-        logger.addHandler(new ConsoleHandler());
-        logger.setUseParentHandlers(false);
+        final Logger logger = LoggerFactory.getLogger(Main.class);
 
         String path = null;
         String content = null;
@@ -70,7 +68,7 @@ public class Main {
         }
 
         if (path == null) {
-            logger.warning("path オプションを指定してください。");
+            logger.warn("path オプションを指定してください。");
             System.exit(1);
         }
 
@@ -81,7 +79,7 @@ public class Main {
         try {
             if (createFlag == 1 || updateFlag == 1) {
                 if (content == null) {
-                    logger.warning("content を指定してください。");
+                    logger.warn("content を指定してください。");
                     System.exit(1);
                 }
 
@@ -113,7 +111,7 @@ public class Main {
                 status = resource.deleteContent();
             }
         } catch (final Exception e) {
-            logger.warning(e.toString());
+            logger.warn("エラーが発生しました。", e);
             System.exit(1);
         }
 
