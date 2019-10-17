@@ -1,4 +1,4 @@
-package attribute_resource.domain.repository;
+package basic_action_resource.domain.repository.attribute;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +36,7 @@ public class GroupResource implements AttributeResource<GroupPrincipal> {
      * @return GroupPrincipal 新規生成された GroupPrincipal を返す。
      * @throws IOException {@link java.io.IOException}
      *
-     * @see attribute_resource.domain.repository.AttributeResource#createAttribute()
+     * @see basic_action_resource.domain.repository.attribute.AttributeResource#createAttribute()
      */
     @Override
     public GroupPrincipal createAttribute() throws IOException {
@@ -50,7 +50,7 @@ public class GroupResource implements AttributeResource<GroupPrincipal> {
      * @return GroupPrincipal ファイルまたはディレクトリに現在のグループ所有者として設定されている GroupPrincipal
      *         を取得する。
      * @throws IOException {@link java.io.IOException}
-     * @see attribute_resource.domain.repository.AttributeResource#getAttribute()
+     * @see basic_action_resource.domain.repository.attribute.AttributeResource#getAttribute()
      */
     @Override
     public GroupPrincipal getAttribute() throws IOException {
@@ -68,7 +68,7 @@ public class GroupResource implements AttributeResource<GroupPrincipal> {
      * ファイルまたはディレクトリのグループ所有者を変更する。
      *
      * @throws IOException {@link java.io.IOException}
-     * @see attribute_resource.domain.repository.AttributeResource#setAttribute()
+     * @see basic_action_resource.domain.repository.attribute.AttributeResource#setAttribute()
      * @return status
      *         <ul>
      *         <li>true: ファイルまたはディレクトリのグループ所有者を変更したことを表す。</li>

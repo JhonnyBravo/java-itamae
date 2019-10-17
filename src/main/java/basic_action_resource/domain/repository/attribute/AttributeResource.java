@@ -1,4 +1,4 @@
-package attribute_resource.domain.repository;
+package basic_action_resource.domain.repository.attribute;
 
 /**
  * リソースの属性を管理する。
