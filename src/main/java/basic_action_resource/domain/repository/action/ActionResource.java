@@ -1,4 +1,4 @@
-package basic_action_resource.domain.repository;
+package basic_action_resource.domain.repository.action;
 
 /**
  * リソースの作成・削除と、所有者・グループ所有者・パーミッションの設定変更を実行する。
