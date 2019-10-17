@@ -1,4 +1,4 @@
-package basic_action_resource.domain.repository;
+package basic_action_resource.domain.repository.action;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,10 +6,10 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import attribute_resource.AttributeResource;
-import attribute_resource.GroupResource;
-import attribute_resource.ModeResource;
-import attribute_resource.OwnerResource;
+import basic_action_resource.domain.repository.attribute.AttributeResource;
+import basic_action_resource.domain.repository.attribute.GroupResource;
+import basic_action_resource.domain.repository.attribute.ModeResource;
+import basic_action_resource.domain.repository.attribute.OwnerResource;
 
 /**
  * ファイルの作成・削除と、所有者・グループ所有者・パーミッションの設定変更を実行する。
