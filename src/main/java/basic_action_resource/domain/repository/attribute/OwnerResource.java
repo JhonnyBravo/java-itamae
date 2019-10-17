@@ -1,4 +1,4 @@
-package attribute_resource.domain.repository;
+package basic_action_resource.domain.repository.attribute;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +36,7 @@ public class OwnerResource implements AttributeResource<UserPrincipal> {
      * @return UserPrincipal 新規生成された UserPrincipal を返す。
      * @throws IOException {@link java.io.IOException}
      *
-     * @see attribute_resource.domain.repository.AttributeResource#createAttribute()
+     * @see basic_action_resource.domain.repository.attribute.AttributeResource#createAttribute()
      */
     @Override
     public UserPrincipal createAttribute() throws IOException {
@@ -49,7 +49,7 @@ public class OwnerResource implements AttributeResource<UserPrincipal> {
     /**
      * @return UserPrincipal ファイルまたはディレクトリに現在の所有者として設定されている UserPrincipal を返す。
      * @throws IOException {@link java.io.IOException}
-     * @see attribute_resource.domain.repository.AttributeResource#getAttribute()
+     * @see basic_action_resource.domain.repository.attribute.AttributeResource#getAttribute()
      */
     @Override
     public UserPrincipal getAttribute() throws IOException {
@@ -66,7 +66,7 @@ public class OwnerResource implements AttributeResource<UserPrincipal> {
      *
      * @throws IOException {@link java.io.IOException}
      *
-     * @see attribute_resource.domain.repository.AttributeResource#setAttribute()
+     * @see basic_action_resource.domain.repository.attribute.AttributeResource#setAttribute()
      * @return status
      *         <ul>
      *         <li>true: ファイルまたはディレクトリの所有者を変更したことを表す。</li>
