@@ -1,4 +1,4 @@
-package basic_action_resource;
+package basic_action_resource.domain.repository;
 
 import java.io.File;
 import java.io.FilenameFilter;
