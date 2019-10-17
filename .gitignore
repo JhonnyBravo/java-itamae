@@ -9,7 +9,6 @@ tmp/
 local.properties
 .settings/
 .loadpath
-.recommenders
 
 # External tool builders
 .externalToolBuilders/
@@ -44,6 +43,7 @@ local.properties
 # STS (Spring Tool Suite)
 .springBeans
 .sts4-cache
+application.properties
 
 # Code Recommenders
 .recommenders/
@@ -56,14 +56,17 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
-.gradle
-gradle
-gradle/wrapper
-gradlew
-gradlew.bat
-/build/
 .classpath
 .project
+
+# Java
+src/test/resources
+
+# Gradle
+.gradle
+gradle
+gradlew*
+/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -75,7 +78,7 @@ gradle-app.setting
 .gradletasknamecache
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
+gradle/wrapper/gradle-wrapper.properties
 
 # Compiled class file
 *.class
