@@ -13,6 +13,7 @@ plugins {
     id 'maven'
 }
 
+// In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
@@ -38,7 +39,7 @@ task sourcesJar(type: Jar, dependsOn: classes){
     from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc){
+task javadocJar(type: Jar,dependsOn: javadoc){
     classifier='javadoc'
     from javadoc.destinationDir
 }
