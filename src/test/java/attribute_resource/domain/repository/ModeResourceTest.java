@@ -1,4 +1,4 @@
-package attribute_resource;
+package attribute_resource.domain.repository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -16,6 +16,9 @@ import org.junit.experimental.theories.DataPoint;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
+
+import attribute_resource.domain.repository.AttributeResource;
+import attribute_resource.domain.repository.ModeResource;
 
 @RunWith(Enclosed.class)
 public class ModeResourceTest {
