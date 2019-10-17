@@ -1,4 +1,4 @@
-package attribute_resource;
+package attribute_resource.domain.repository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import attribute_resource.domain.repository.AttributeResource;
+import attribute_resource.domain.repository.GroupResource;
 import content_resource.ContentResource;
 import property_resource.PropertyResource;
 
