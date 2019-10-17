@@ -3,9 +3,9 @@ package basic_action_resource.app;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import basic_action_resource.domain.repository.ActionResource;
-import basic_action_resource.domain.repository.DirectoryResource;
-import basic_action_resource.domain.repository.FileResource;
+import basic_action_resource.domain.repository.action.ActionResource;
+import basic_action_resource.domain.repository.action.DirectoryResource;
+import basic_action_resource.domain.repository.action.FileResource;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
