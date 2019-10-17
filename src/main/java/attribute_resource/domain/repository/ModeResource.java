@@ -1,4 +1,4 @@
-package attribute_resource;
+package attribute_resource.domain.repository;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,7 +44,7 @@ public class ModeResource implements AttributeResource<Set<PosixFilePermission>>
     /**
      * @return Set&lt;PosixFilePermission&gt; 新規生成された PosixFilePermission を返す。
      *
-     * @see attribute_resource.AttributeResource#createAttribute()
+     * @see attribute_resource.domain.repository.AttributeResource#createAttribute()
      */
     @Override
     public Set<PosixFilePermission> createAttribute() {
@@ -67,7 +67,7 @@ public class ModeResource implements AttributeResource<Set<PosixFilePermission>>
      * @return Set&lt;PosixFilePermission&gt; ファイルまたはディレクトリに現在のパーミッションとして設定されている
      *         PosixFilePermission を取得する。
      * @throws IOException {@link java.io.IOException}
-     * @see attribute_resource.AttributeResource#getAttribute()
+     * @see attribute_resource.domain.repository.AttributeResource#getAttribute()
      */
     @Override
     public Set<PosixFilePermission> getAttribute() throws IOException {
@@ -84,7 +84,7 @@ public class ModeResource implements AttributeResource<Set<PosixFilePermission>>
      *
      * @throws IOException {@link java.io.IOException}
      *
-     * @see attribute_resource.AttributeResource#setAttribute()
+     * @see attribute_resource.domain.repository.AttributeResource#setAttribute()
      * @return status
      *         <ul>
      *         <li>true: ファイルまたはディレクトリのパーミッション設定を変更したことを表す。</li>
