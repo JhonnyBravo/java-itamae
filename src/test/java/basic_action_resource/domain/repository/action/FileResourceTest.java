@@ -1,4 +1,4 @@
-package basic_action_resource.domain.repository;
+package basic_action_resource.domain.repository.action;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import basic_action_resource.domain.repository.ActionResource;
-import basic_action_resource.domain.repository.FileResource;
+import basic_action_resource.domain.repository.action.ActionResource;
+import basic_action_resource.domain.repository.action.FileResource;
 
 @RunWith(Enclosed.class)
 public class FileResourceTest {
