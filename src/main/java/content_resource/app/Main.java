@@ -1,4 +1,4 @@
-package content_resource;
+package content_resource.app;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,6 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import content_resource.domain.repository.ContentResource;
+import content_resource.domain.repository.TxtResource;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
