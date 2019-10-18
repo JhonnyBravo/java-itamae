@@ -1,4 +1,4 @@
-package content_resource;
+package content_resource.domain.repository;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
