@@ -1,4 +1,4 @@
-package content_resource;
+package content_resource.domain.repository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -14,6 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+
+import content_resource.domain.repository.ContentResource;
+import content_resource.domain.repository.TxtResource;
 
 @RunWith(Enclosed.class)
 public class TxtResourceTest {
