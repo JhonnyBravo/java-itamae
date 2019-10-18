@@ -1,4 +1,4 @@
-package content_resource;
+package content_resource.domain.repository;
 
 /**
  * ファイルの読み書きを管理する。
