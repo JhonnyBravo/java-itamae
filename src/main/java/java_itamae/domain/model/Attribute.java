@@ -2,17 +2,23 @@ package java_itamae.domain.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import java_itamae.app.NotWindows;
+
 /**
  * リソースの管理に使用する属性を管理する。
  */
+@NotWindows
 public class Attribute implements Serializable {
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+
+    @NotNull
     private String path;
     private String owner;
     private String group;
+    @Pattern(regexp = "[0-7]{3}")
     private String mode;
 
     /**
