@@ -34,10 +34,6 @@ public class DirectoryServiceImpl implements DirectoryService {
     public boolean create(Attribute attr) throws Exception {
         boolean status = false;
 
-        if (attr.getPath() == null) {
-            throw new Exception("path を指定してください。");
-        }
-
         if (recursive) {
             status = dr.createRecursive(attr.getPath());
         } else {
@@ -62,10 +58,6 @@ public class DirectoryServiceImpl implements DirectoryService {
     @Override
     public boolean delete(Attribute attr) throws Exception {
         boolean status = false;
-
-        if (attr.getPath() == null) {
-            throw new Exception("path を指定してください。");
-        }
 
         if (recursive) {
             status = dr.deleteRecursive(attr.getPath());
