@@ -24,10 +24,13 @@ repositories {
 dependencies {
     compile group: 'gnu.getopt', name: 'java-getopt', version: '1.0.13'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.0.Final'
+    compile group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
+    compile group: 'org.glassfish', name: 'javax.el', version: '3.0.0'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
-    testCompile 'com.github.JhonnyBravo:property-resource:master-SNAPSHOT'
+    testCompile 'com.github.JhonnyBravo:java-itamae-properties:master-SNAPSHOT'
 }
 
 group='com.github.JhonnyBravo'
