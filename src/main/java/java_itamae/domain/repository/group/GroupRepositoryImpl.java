@@ -41,11 +41,6 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public boolean setGroup(String path, String group) throws Exception {
         boolean status = false;
-        final String osName = System.getProperty("os.name");
-
-        if (osName.substring(0, 3).equals("Win")) {
-            throw new Exception(osName + " ではグループ所有者の取得 / 設定はサポートしていません。");
-        }
 
         final GroupPrincipal curGroup = getGroup(path);
         final GroupPrincipal newGroup = createGroup(group);
