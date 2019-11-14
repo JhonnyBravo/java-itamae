@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +13,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import property_resource.PropertyResource;
+import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_properties.domain.service.properties.PropertiesService;
+import java_itamae_properties.domain.service.properties.PropertiesServiceImpl;
 
 @RunWith(Enclosed.class)
 public class GroupRepositoryTest {
@@ -29,9 +30,11 @@ public class GroupRepositoryTest {
             directory = new File("test_dir");
             directory.mkdir();
 
-            final PropertyResource pr = new PropertyResource("src/test/resources/test.properties");
-            final Map<String, String> props = pr.getContent();
-            group = props.get("group");
+            final ContentsAttribute attr = new ContentsAttribute();
+            attr.setPath("src/test/resources/test.properties");
+            final PropertiesService ps = new PropertiesServiceImpl(attr);
+
+            group = ps.getProperty("group");
         }
 
         @After
@@ -85,9 +88,11 @@ public class GroupRepositoryTest {
             file = new File("test.txt");
             file.mkdir();
 
-            final PropertyResource pr = new PropertyResource("src/test/resources/test.properties");
-            final Map<String, String> props = pr.getContent();
-            group = props.get("group");
+            final ContentsAttribute attr = new ContentsAttribute();
+            attr.setPath("src/test/resources/test.properties");
+            final PropertiesService ps = new PropertiesServiceImpl(attr);
+
+            group = ps.getProperty("group");
         }
 
         @After
