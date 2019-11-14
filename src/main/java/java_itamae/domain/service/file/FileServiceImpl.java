@@ -25,13 +25,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean create(Attribute attr) throws Exception {
-        boolean status = false;
-
-        if (attr.getPath() == null) {
-            throw new Exception("path を指定してください。");
-        }
-
-        status = fr.create(attr.getPath());
+        boolean status = fr.create(attr.getPath());
 
         if (attr.getOwner() != null) {
             status = or.setOwner(attr.getPath(), attr.getOwner());
@@ -50,10 +44,6 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean delete(Attribute attr) throws Exception {
-        if (attr.getPath() == null) {
-            throw new Exception("path を指定してください。");
-        }
-
         final boolean status = fr.delete(attr.getPath());
         return status;
     }
