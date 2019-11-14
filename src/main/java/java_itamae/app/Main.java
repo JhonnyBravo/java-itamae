@@ -1,5 +1,11 @@
 package java_itamae.app;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +105,16 @@ public class Main {
         }
 
         boolean status = false;
+        final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        final Set<ConstraintViolation<Attribute>> validResult = validator.validate(attr);
+
+        if (validResult.size() > 0) {
+            validResult.stream().forEach(e -> {
+                logger.warn(e.getMessage());
+            });
+
+            System.exit(1);
+        }
 
         if (fileFlag == 1) {
             final FileService fs = new FileServiceImpl();
