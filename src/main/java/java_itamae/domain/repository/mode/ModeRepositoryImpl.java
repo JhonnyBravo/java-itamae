@@ -20,10 +20,6 @@ public class ModeRepositoryImpl implements ModeRepository {
 
     @Override
     public Set<PosixFilePermission> createMode(String mode) throws Exception {
-        if (!mode.matches("[0-7]{3}")) {
-            throw new Exception("mode の値が不正です。 0 から 7 までの整数のみで構成された 3 桁の数列を指定してください。");
-        }
-
         final String converted = mode.replaceAll("0", "---").replaceAll("1", "--x").replaceAll("2", "-w-")
                 .replaceAll("3", "-wx").replaceAll("4", "r--").replaceAll("5", "r-x").replaceAll("6", "rw-")
                 .replaceAll("7", "rwx");
@@ -46,11 +42,6 @@ public class ModeRepositoryImpl implements ModeRepository {
     @Override
     public boolean setMode(String path, String mode) throws Exception {
         boolean status = false;
-        final String osName = System.getProperty("os.name");
-
-        if (osName.substring(0, 3).equals("Win")) {
-            throw new Exception(osName + " ではパーミッションの取得 / 設定はサポートしていません。");
-        }
 
         final Set<PosixFilePermission> curPermission = getMode(path);
         final Set<PosixFilePermission> newPermission = createMode(mode);
