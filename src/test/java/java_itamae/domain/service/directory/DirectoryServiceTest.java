@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,22 +14,25 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java_itamae.domain.model.Attribute;
-import property_resource.PropertyResource;
+import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_properties.domain.service.properties.PropertiesService;
+import java_itamae_properties.domain.service.properties.PropertiesServiceImpl;
 
 @RunWith(Enclosed.class)
 public class DirectoryServiceTest {
     public static class エラーテスト {
         private DirectoryService ds;
+        private PropertiesService ps;
         private File file;
-        private Map<String, String> props;
 
         @Before
         public void setUp() throws Exception {
             ds = new DirectoryServiceImpl();
             file = new File("test_dir");
 
-            final PropertyResource pr = new PropertyResource("src/test/resources/test.properties");
-            props = pr.getContent();
+            final ContentsAttribute attr = new ContentsAttribute();
+            attr.setPath("src/test/resources/test.properties");
+            ps = new PropertiesServiceImpl(attr);
         }
 
         @After
@@ -43,8 +45,8 @@ public class DirectoryServiceTest {
         @Test(expected = Exception.class)
         public void pathが指定されないままcreateを実行した場合にExceptionが送出されること() throws Exception {
             final Attribute attr = new Attribute();
-            attr.setOwner(props.get("owner"));
-            attr.setGroup(props.get("group"));
+            attr.setOwner(ps.getProperty("owner"));
+            attr.setGroup(ps.getProperty("group"));
             attr.setMode("640");
 
             try {
@@ -72,7 +74,7 @@ public class DirectoryServiceTest {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
             attr.setOwner("NotExist");
-            attr.setGroup(props.get("group"));
+            attr.setGroup(ps.getProperty("group"));
             attr.setMode("640");
 
             try {
@@ -87,7 +89,7 @@ public class DirectoryServiceTest {
         public void 新しいグループ所有者として存在しないグループ名を指定した場合にUserPrincipalNotFoundExceptionが送出されること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setOwner(props.get("owner"));
+            attr.setOwner(ps.getProperty("owner"));
             attr.setGroup("NotExist");
             attr.setMode("640");
 
@@ -103,8 +105,8 @@ public class DirectoryServiceTest {
         public void 新しいパーミッションとして不正なパーミッション値を指定した場合にExceptionが送出されること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setOwner(props.get("owner"));
-            attr.setGroup(props.get("group"));
+            attr.setOwner(ps.getProperty("owner"));
+            attr.setGroup(ps.getProperty("group"));
             attr.setMode("a40");
 
             try {
@@ -118,24 +120,25 @@ public class DirectoryServiceTest {
 
     public static class ディレクトリが既に存在する場合1 {
         private DirectoryService ds;
-
+        private PropertiesService ps;
         private File file;
-        private Map<String, String> props;
 
         @Before
         public void setUp() throws Exception {
-            final PropertyResource pr = new PropertyResource("src/test/resources/test.properties");
-            props = pr.getContent();
-            file = new File("test_dir");
+            final ContentsAttribute ca = new ContentsAttribute();
+            ca.setPath("src/test/resources/test.properties");
+            ps = new PropertiesServiceImpl(ca);
 
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setOwner(props.get("owner"));
-            attr.setGroup(props.get("group"));
+            attr.setOwner(ps.getProperty("owner"));
+            attr.setGroup(ps.getProperty("group"));
             attr.setMode("640");
 
             ds = new DirectoryServiceImpl();
             ds.create(attr);
+
+            file = new File("test_dir");
         }
 
         @After
@@ -158,7 +161,7 @@ public class DirectoryServiceTest {
         public void 新しいディレクトリ所有者として現在設定されているディレクトリ所有者と同一のユーザ名を指定した場合に終了ステータスがfalseであること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setOwner(props.get("owner"));
+            attr.setOwner(ps.getProperty("owner"));
 
             final boolean status = ds.create(attr);
             assertThat(status, is(false));
@@ -168,7 +171,7 @@ public class DirectoryServiceTest {
         public void 新しいグループ所有者として現在設定されているグループ所有者と同一のグループ名を指定した場合に終了ステータスがfalseであること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setGroup(props.get("group"));
+            attr.setGroup(ps.getProperty("group"));
 
             final boolean status = ds.create(attr);
             assertThat(status, is(false));
@@ -187,7 +190,7 @@ public class DirectoryServiceTest {
 
     public static class ディレクトリが既に存在する場合2 {
         private DirectoryService ds;
-        private Map<String, String> props;
+        private PropertiesService ps;
         private File directory;
 
         @Before
@@ -195,8 +198,9 @@ public class DirectoryServiceTest {
             directory = new File("test_dir");
             directory.mkdir();
 
-            final PropertyResource pr = new PropertyResource("src/test/resources/test.properties");
-            props = pr.getContent();
+            final ContentsAttribute attr = new ContentsAttribute();
+            attr.setPath("src/test/resources/test.properties");
+            ps = new PropertiesServiceImpl(attr);
 
             ds = new DirectoryServiceImpl();
         }
@@ -212,7 +216,7 @@ public class DirectoryServiceTest {
         public void ディレクトリ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setOwner(props.get("owner"));
+            attr.setOwner(ps.getProperty("owner"));
 
             final boolean status = ds.create(attr);
             assertThat(status, is(true));
@@ -222,7 +226,7 @@ public class DirectoryServiceTest {
         public void グループ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setGroup(props.get("group"));
+            attr.setGroup(ps.getProperty("group"));
 
             final boolean status = ds.create(attr);
             assertThat(status, is(true));
@@ -241,15 +245,17 @@ public class DirectoryServiceTest {
 
     public static class ディレクトリが存在しない場合 {
         private DirectoryService ds;
-        private Map<String, String> props;
+        private PropertiesService ps;
         private File directory;
 
         @Before
         public void setUp() throws Exception {
             ds = new DirectoryServiceImpl();
             directory = new File("test_dir");
-            final PropertyResource pr = new PropertyResource("src/test/resources/test.properties");
-            props = pr.getContent();
+
+            final ContentsAttribute attr = new ContentsAttribute();
+            attr.setPath("src/test/resources/test.properties");
+            ps = new PropertiesServiceImpl(attr);
         }
 
         @After
@@ -273,7 +279,7 @@ public class DirectoryServiceTest {
         public void ディレクトリの所有者を変更できて終了ステータスがtrueであること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setOwner(props.get("owner"));
+            attr.setOwner(ps.getProperty("owner"));
 
             final boolean status = ds.create(attr);
             assertThat(status, is(true));
@@ -283,7 +289,7 @@ public class DirectoryServiceTest {
         public void ディレクトリのグループ所有者を変更できて終了ステータスがtrueであること() throws Exception {
             final Attribute attr = new Attribute();
             attr.setPath("test_dir");
-            attr.setGroup(props.get("group"));
+            attr.setGroup(ps.getProperty("group"));
 
             final boolean status = ds.create(attr);
             assertThat(status, is(true));
