@@ -1,6 +1,11 @@
 package java_itamae_contents.app;
 
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,12 +79,18 @@ public class Main {
             }
         }
 
-        if ((setFlag == 1 || appendFlag == 1 || getFlag == 1 || deleteFlag == 1) && attr.getPath() == null) {
-            logger.warn("path オプションを指定してください。");
+        boolean status = false;
+        final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        final Set<ConstraintViolation<ContentsAttribute>> validResult = validator.validate(attr);
+
+        if (validResult.size() > 0) {
+            validResult.stream().forEach(e -> {
+                logger.warn(e.getMessage());
+            });
+
             System.exit(1);
         }
 
-        boolean status = false;
         final ContentsService cs = new ContentsServiceImpl(attr);
 
         try {
