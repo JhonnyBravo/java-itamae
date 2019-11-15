@@ -2,10 +2,14 @@ package java_itamae_contents.domain.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 public class ContentsAttribute implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String encoding;
+
+    @NotNull
     private String path;
+    private String encoding;
 
     /**
      * @return path 操作対象とするファイルのパスを返す。
