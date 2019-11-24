@@ -110,7 +110,9 @@ public class Main {
 
         if (validResult.size() > 0) {
             validResult.stream().forEach(e -> {
-                logger.warn(e.getMessage());
+                final String path = e.getPropertyPath().toString();
+                final String message = e.getMessage();
+                logger.warn(path + ": " + message);
             });
 
             System.exit(1);
