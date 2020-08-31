@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import java_itamae.app.NotWindows;
+import java_itamae.app.validator.NotWindows;
 
 /**
  * リソースの管理に使用する属性を管理する。
