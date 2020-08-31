@@ -1,23 +1,13 @@
 package java_itamae.app;
 
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java_itamae.app.directory.CreateDirectory;
+import java_itamae.app.directory.DeleteDirectory;
+import java_itamae.app.file.CreateFile;
+import java_itamae.app.file.DeleteFile;
+import java_itamae.app.validator.IsValidAttribute;
 import java_itamae.domain.model.Attribute;
-import java_itamae.domain.service.directory.DirectoryService;
-import java_itamae.domain.service.directory.DirectoryServiceImpl;
-import java_itamae.domain.service.file.FileService;
-import java_itamae.domain.service.file.FileServiceImpl;
 
 /**
  * ファイルまたはディレクトリに対して以下の操作を実行する。
@@ -74,9 +64,16 @@ public class Main {
         int dirFlag = 0;
         int createFlag = 0;
         int deleteFlag = 0;
-        int recursiveFlag = 0;
+
+        boolean recursive = false;
+        int status = 0;
 
         final Attribute attr = new Attribute();
+        final Usage usage = new Usage();
+
+        if (args.length == 0) {
+            usage.run();
+        }
 
         while ((c = options.getopt()) != -1) {
             switch (c) {
@@ -95,7 +92,7 @@ public class Main {
                     deleteFlag = 1;
                     break;
                 case 'r' :
-                    recursiveFlag = 1;
+                    recursive = true;
                     break;
                 case 'o' :
                     attr.setOwner(options.getOptarg());
@@ -106,116 +103,25 @@ public class Main {
                 case 'm' :
                     attr.setMode(options.getOptarg());
                     break;
+                default :
+                    usage.run();
+                    status = 1;
+                    break;
             }
         }
 
-        final Logger logger = LoggerFactory.getLogger(Main.class);
-
-        Predicate<Attribute> isValid = attribute -> {
-            final Validator validator = Validation
-                    .buildDefaultValidatorFactory().getValidator();
-            final Set<ConstraintViolation<Attribute>> validResult = validator
-                    .validate(attr);
-
-            if (validResult.size() > 0) {
-                validResult.stream().forEach(e -> {
-                    final String path = e.getPropertyPath().toString();
-                    final String message = e.getMessage();
-                    logger.warn(path + ": " + message);
-                });
-
-                return false;
-            } else {
-                return true;
-            }
-        };
-
-        final FileService fs = new FileServiceImpl();
-
-        final Function<Attribute, Integer> createFile = attribute -> {
-            boolean result = false;
-
-            try {
-                result = fs.create(attribute);
-
-                if (result) {
-                    return 2;
-                } else {
-                    return 0;
-                }
-            } catch (Exception e) {
-                logger.warn(e.toString());
-                return 1;
-            }
-        };
-
-        final Function<Attribute, Integer> deleteFile = attribute -> {
-            boolean result = false;
-
-            try {
-                result = fs.delete(attribute);
-
-                if (result) {
-                    return 2;
-                } else {
-                    return 0;
-                }
-            } catch (Exception e) {
-                logger.warn(e.toString());
-                return 1;
-            }
-        };
-
-        final DirectoryService ds = new DirectoryServiceImpl();
-
-        if (recursiveFlag == 1) {
-            ds.setRecursive(true);
-        }
-
-        final Function<Attribute, Integer> createDirectory = attribute -> {
-            try {
-                boolean result = ds.create(attribute);
-
-                if (result) {
-                    return 2;
-                } else {
-                    return 0;
-                }
-            } catch (Exception e) {
-                logger.warn(e.toString());
-                return 1;
-            }
-        };
-
-        final Function<Attribute, Integer> deleteDirectory = attribute -> {
-            try {
-                boolean result = ds.delete(attribute);
-
-                if (result) {
-                    return 2;
-                } else {
-                    return 0;
-                }
-            } catch (Exception e) {
-                logger.warn(e.toString());
-                return 1;
-            }
-        };
-
-        int status = 0;
-
-        if (isValid.test(attr)) {
+        if (new IsValidAttribute().test(attr)) {
             if (createFlag == 1) {
                 if (fileFlag == 1) {
-                    status = createFile.apply(attr);
+                    status = new CreateFile().apply(attr);
                 } else if (dirFlag == 1) {
-                    status = createDirectory.apply(attr);
+                    status = new CreateDirectory().apply(attr, recursive);
                 }
             } else if (deleteFlag == 1) {
                 if (fileFlag == 1) {
-                    status = deleteFile.apply(attr);
+                    status = new DeleteFile().apply(attr);
                 } else if (dirFlag == 1) {
-                    status = deleteDirectory.apply(attr);
+                    status = new DeleteDirectory().apply(attr, recursive);
                 }
             }
         } else {
