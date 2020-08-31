@@ -1,4 +1,4 @@
-package java_itamae.app;
+package java_itamae.app.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
