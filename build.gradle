@@ -29,7 +29,7 @@ dependencies {
     compile group: 'org.glassfish', name: 'javax.el', version: '3.0.0'
 
     // Use JUnit test framework
-    testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.13.2'
     testCompile 'com.github.JhonnyBravo:java-itamae-properties:master-SNAPSHOT'
 }
 
