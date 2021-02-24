@@ -2,7 +2,7 @@ package java_itamae_contents.domain.model;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class ContentsAttribute implements Serializable {
     private static final long serialVersionUID = 1L;
