@@ -1,7 +1,7 @@
 package java_itamae.domain.repository.directory;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.nio.file.DirectoryNotEmptyException;
@@ -106,7 +106,7 @@ public class DirectoryRepositoryTest {
         private DirectoryRepository dr;
         private File directory;
         private File rootDir;
-        private final List<File> files = new ArrayList<File>();
+        private final List<File> files = new ArrayList<>();
 
         @Before
         public void setUp() throws Exception {
