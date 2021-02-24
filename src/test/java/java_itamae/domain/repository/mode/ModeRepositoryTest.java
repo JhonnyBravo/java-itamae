@@ -1,20 +1,19 @@
 package java_itamae.domain.repository.mode;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.experimental.theories.DataPoint;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 @RunWith(Enclosed.class)
@@ -253,9 +252,6 @@ public class ModeRepositoryTest {
         private ModeRepository mr;
         private File file;
 
-        @Rule
-        public ExpectedException exception = ExpectedException.none();
-
         @Before
         public void setUp() throws Exception {
             mr = new ModeRepositoryImpl();
@@ -270,14 +266,14 @@ public class ModeRepositoryTest {
 
         @Theory
         public void setMode実行時にExceptionが送出されること(String mode) throws Exception {
-            exception.expect(Exception.class);
-
-            try {
-                mr.setMode("test.txt", mode);
-            } catch (final Exception e) {
-                System.err.println(e);
-                throw e;
-            }
+            assertThrows(Exception.class, () -> {
+                try {
+                    mr.setMode("test.txt", mode);
+                } catch (final Exception e) {
+                    System.err.println(e);
+                    throw e;
+                }
+            });
         }
     }
 }
