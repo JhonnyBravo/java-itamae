@@ -1,7 +1,7 @@
 package java_itamae_contents.domain.repository.contents;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.io.Reader;
@@ -67,7 +67,7 @@ public class ContentsRepositoryTest {
             final ContentsAttribute attr = new ContentsAttribute();
             attr.setPath("test.txt");
 
-            final List<String> newContents = new ArrayList<String>();
+            final List<String> newContents = new ArrayList<>();
             newContents.add("1 行目");
             newContents.add("2 行目");
 
@@ -97,7 +97,7 @@ public class ContentsRepositoryTest {
                 attr.setEncoding("MS932");
             }
 
-            final List<String> newContents = new ArrayList<String>();
+            final List<String> newContents = new ArrayList<>();
             newContents.add("1 行目");
             newContents.add("2 行目");
 
@@ -141,7 +141,7 @@ public class ContentsRepositoryTest {
             final ContentsAttribute attr = new ContentsAttribute();
             attr.setPath("test.txt");
 
-            final List<String> contents = new ArrayList<String>();
+            final List<String> contents = new ArrayList<>();
             contents.add("1 行目");
             contents.add("2 行目");
 
@@ -178,7 +178,7 @@ public class ContentsRepositoryTest {
             final ContentsAttribute attr = new ContentsAttribute();
             attr.setPath("test.txt");
 
-            final List<String> newContents = new ArrayList<String>();
+            final List<String> newContents = new ArrayList<>();
             newContents.add("上書きテスト");
 
             final Writer writer = sr.getWriter(attr);
@@ -206,7 +206,7 @@ public class ContentsRepositoryTest {
                 attr.setEncoding("MS932");
             }
 
-            final List<String> newContents = new ArrayList<String>();
+            final List<String> newContents = new ArrayList<>();
             newContents.add("上書きテスト");
 
             final Writer writer = sr.getWriter(attr);
