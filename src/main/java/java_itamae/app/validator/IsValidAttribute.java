@@ -3,13 +3,12 @@ package java_itamae.app.validator;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import java_itamae.domain.model.Attribute;
 
 /**
@@ -19,8 +18,7 @@ public class IsValidAttribute implements Predicate<Attribute> {
     /**
      * Attribute のバリデーションチェックを実行する。
      *
-     * @param attr
-     *            判定対象とする Attribute を指定する。
+     * @param attr 判定対象とする Attribute を指定する。
      * @return isValid
      *         <ul>
      *         <li>true: エラーが無いことを表す。</li>
@@ -30,10 +28,8 @@ public class IsValidAttribute implements Predicate<Attribute> {
     @Override
     public boolean test(Attribute attr) {
         final Logger logger = LoggerFactory.getLogger(this.getClass());
-        final Validator validator = Validation.buildDefaultValidatorFactory()
-                .getValidator();
-        final Set<ConstraintViolation<Attribute>> resultSet = validator
-                .validate(attr);
+        final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        final Set<ConstraintViolation<Attribute>> resultSet = validator.validate(attr);
 
         if (resultSet.size() > 0) {
             resultSet.stream().forEach(error -> {
@@ -48,5 +44,4 @@ public class IsValidAttribute implements Predicate<Attribute> {
         }
 
     }
-
 }
