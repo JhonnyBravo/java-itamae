@@ -24,7 +24,7 @@ dependencies {
     compile group: 'gnu.getopt', name: 'java-getopt', version: '1.0.13'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '7.0.1.Final'
-    compile group: 'org.glassfish', name: 'jakarta.el', version: '4.0.0'
+    compile group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
     // Use JUnit test framework
     testCompile 'junit:junit:4.13.2'
 }
