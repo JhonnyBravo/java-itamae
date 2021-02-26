@@ -1,22 +1,13 @@
 package java_itamae_contents.app;
 
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
+import java_itamae_contents.app.contents.AppendContent;
+import java_itamae_contents.app.contents.DeleteContents;
+import java_itamae_contents.app.contents.GetContents;
+import java_itamae_contents.app.contents.SetContent;
+import java_itamae_contents.app.validator.IsValidContentsAttribute;
 import java_itamae_contents.domain.model.ContentsAttribute;
-import java_itamae_contents.domain.service.contents.ContentsService;
-import java_itamae_contents.domain.service.contents.ContentsServiceImpl;
 
 /**
  * テキストファイルの読み書きを実行する。
@@ -44,7 +35,6 @@ public class Main {
         longopts[5] = new LongOpt("delete-content", LongOpt.NO_ARGUMENT, null, 'd');
 
         final Getopt options = new Getopt("Main", args, "p:e:s:a:gd", longopts);
-        final Logger logger = LoggerFactory.getLogger(Main.class);
 
         final ContentsAttribute attr = new ContentsAttribute();
 
@@ -55,6 +45,13 @@ public class Main {
         int deleteFlag = 0;
 
         String content = null;
+
+        int status = 0;
+        final Usage usage = new Usage();
+
+        if (args.length == 0) {
+            usage.run();
+        }
 
         while ((c = options.getopt()) != -1) {
             switch (c) {
@@ -78,103 +75,22 @@ public class Main {
             case 'd':
                 deleteFlag = 1;
                 break;
+            default:
+                usage.run();
+                status = 1;
+                break;
             }
         }
 
-        final Predicate<ContentsAttribute> isValid = attribute -> {
-            final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-            final Set<ConstraintViolation<ContentsAttribute>> validResult = validator.validate(attribute);
-            boolean result = true;
-
-            if (validResult.size() > 0) {
-                validResult.stream().forEach(e -> {
-                    final String path = e.getPropertyPath().toString();
-                    final String message = e.getMessage();
-                    logger.warn(path + ": " + message);
-                });
-
-                result = false;
-            }
-
-            return result;
-        };
-
-        final ContentsService cs = new ContentsServiceImpl(attr);
-
-        final Function<String, Integer> appendContent = line -> {
-            try {
-                final boolean result = cs.appendContent(line);
-
-                if (result) {
-                    return 2;
-                } else {
-                    return 0;
-                }
-            } catch (final Exception e) {
-                logger.warn(e.toString());
-                return 1;
-            }
-        };
-
-        final Function<String, Integer> setContent = line -> {
-            try {
-                final boolean result = cs.setContent(line);
-
-                if (result) {
-                    return 2;
-                } else {
-                    return 0;
-                }
-            } catch (final Exception e) {
-                return 1;
-            }
-        };
-
-        final Supplier<Integer> deleteContents = () -> {
-            try {
-                final boolean result = cs.deleteContents();
-
-                if (result) {
-                    return 2;
-                } else {
-                    return 0;
-                }
-            } catch (final Exception e) {
-                logger.warn(e.toString());
-                return 1;
-            }
-        };
-
-        final Supplier<Integer> getContents = () -> {
-            try {
-                final List<String> contents = cs.getContents();
-
-                if (contents.size() == 0) {
-                    return 0;
-                } else {
-                    contents.forEach(line -> {
-                        System.out.println(line);
-                    });
-
-                    return 2;
-                }
-            } catch (final Exception e) {
-                logger.warn(e.toString());
-                return 1;
-            }
-        };
-
-        int status = 0;
-
-        if (isValid.test(attr)) {
+        if (new IsValidContentsAttribute().test(attr)) {
             if (appendFlag == 1) {
-                status = appendContent.apply(content);
+                status = new AppendContent().apply(attr, content);
             } else if (setFlag == 1) {
-                status = setContent.apply(content);
+                status = new SetContent().apply(attr, content);
             } else if (deleteFlag == 1) {
-                status = deleteContents.get();
+                status = new DeleteContents().apply(attr);
             } else if (getFlag == 1) {
-                status = getContents.get();
+                status = new GetContents().apply(attr);
             }
         } else {
             status = 1;
