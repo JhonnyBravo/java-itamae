@@ -11,40 +11,39 @@ import java_itamae.domain.repository.owner.OwnerRepository;
 import java_itamae.domain.repository.owner.OwnerRepositoryImpl;
 
 public class FileServiceImpl implements FileService {
-    private final FileRepository fr;
-    private final OwnerRepository or;
-    private final GroupRepository gr;
-    private final ModeRepository mr;
+  private final FileRepository fr;
+  private final OwnerRepository or;
+  private final GroupRepository gr;
+  private final ModeRepository mr;
 
-    public FileServiceImpl() {
-        fr = new FileRepositoryImpl();
-        or = new OwnerRepositoryImpl();
-        gr = new GroupRepositoryImpl();
-        mr = new ModeRepositoryImpl();
+  public FileServiceImpl() {
+    fr = new FileRepositoryImpl();
+    or = new OwnerRepositoryImpl();
+    gr = new GroupRepositoryImpl();
+    mr = new ModeRepositoryImpl();
+  }
+
+  @Override
+  public boolean create(Attribute attr) throws Exception {
+    boolean status = fr.create(attr.getPath());
+
+    if (attr.getOwner() != null) {
+      status = or.setOwner(attr.getPath(), attr.getOwner());
     }
 
-    @Override
-    public boolean create(Attribute attr) throws Exception {
-        boolean status = fr.create(attr.getPath());
-
-        if (attr.getOwner() != null) {
-            status = or.setOwner(attr.getPath(), attr.getOwner());
-        }
-
-        if (attr.getGroup() != null) {
-            status = gr.setGroup(attr.getPath(), attr.getGroup());
-        }
-
-        if (attr.getMode() != null) {
-            status = mr.setMode(attr.getPath(), attr.getMode());
-        }
-
-        return status;
+    if (attr.getGroup() != null) {
+      status = gr.setGroup(attr.getPath(), attr.getGroup());
     }
 
-    @Override
-    public boolean delete(Attribute attr) throws Exception {
-        final boolean status = fr.delete(attr.getPath());
-        return status;
+    if (attr.getMode() != null) {
+      status = mr.setMode(attr.getPath(), attr.getMode());
     }
+
+    return status;
+  }
+
+  @Override
+  public boolean delete(Attribute attr) throws Exception {
+    return fr.delete(attr.getPath());
+  }
 }
