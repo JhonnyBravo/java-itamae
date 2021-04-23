@@ -11,12 +11,15 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'maven'
+    id 'checkstyle'
+    id 'pmd'
 }
 
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
     jcenter()
     maven {url 'https://jitpack.io'}
 }
@@ -54,6 +57,18 @@ artifacts {
 javadoc {
     options.charSet='UTF-8'
     options.encoding='UTF-8'
+}
+
+checkstyle {
+    toolVersion='8.41.1'
+}
+
+pmd {
+    toolVersion='6.33.0'
+    ignoreFailures=true
+    ruleSets=[
+        "java-quickstart"
+    ]
 }
 
 tasks.withType(JavaCompile) {
