@@ -6,53 +6,50 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OwnerRepositoryImpl implements OwnerRepository {
-    private final Logger logger;
+  private final Logger logger;
 
-    public OwnerRepositoryImpl() {
-        logger = LoggerFactory.getLogger(this.getClass());
+  public OwnerRepositoryImpl() {
+    logger = LoggerFactory.getLogger(this.getClass());
+  }
+
+  @Override
+  public UserPrincipal createOwner(String owner) throws Exception {
+    final UserPrincipalLookupService upls =
+        FileSystems.getDefault().getUserPrincipalLookupService();
+    return upls.lookupPrincipalByName(owner);
+  }
+
+  @Override
+  public UserPrincipal getOwner(String path) throws Exception {
+    final Path p = FileSystems.getDefault().getPath(path);
+
+    if (!p.toFile().exists()) {
+      throw new FileNotFoundException(path + " が見つかりません。");
     }
 
-    @Override
-    public UserPrincipal createOwner(String owner) throws Exception {
-        final UserPrincipalLookupService upls = FileSystems.getDefault().getUserPrincipalLookupService();
-        final UserPrincipal up = upls.lookupPrincipalByName(owner);
+    return Files.getOwner(p);
+  }
 
-        return up;
+  @Override
+  public boolean setOwner(String path, String owner) throws Exception {
+    boolean status = false;
+
+    final UserPrincipal curOwner = getOwner(path);
+    final UserPrincipal newOwner = createOwner(owner);
+
+    if (curOwner.equals(newOwner)) {
+      return status;
     }
 
-    @Override
-    public UserPrincipal getOwner(String path) throws Exception {
-        final Path p = FileSystems.getDefault().getPath(path);
+    logger.info("所有者を変更しています......");
+    final Path p = FileSystems.getDefault().getPath(path);
+    Files.setOwner(p, newOwner);
 
-        if (!p.toFile().exists()) {
-            throw new FileNotFoundException(path + " が見つかりません。");
-        }
-
-        final UserPrincipal up = Files.getOwner(p);
-        return up;
-    }
-
-    @Override
-    public boolean setOwner(String path, String owner) throws Exception {
-        boolean status = false;
-
-        final UserPrincipal curOwner = getOwner(path);
-        final UserPrincipal newOwner = createOwner(owner);
-
-        if (curOwner.equals(newOwner)) {
-            return status;
-        }
-
-        logger.info("所有者を変更しています......");
-        final Path p = FileSystems.getDefault().getPath(path);
-        Files.setOwner(p, newOwner);
-
-        status = true;
-        return status;
-    }
+    status = true;
+    return status;
+  }
 }
