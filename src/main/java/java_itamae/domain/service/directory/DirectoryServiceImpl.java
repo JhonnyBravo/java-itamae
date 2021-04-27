@@ -41,15 +41,15 @@ public class DirectoryServiceImpl implements DirectoryService {
     }
 
     if (attr.getOwner() != null) {
-      status = or.setOwner(attr.getPath(), attr.getOwner());
+      status = or.updateOwner(attr.getPath(), attr.getOwner());
     }
 
     if (attr.getGroup() != null) {
-      status = gr.setGroup(attr.getPath(), attr.getGroup());
+      status = gr.updateGroup(attr.getPath(), attr.getGroup());
     }
 
     if (attr.getMode() != null) {
-      status = mr.setMode(attr.getPath(), attr.getMode());
+      status = mr.updateMode(attr.getPath(), attr.getMode());
     }
 
     return status;
