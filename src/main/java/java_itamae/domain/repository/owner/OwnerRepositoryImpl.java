@@ -35,7 +35,7 @@ public class OwnerRepositoryImpl implements OwnerRepository {
   }
 
   @Override
-  public boolean setOwner(String path, String owner) throws Exception {
+  public boolean updateOwner(String path, String owner) throws Exception {
     boolean status = false;
 
     final UserPrincipal curOwner = getOwner(path);
