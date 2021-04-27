@@ -36,5 +36,5 @@ public interface OwnerRepository {
    *         </ul>
    * @throws Exception {@link java.lang.Exception}
    */
-  boolean setOwner(String path, String owner) throws Exception;
+  boolean updateOwner(String path, String owner) throws Exception;
 }
