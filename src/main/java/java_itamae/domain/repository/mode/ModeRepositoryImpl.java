@@ -37,7 +37,7 @@ public class ModeRepositoryImpl implements ModeRepository {
   }
 
   @Override
-  public boolean setMode(String path, String mode) throws Exception {
+  public boolean updateMode(String path, String mode) throws Exception {
     boolean status = false;
 
     final Set<PosixFilePermission> curPermission = getMode(path);
