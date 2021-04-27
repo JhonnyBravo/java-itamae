@@ -36,5 +36,5 @@ public interface GroupRepository {
    *         </ul>
    * @throws Exception {@link java.lang.Exception}
    */
-  boolean setGroup(String path, String group) throws Exception;
+  boolean updateGroup(String path, String group) throws Exception;
 }
