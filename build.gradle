@@ -66,9 +66,8 @@ checkstyle {
 pmd {
     toolVersion='6.33.0'
     ignoreFailures=true
-    ruleSets=[
-        "java-quickstart"
-    ]
+    ruleSetFiles=files("config/pmd/custom-java.xml")
+    ruleSets=[]
 }
 
 tasks.withType(JavaCompile) {
