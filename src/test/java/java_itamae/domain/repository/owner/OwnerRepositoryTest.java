@@ -44,14 +44,14 @@ public class OwnerRepositoryTest {
 
         @Test
         public void ディレクトリ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
-            final boolean status = or.setOwner("test_dir", owner);
+            final boolean status = or.updateOwner("test_dir", owner);
             assertThat(status, is(true));
         }
 
         @Test
         public void 新しく設定するディレクトリ所有者のユーザ名が現在設定されているディレクトリ所有者のユーザ名と同一である場合に終了ステータスがfalseであること() throws Exception {
-            or.setOwner("test_dir", owner);
-            final boolean status = or.setOwner("test_dir", owner);
+            or.updateOwner("test_dir", owner);
+            final boolean status = or.updateOwner("test_dir", owner);
 
             assertThat(status, is(false));
         }
@@ -59,7 +59,7 @@ public class OwnerRepositoryTest {
         @Test(expected = UserPrincipalNotFoundException.class)
         public void 新しく設定するディレクトリ所有者として存在しないユーザの名前を指定した場合にUserPrincipalNotFoundExceptionが送出されること() throws Exception {
             try {
-                or.setOwner("test_dir", "NotExist");
+                or.updateOwner("test_dir", "NotExist");
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -69,7 +69,7 @@ public class OwnerRepositoryTest {
         @Test(expected = FileNotFoundException.class)
         public void 存在しないディレクトリの所有者を変更しようとした場合にFileNotFoundExceptionが送出されること() throws Exception {
             try {
-                or.setOwner("NotExist", owner);
+                or.updateOwner("NotExist", owner);
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -102,14 +102,14 @@ public class OwnerRepositoryTest {
 
         @Test
         public void ファイル所有者の変更ができて終了ステータスがtrueであること() throws Exception {
-            final boolean status = or.setOwner("test.txt", owner);
+            final boolean status = or.updateOwner("test.txt", owner);
             assertThat(status, is(true));
         }
 
         @Test
         public void 新しく設定するファイル所有者のユーザ名が現在設定されているファイル所有者のユーザ名と同一である場合に終了ステータスがfalseであること() throws Exception {
-            or.setOwner("test.txt", owner);
-            final boolean status = or.setOwner("test.txt", owner);
+            or.updateOwner("test.txt", owner);
+            final boolean status = or.updateOwner("test.txt", owner);
 
             assertThat(status, is(false));
         }
@@ -117,7 +117,7 @@ public class OwnerRepositoryTest {
         @Test(expected = UserPrincipalNotFoundException.class)
         public void 新しく設定するファイル所有者として存在しないユーザの名前を指定した場合にUserPrincipalNotFoundExceptionが送出されること() throws Exception {
             try {
-                or.setOwner("test.txt", "NotExist");
+                or.updateOwner("test.txt", "NotExist");
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -127,7 +127,7 @@ public class OwnerRepositoryTest {
         @Test(expected = FileNotFoundException.class)
         public void 存在しないファイルの所有者を変更しようとした場合にFileNotFoundExceptionが送出されること() throws Exception {
             try {
-                or.setOwner("NotExist", owner);
+                or.updateOwner("NotExist", owner);
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
