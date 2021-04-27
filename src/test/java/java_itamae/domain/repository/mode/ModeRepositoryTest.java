@@ -32,7 +32,7 @@ public class ModeRepositoryTest {
         @Test(expected = FileNotFoundException.class)
         public void 存在しないディレクトリのパーミッション設定を変更しようとした場合にFileNotFoundExceptionが送出されること() throws Exception {
             try {
-                mr.setMode("NotExist", "640");
+                mr.updateMode("NotExist", "640");
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -42,7 +42,7 @@ public class ModeRepositoryTest {
         @Test(expected = FileNotFoundException.class)
         public void 存在しないファイルのパーミッション設定を変更しようとした場合にFileNotFoundExceptionが送出されること() throws Exception {
             try {
-                mr.setMode("NotExist.txt", "640");
+                mr.updateMode("NotExist.txt", "640");
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -124,14 +124,14 @@ public class ModeRepositoryTest {
 
         @Theory
         public void ディレクトリのパーミッション設定を変更できて終了ステータスがtrueであること(String mode) throws Exception {
-            final boolean status = mr.setMode("test_dir", mode);
+            final boolean status = mr.updateMode("test_dir", mode);
             assertThat(status, is(true));
         }
 
         @Theory
         public void 新しく設定するパーミッション値が現在設定されているパーミッション値と同一である場合に終了ステータスがfalseであること(String mode) throws Exception {
-            mr.setMode("test_dir", mode);
-            final boolean status = mr.setMode("test_dir", mode);
+            mr.updateMode("test_dir", mode);
+            final boolean status = mr.updateMode("test_dir", mode);
             assertThat(status, is(false));
         }
     }
@@ -210,14 +210,14 @@ public class ModeRepositoryTest {
 
         @Theory
         public void ファイルのパーミッション設定を変更できて終了ステータスがtrueであること(String mode) throws Exception {
-            final boolean status = mr.setMode("test.txt", mode);
+            final boolean status = mr.updateMode("test.txt", mode);
             assertThat(status, is(true));
         }
 
         @Theory
         public void 新しく設定するパーミッション値が現在設定されているパーミッション値と同一である場合に終了ステータスがfalseであること(String mode) throws Exception {
-            mr.setMode("test.txt", mode);
-            final boolean status = mr.setMode("test.txt", mode);
+            mr.updateMode("test.txt", mode);
+            final boolean status = mr.updateMode("test.txt", mode);
             assertThat(status, is(false));
         }
     }
@@ -268,7 +268,7 @@ public class ModeRepositoryTest {
         public void setMode実行時にExceptionが送出されること(String mode) throws Exception {
             assertThrows(Exception.class, () -> {
                 try {
-                    mr.setMode("test.txt", mode);
+                    mr.updateMode("test.txt", mode);
                 } catch (final Exception e) {
                     System.err.println(e);
                     throw e;
