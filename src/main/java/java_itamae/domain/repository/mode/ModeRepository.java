@@ -37,5 +37,5 @@ public interface ModeRepository {
    *         </ul>
    * @throws Exception {@link java.lang.Exception}
    */
-  boolean setMode(String path, String mode) throws Exception;
+  boolean updateMode(String path, String mode) throws Exception;
 }
