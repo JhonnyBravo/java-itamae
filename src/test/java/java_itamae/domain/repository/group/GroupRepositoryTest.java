@@ -44,14 +44,14 @@ public class GroupRepositoryTest {
 
         @Test
         public void グループ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
-            final boolean status = gr.setGroup("test_dir", group);
+            final boolean status = gr.updateGroup("test_dir", group);
             assertThat(status, is(true));
         }
 
         @Test
         public void 新しく設定するグループ所有者のグループ名が現在設定されているグループ所有者のグループ名と同一である場合に終了ステータスがfalseであること() throws Exception {
-            gr.setGroup("test_dir", group);
-            final boolean status = gr.setGroup("test_dir", group);
+            gr.updateGroup("test_dir", group);
+            final boolean status = gr.updateGroup("test_dir", group);
 
             assertThat(status, is(false));
         }
@@ -59,7 +59,7 @@ public class GroupRepositoryTest {
         @Test(expected = UserPrincipalNotFoundException.class)
         public void 新しく設定するグループ所有者として存在しないグループの名前を指定した場合にUserPrincipalNotFoundExceptionが送出されること() throws Exception {
             try {
-                gr.setGroup("test_dir", "NotExist");
+                gr.updateGroup("test_dir", "NotExist");
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -69,7 +69,7 @@ public class GroupRepositoryTest {
         @Test(expected = FileNotFoundException.class)
         public void 存在しないディレクトリのグループ所有者を変更しようとした場合にFileNotFoundExceptionが送出されること() throws Exception {
             try {
-                gr.setGroup("NotExist", group);
+                gr.updateGroup("NotExist", group);
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -102,14 +102,14 @@ public class GroupRepositoryTest {
 
         @Test
         public void グループ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
-            final boolean status = gr.setGroup("test.txt", group);
+            final boolean status = gr.updateGroup("test.txt", group);
             assertThat(status, is(true));
         }
 
         @Test
         public void 新しく設定するグループ所有者のグループ名が現在設定されているグループ所有者のグループ名と同一である場合に終了ステータスがfalseであること() throws Exception {
-            gr.setGroup("test.txt", group);
-            final boolean status = gr.setGroup("test.txt", group);
+            gr.updateGroup("test.txt", group);
+            final boolean status = gr.updateGroup("test.txt", group);
 
             assertThat(status, is(false));
         }
@@ -117,7 +117,7 @@ public class GroupRepositoryTest {
         @Test(expected = UserPrincipalNotFoundException.class)
         public void 新しく設定するグループ所有者として存在しないグループの名前を指定した場合にUserPrincipalNotFoundExceptionが送出されること() throws Exception {
             try {
-                gr.setGroup("test.txt", "NotExist");
+                gr.updateGroup("test.txt", "NotExist");
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
@@ -127,7 +127,7 @@ public class GroupRepositoryTest {
         @Test(expected = FileNotFoundException.class)
         public void 存在しないファイルのグループ所有者を変更しようとした場合にFileNotFoundExceptionが送出されること() throws Exception {
             try {
-                gr.setGroup("NotExist", group);
+                gr.updateGroup("NotExist", group);
             } catch (final Exception e) {
                 System.err.println(e);
                 throw e;
