@@ -37,7 +37,7 @@ public class GroupRepositoryImpl implements GroupRepository {
   }
 
   @Override
-  public boolean setGroup(String path, String group) throws Exception {
+  public boolean updateGroup(String path, String group) throws Exception {
     boolean status = false;
 
     final GroupPrincipal curGroup = getGroup(path);
