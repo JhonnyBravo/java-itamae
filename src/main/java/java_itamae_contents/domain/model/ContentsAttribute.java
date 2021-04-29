@@ -2,6 +2,7 @@ package java_itamae_contents.domain.model;
 
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * 読み書きの対象とするファイルの情報を管理する。
@@ -37,7 +38,8 @@ public class ContentsAttribute implements Serializable {
    * @return encoding 文字エンコーディング
    */
   public String getEncoding() {
-    return encoding;
+    final Optional<String> value = Optional.ofNullable(encoding);
+    return value.orElse(System.getProperty("file.encoding"));
   }
 
   /**
