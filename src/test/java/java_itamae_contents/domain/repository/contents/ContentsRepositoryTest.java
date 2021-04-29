@@ -72,7 +72,7 @@ public class ContentsRepositoryTest {
             newContents.add("2 行目");
 
             final Writer writer = sr.getWriter(attr);
-            final boolean status = cr.setContents(writer, newContents);
+            final boolean status = cr.updateContents(writer, newContents);
             assertThat(status, is(true));
 
             final Reader reader = sr.getReader(attr);
@@ -102,7 +102,7 @@ public class ContentsRepositoryTest {
             newContents.add("2 行目");
 
             final Writer writer = sr.getWriter(attr);
-            final boolean status = cr.setContents(writer, newContents);
+            final boolean status = cr.updateContents(writer, newContents);
             assertThat(status, is(true));
 
             final Reader reader = sr.getReader(attr);
@@ -149,7 +149,7 @@ public class ContentsRepositoryTest {
             final Writer writer = sr.getWriter(attr);
 
             cr = new ContentsRepositoryImpl();
-            cr.setContents(writer, contents);
+            cr.updateContents(writer, contents);
         }
 
         @After
@@ -182,7 +182,7 @@ public class ContentsRepositoryTest {
             newContents.add("上書きテスト");
 
             final Writer writer = sr.getWriter(attr);
-            final boolean status = cr.setContents(writer, newContents);
+            final boolean status = cr.updateContents(writer, newContents);
             assertThat(status, is(true));
 
             final Reader reader = sr.getReader(attr);
@@ -210,7 +210,7 @@ public class ContentsRepositoryTest {
             newContents.add("上書きテスト");
 
             final Writer writer = sr.getWriter(attr);
-            final boolean status = cr.setContents(writer, newContents);
+            final boolean status = cr.updateContents(writer, newContents);
             assertThat(status, is(true));
 
             final Reader reader = sr.getReader(attr);
