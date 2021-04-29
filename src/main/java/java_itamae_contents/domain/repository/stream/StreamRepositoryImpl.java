@@ -19,10 +19,6 @@ public class StreamRepositoryImpl implements StreamRepository {
       throw new FileNotFoundException(attr.getPath() + " が見つかりません。");
     }
 
-    if (attr.getEncoding() == null) {
-      attr.setEncoding(System.getProperty("file.encoding"));
-    }
-
     return Files.newBufferedReader(Paths.get(attr.getPath()), Charset.forName(attr.getEncoding()));
   }
 
@@ -32,10 +28,6 @@ public class StreamRepositoryImpl implements StreamRepository {
 
     if (!file.isFile()) {
       throw new FileNotFoundException(attr.getPath() + " が見つかりません。");
-    }
-
-    if (attr.getEncoding() == null) {
-      attr.setEncoding(System.getProperty("file.encoding"));
     }
 
     return Files.newBufferedWriter(Paths.get(attr.getPath()), Charset.forName(attr.getEncoding()));
