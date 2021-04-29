@@ -59,7 +59,7 @@ public class ContentsServiceTest {
 
         @Test
         public void setContent実行時にファイルが作成されて文字列の書込みができて終了ステータスがtrueであること() throws Exception {
-            final boolean status = cs.setContent("書込みテスト");
+            final boolean status = cs.updateContent("書込みテスト");
             assertThat(status, is(true));
             assertThat(file.isFile(), is(true));
 
@@ -117,7 +117,7 @@ public class ContentsServiceTest {
 
         @Test
         public void setContent実行時にファイルへ文字列の書込みができて終了ステータスがtrueであること() throws Exception {
-            final boolean status = cs.setContent("書込みテスト");
+            final boolean status = cs.updateContent("書込みテスト");
             assertThat(status, is(true));
 
             final List<String> contents = cs.getContents();
@@ -185,7 +185,7 @@ public class ContentsServiceTest {
 
         @Test
         public void setContent実行時にファイルの上書きができて終了ステータスがtrueであること() throws Exception {
-            final boolean status = cs.setContent("上書きテスト");
+            final boolean status = cs.updateContent("上書きテスト");
             assertThat(status, is(true));
 
             final List<String> contents = cs.getContents();
