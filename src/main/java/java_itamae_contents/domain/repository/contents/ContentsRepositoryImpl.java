@@ -9,46 +9,46 @@ import java.util.List;
 
 public class ContentsRepositoryImpl implements ContentsRepository {
 
-    @Override
-    public List<String> getContents(Reader reader) throws Exception {
-        final List<String> contents = new ArrayList<String>();
+  @Override
+  public List<String> getContents(Reader reader) throws Exception {
+    final List<String> contents = new ArrayList<>();
 
-        try (BufferedReader buffer = new BufferedReader(reader)) {
-            String line;
+    try (BufferedReader buffer = new BufferedReader(reader)) {
+      String line;
 
-            while ((line = buffer.readLine()) != null) {
-                contents.add(line);
-            }
-        }
-
-        return contents;
+      while ((line = buffer.readLine()) != null) {
+        contents.add(line);
+      }
     }
 
-    @Override
-    public boolean setContents(Writer writer, List<String> contents) throws Exception {
-        boolean status = false;
+    return contents;
+  }
 
-        try (BufferedWriter buffer = new BufferedWriter(writer)) {
-            for (final String line : contents) {
-                buffer.write(line);
-                buffer.newLine();
-            }
+  @Override
+  public boolean updateContents(Writer writer, List<String> contents) throws Exception {
+    boolean status = false;
 
-            status = true;
-        }
+    try (BufferedWriter buffer = new BufferedWriter(writer)) {
+      for (final String line : contents) {
+        buffer.write(line);
+        buffer.newLine();
+      }
 
-        return status;
+      status = true;
     }
 
-    @Override
-    public boolean deleteContents(Writer writer) throws Exception {
-        boolean status = false;
+    return status;
+  }
 
-        try (BufferedWriter buffer = new BufferedWriter(writer)) {
-            buffer.write("");
-            status = true;
-        }
+  @Override
+  public boolean deleteContents(Writer writer) throws Exception {
+    boolean status = false;
 
-        return status;
+    try (BufferedWriter buffer = new BufferedWriter(writer)) {
+      buffer.write("");
+      status = true;
     }
+
+    return status;
+  }
 }
