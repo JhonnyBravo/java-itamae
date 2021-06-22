@@ -9,20 +9,27 @@ import java_itamae.domain.repository.mode.ModeRepository;
 import java_itamae.domain.repository.mode.ModeRepositoryImpl;
 import java_itamae.domain.repository.owner.OwnerRepository;
 import java_itamae.domain.repository.owner.OwnerRepositoryImpl;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 
 public class DirectoryServiceImpl implements DirectoryService {
+  @Inject
+  @New(DirectoryRepositoryImpl.class)
+  private DirectoryRepository dr;
+  @Inject
+  @New(OwnerRepositoryImpl.class)
+  private OwnerRepository or;
+  @Inject
+  @New(GroupRepositoryImpl.class)
+  private GroupRepository gr;
+  @Inject
+  @New(ModeRepositoryImpl.class)
+  private ModeRepository mr;
+
   private boolean recursive;
-  private final DirectoryRepository dr;
-  private final OwnerRepository or;
-  private final GroupRepository gr;
-  private final ModeRepository mr;
 
   public DirectoryServiceImpl() {
     recursive = false;
-    dr = new DirectoryRepositoryImpl();
-    or = new OwnerRepositoryImpl();
-    gr = new GroupRepositoryImpl();
-    mr = new ModeRepositoryImpl();
   }
 
   @Override
