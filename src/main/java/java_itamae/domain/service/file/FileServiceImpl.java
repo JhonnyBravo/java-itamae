@@ -9,19 +9,22 @@ import java_itamae.domain.repository.mode.ModeRepository;
 import java_itamae.domain.repository.mode.ModeRepositoryImpl;
 import java_itamae.domain.repository.owner.OwnerRepository;
 import java_itamae.domain.repository.owner.OwnerRepositoryImpl;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 
 public class FileServiceImpl implements FileService {
-  private final FileRepository fr;
-  private final OwnerRepository or;
-  private final GroupRepository gr;
-  private final ModeRepository mr;
-
-  public FileServiceImpl() {
-    fr = new FileRepositoryImpl();
-    or = new OwnerRepositoryImpl();
-    gr = new GroupRepositoryImpl();
-    mr = new ModeRepositoryImpl();
-  }
+  @Inject
+  @New(FileRepositoryImpl.class)
+  private FileRepository fr;
+  @Inject
+  @New(OwnerRepositoryImpl.class)
+  private OwnerRepository or;
+  @Inject
+  @New(GroupRepositoryImpl.class)
+  private GroupRepository gr;
+  @Inject
+  @New(ModeRepositoryImpl.class)
+  private ModeRepository mr;
 
   @Override
   public boolean create(Attribute attr) throws Exception {
