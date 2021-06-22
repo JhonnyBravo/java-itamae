@@ -4,6 +4,8 @@ import java.util.function.BiFunction;
 import java_itamae.domain.model.Attribute;
 import java_itamae.domain.service.directory.DirectoryService;
 import java_itamae.domain.service.directory.DirectoryServiceImpl;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +13,14 @@ import org.slf4j.LoggerFactory;
  * ディレクトリを削除する。
  */
 public class DeleteDirectory implements BiFunction<Attribute, Boolean, Integer> {
+  @Inject
+  @New(DirectoryServiceImpl.class)
+  private DirectoryService service;
+
   /**
    * ディレクトリを削除する。
    *
-   * @param attr 操作対象とするディレクトリの情報を収めた Attribute を指定する。
+   * @param attr 操作対象とするディレクトリの情報を収めた {@link Attribute} を指定する。
    * @param recursive
    *        <ul>
    *        <li>true: 操作対象とするディレクトリの配下に存在するファイル・ディレクトリも含めて削除する。</li>
@@ -30,7 +36,6 @@ public class DeleteDirectory implements BiFunction<Attribute, Boolean, Integer> 
   @Override
   public Integer apply(Attribute attr, Boolean recursive) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    final DirectoryService service = new DirectoryServiceImpl();
     service.setRecursive(recursive);
 
     try {
