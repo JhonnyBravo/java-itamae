@@ -4,6 +4,8 @@ import java.util.function.BiFunction;
 import java_itamae.domain.model.Attribute;
 import java_itamae.domain.service.directory.DirectoryService;
 import java_itamae.domain.service.directory.DirectoryServiceImpl;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,10 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 public class CreateDirectory implements BiFunction<Attribute, Boolean, Integer> {
+  @Inject
+  @New(DirectoryServiceImpl.class)
+  private DirectoryService service;
+
   /**
    * ディレクトリに対して以下の操作を実行する。
    * <ul>
@@ -26,7 +32,7 @@ public class CreateDirectory implements BiFunction<Attribute, Boolean, Integer> 
    * <li>パーミッションの変更</li>
    * </ul>
    *
-   * @param attr 操作対象とするディレクトリの情報を収めた Attribute を指定する。
+   * @param attr 操作対象とするディレクトリの情報を収めた {@link Attribute} を指定する。
    * @param recursive
    *        <ul>
    *        <li>true: 複数階層のディレクトリを親ディレクトリも含めて作成する。</li>
@@ -42,7 +48,6 @@ public class CreateDirectory implements BiFunction<Attribute, Boolean, Integer> 
   @Override
   public Integer apply(Attribute attr, Boolean recursive) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    final DirectoryService service = new DirectoryServiceImpl();
     service.setRecursive(recursive);
 
     try {
