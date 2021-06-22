@@ -4,6 +4,8 @@ import java.util.function.Function;
 import java_itamae.domain.model.Attribute;
 import java_itamae.domain.service.file.FileService;
 import java_itamae.domain.service.file.FileServiceImpl;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +13,14 @@ import org.slf4j.LoggerFactory;
  * ファイルを削除する。
  */
 public class DeleteFile implements Function<Attribute, Integer> {
+  @Inject
+  @New(FileServiceImpl.class)
+  private FileService service;
+
   /**
    * ファイルを削除する。
    *
-   * @param attr 操作対象とするファイルの情報を収めた Attribute を指定する。
+   * @param attr 操作対象とするファイルの情報を収めた {@link Attribute} を指定する。
    * @return status
    *         <ul>
    *         <li>0: 操作を実行しなかったことを表す。</li>
@@ -25,7 +31,7 @@ public class DeleteFile implements Function<Attribute, Integer> {
   @Override
   public Integer apply(Attribute attr) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    final FileService service = new FileServiceImpl();
+
 
     try {
       final boolean result = service.delete(attr);
