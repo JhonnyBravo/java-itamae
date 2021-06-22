@@ -4,6 +4,8 @@ import java.util.function.Function;
 import java_itamae.domain.model.Attribute;
 import java_itamae.domain.service.file.FileService;
 import java_itamae.domain.service.file.FileServiceImpl;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,10 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 public class CreateFile implements Function<Attribute, Integer> {
+  @Inject
+  @New(FileServiceImpl.class)
+  private FileService service;
+
   /**
    * ファイルに対して以下の操作を実行する。
    * <ul>
@@ -37,7 +43,6 @@ public class CreateFile implements Function<Attribute, Integer> {
   @Override
   public Integer apply(Attribute attr) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    final FileService service = new FileServiceImpl();
 
     try {
       final boolean result = service.create(attr);
