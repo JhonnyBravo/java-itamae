@@ -64,9 +64,7 @@ src/test/resources
 
 # Gradle
 .gradle
-gradle
-gradlew*
-/build/
+build
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -76,9 +74,6 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
-
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-gradle/wrapper/gradle-wrapper.properties
 
 # Compiled class file
 *.class
@@ -93,7 +88,6 @@ gradle/wrapper/gradle-wrapper.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
