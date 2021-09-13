@@ -10,6 +10,7 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
     id 'eclipse'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'maven-publish'
     id 'checkstyle'
     id 'pmd'
@@ -22,17 +23,23 @@ repositories {
     maven {url 'https://jitpack.io'}
 }
 
+dependencyManagement {
+    imports {
+        mavenBom 'com.github.JhonnyBravo:java-se-template-bom:dependency-management-SNAPSHOT'
+    }
+}
+
 dependencies {
-    api group: 'gnu.getopt', name: 'java-getopt', version: '1.0.13'
-    api group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    api group: 'org.hibernate.validator', name: 'hibernate-validator', version: '7.0.1.Final'
-    api group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
+    api 'gnu.getopt:java-getopt'
+    api 'ch.qos.logback:logback-classic'
+    api 'org.hibernate.validator:hibernate-validator'
+    api 'org.glassfish:jakarta.el'
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'junit:junit'
 }
 
 group='com.github.JhonnyBravo'
-version='master-SNAPSHOT'
+version='dependency-management-SNAPSHOT'
 sourceCompatibility=1.8
 targetCompatibility=1.8
 
