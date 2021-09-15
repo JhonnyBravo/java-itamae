@@ -25,18 +25,18 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'com.github.JhonnyBravo:java-se-template-bom:dependency-management-SNAPSHOT'
+        mavenBom 'com.github.JhonnyBravo:java-se-template-bom:master-SNAPSHOT'
     }
 }
 
 dependencies {
-    api 'com.github.JhonnyBravo:java-itamae-contents:dependency-management-SNAPSHOT'
+    api 'com.github.JhonnyBravo:java-itamae-contents:master-SNAPSHOT'
     // Use JUnit test framework
     testImplementation 'junit:junit'
 }
 
 group='com.github.JhonnyBravo'
-version='dependency-management-SNAPSHOT'
+version='master-SNAPSHOT'
 sourceCompatibility=1.8
 targetCompatibility=1.8
 
