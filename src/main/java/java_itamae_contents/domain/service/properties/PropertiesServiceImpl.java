@@ -1,4 +1,4 @@
-package java_itamae_properties.domain.service.properties;
+package java_itamae_contents.domain.service.properties;
 
 import java.io.File;
 import java.io.Reader;
@@ -6,10 +6,10 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_contents.domain.repository.properties.PropertiesRepository;
+import java_itamae_contents.domain.repository.properties.PropertiesRepositoryImpl;
 import java_itamae_contents.domain.repository.stream.StreamRepository;
 import java_itamae_contents.domain.repository.stream.StreamRepositoryImpl;
-import java_itamae_properties.domain.repository.properties.PropertiesRepository;
-import java_itamae_properties.domain.repository.properties.PropertiesRepositoryImpl;
 
 public class PropertiesServiceImpl implements PropertiesService {
   private final ContentsAttribute attr;

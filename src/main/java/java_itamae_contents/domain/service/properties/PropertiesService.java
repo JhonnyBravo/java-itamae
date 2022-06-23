@@ -1,4 +1,4 @@
-package java_itamae_properties.domain.service.properties;
+package java_itamae_contents.domain.service.properties;
 
 /**
  * プロパティファイルの読み書きを操作する。
