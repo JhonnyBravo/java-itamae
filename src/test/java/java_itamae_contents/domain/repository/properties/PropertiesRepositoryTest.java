@@ -1,4 +1,4 @@
-package java_itamae_properties.domain.repository.properties;
+package java_itamae_contents.domain.repository.properties;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -17,6 +17,8 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_contents.domain.repository.properties.PropertiesRepository;
+import java_itamae_contents.domain.repository.properties.PropertiesRepositoryImpl;
 import java_itamae_contents.domain.repository.stream.StreamRepository;
 import java_itamae_contents.domain.repository.stream.StreamRepositoryImpl;
 
