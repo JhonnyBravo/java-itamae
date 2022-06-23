@@ -1,4 +1,4 @@
-package java_itamae_properties.domain.repository.properties;
+package java_itamae_contents.domain.repository.properties;
 
 import java.io.Reader;
 import java.io.Writer;
