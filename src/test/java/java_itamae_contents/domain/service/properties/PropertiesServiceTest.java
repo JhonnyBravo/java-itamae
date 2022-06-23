@@ -1,4 +1,4 @@
-package java_itamae_properties.domain.service.properties;
+package java_itamae_contents.domain.service.properties;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -14,6 +14,8 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_contents.domain.service.properties.PropertiesService;
+import java_itamae_contents.domain.service.properties.PropertiesServiceImpl;
 
 @RunWith(Enclosed.class)
 public class PropertiesServiceTest {
