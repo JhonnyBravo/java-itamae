@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.model;
+package java_itamae_contents.domain.model.contents;
 
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * 読み書きの対象とするファイルの情報を管理する。
  */
-public class ContentsAttribute implements Serializable {
+public class ContentsModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @NotNull
