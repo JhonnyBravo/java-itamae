@@ -8,24 +8,26 @@ import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.UnsupportedCharsetException;
-import java_itamae_contents.domain.model.ContentsAttribute;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import java_itamae_contents.domain.model.contents.ContentsModel;
+
 @RunWith(Enclosed.class)
 public class StreamRepositoryTest {
   public static class ファイルが存在しない場合 {
-    private ContentsAttribute attr;
+    private ContentsModel attr;
     private StreamRepository repository;
 
     @Before
     public void setUp() throws Exception {
       repository = new StreamRepositoryImpl();
 
-      attr = new ContentsAttribute();
+      attr = new ContentsModel();
       attr.setPath("NotExist.txt");
     }
 
@@ -81,7 +83,7 @@ public class StreamRepositoryTest {
 
     @Test
     public void getReader実行時にReaderを取得できること() throws Exception {
-      final ContentsAttribute attr = new ContentsAttribute();
+      final ContentsModel attr = new ContentsModel();
       attr.setPath("test.txt");
 
       try (Reader reader = repository.getReader(attr)) {
@@ -92,7 +94,7 @@ public class StreamRepositoryTest {
 
     @Test
     public void 文字エンコーディングを指定してReaderを取得できること() throws Exception {
-      final ContentsAttribute attr = new ContentsAttribute();
+      final ContentsModel attr = new ContentsModel();
       attr.setPath("test.txt");
 
       String encoding = null;
@@ -114,7 +116,7 @@ public class StreamRepositoryTest {
     @Test(expected = UnsupportedCharsetException.class)
     public void 不正な文字エンコーディングを指定してgetReaderを実行した場合にUnsupportedEncodingExceptionが送出されること()
         throws Exception {
-      final ContentsAttribute attr = new ContentsAttribute();
+      final ContentsModel attr = new ContentsModel();
       attr.setPath("test.txt");
       attr.setEncoding("NotExist");
 
@@ -128,7 +130,7 @@ public class StreamRepositoryTest {
 
     @Test
     public void getWriter実行時にWriterを取得できること() throws Exception {
-      final ContentsAttribute attr = new ContentsAttribute();
+      final ContentsModel attr = new ContentsModel();
       attr.setPath("test.txt");
 
       try (Writer writer = repository.getWriter(attr)) {
@@ -139,7 +141,7 @@ public class StreamRepositoryTest {
 
     @Test
     public void 文字エンコーディングを指定してWriterを取得できること() throws Exception {
-      final ContentsAttribute attr = new ContentsAttribute();
+      final ContentsModel attr = new ContentsModel();
       attr.setPath("test.txt");
 
       String encoding = null;
@@ -161,7 +163,7 @@ public class StreamRepositoryTest {
     @Test(expected = UnsupportedCharsetException.class)
     public void 不正な文字エンコーディングを指定してgetWriterを実行した場合にUnsupportedEncodingExceptionが送出されること()
         throws Exception {
-      final ContentsAttribute attr = new ContentsAttribute();
+      final ContentsModel attr = new ContentsModel();
       attr.setPath("test.txt");
       attr.setEncoding("NotExist");
 

@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.service.properties.PropertiesService;
 import java_itamae_contents.domain.service.properties.PropertiesServiceImpl;
 
@@ -25,7 +25,7 @@ public class PropertiesServiceTest {
 
         @Before
         public void setUp() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("NotExist.txt");
 
             service = new PropertiesServiceImpl(attr);
@@ -103,7 +103,7 @@ public class PropertiesServiceTest {
 
         @Test(expected = Exception.class)
         public void getProperty実行時にExceptionが送出されること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -118,7 +118,7 @@ public class PropertiesServiceTest {
 
         @Test
         public void createProperty実行時にプロパティファイルへの書込みができて終了ステータスがtrueであること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -129,7 +129,7 @@ public class PropertiesServiceTest {
 
         @Test
         public void 文字エンコーディングを指定してプロパティファイルの読み書きができること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             if (isWindows()) {
@@ -146,7 +146,7 @@ public class PropertiesServiceTest {
 
         @Test(expected = Exception.class)
         public void updateProperty実行時にExceptionが送出されること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -161,7 +161,7 @@ public class PropertiesServiceTest {
 
         @Test(expected = Exception.class)
         public void deleteProperty実行時にExceptionが送出されること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -183,7 +183,7 @@ public class PropertiesServiceTest {
             file = new File("test.txt");
             file.createNewFile();
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -198,7 +198,7 @@ public class PropertiesServiceTest {
 
         @Test
         public void getProperty実行時にプロパティファイルから値を取得できること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -208,7 +208,7 @@ public class PropertiesServiceTest {
 
         @Test(expected = Exception.class)
         public void 既に存在するプロパティ名を指定してcreatePropertyを実行した場合にExceptionが送出されること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -224,7 +224,7 @@ public class PropertiesServiceTest {
 
         @Test
         public void updateProperty実行時にプロパティの値を上書きできて終了ステータスがtrueであること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -236,7 +236,7 @@ public class PropertiesServiceTest {
 
         @Test
         public void updateProperty実行時にプロパティの値が変更前と同一である場合に終了ステータスがfalseであること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);
@@ -248,7 +248,7 @@ public class PropertiesServiceTest {
 
         @Test
         public void deleteProperty実行時にプロパティを削除できて終了ステータスがtrueであること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final PropertiesService service = new PropertiesServiceImpl(attr);

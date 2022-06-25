@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.repository.properties.PropertiesRepository;
 import java_itamae_contents.domain.repository.properties.PropertiesRepositoryImpl;
 import java_itamae_contents.domain.repository.stream.StreamRepository;
@@ -55,7 +55,7 @@ public class PropertiesRepositoryTest {
 
         @Test
         public void getProperties実行時に空のMapが返されること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             try (final Reader reader = sr.getReader(attr)) {
@@ -70,7 +70,7 @@ public class PropertiesRepositoryTest {
             newProps.put("property1", "1 つ目のプロパティ");
             newProps.put("property2", "2 つ目のプロパティ");
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             try (final Writer writer = sr.getWriter(attr)) {
@@ -92,7 +92,7 @@ public class PropertiesRepositoryTest {
             newProps.put("property1", "1 つ目のプロパティ");
             newProps.put("property2", "2 つ目のプロパティ");
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             if (isWindows()) {
@@ -138,7 +138,7 @@ public class PropertiesRepositoryTest {
             file = new File("test.properties");
             file.createNewFile();
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             final Map<String, String> properties = new HashMap<>();
@@ -157,7 +157,7 @@ public class PropertiesRepositoryTest {
 
         @Test
         public void getProperties実行時にプロパティファイルをMap変換できること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             try (final Reader reader = sr.getReader(attr)) {
@@ -173,7 +173,7 @@ public class PropertiesRepositoryTest {
             final Map<String, String> newProps = new HashMap<>();
             newProps.put("update", "更新テスト");
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             try (final Writer writer = sr.getWriter(attr)) {
@@ -193,7 +193,7 @@ public class PropertiesRepositoryTest {
             final Map<String, String> newProps = new HashMap<>();
             newProps.put("encoding", "文字コードテスト");
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             if (isWindows()) {
@@ -216,7 +216,7 @@ public class PropertiesRepositoryTest {
 
         @Test
         public void deleteProperties実行時にプロパティファイルを空にできること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.properties");
 
             try (Writer writer = sr.getWriter(attr)) {

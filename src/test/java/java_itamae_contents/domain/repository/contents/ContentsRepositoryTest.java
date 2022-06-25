@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.repository.stream.StreamRepository;
 import java_itamae_contents.domain.repository.stream.StreamRepositoryImpl;
 
@@ -53,7 +53,7 @@ public class ContentsRepositoryTest {
 
         @Test
         public void getContents実行時に空のListが取得されること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final Reader reader = sr.getReader(attr);
@@ -64,7 +64,7 @@ public class ContentsRepositoryTest {
 
         @Test
         public void setContents実行時にファイルへ書込みができて終了ステータスがtrueであること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final List<String> newContents = new ArrayList<>();
@@ -88,7 +88,7 @@ public class ContentsRepositoryTest {
 
         @Test
         public void 文字エンコーディングを指定してファイルの読み書きができること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             if (isWindows()) {
@@ -138,7 +138,7 @@ public class ContentsRepositoryTest {
             file = new File("test.txt");
             file.createNewFile();
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final List<String> contents = new ArrayList<>();
@@ -159,7 +159,7 @@ public class ContentsRepositoryTest {
 
         @Test
         public void getContents実行時にファイルの内容をList変換して取得できること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final Reader reader = sr.getReader(attr);
@@ -175,7 +175,7 @@ public class ContentsRepositoryTest {
 
         @Test
         public void setContents実行時にファイルの内容を上書きできて終了ステータスがtrueであること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final List<String> newContents = new ArrayList<>();
@@ -197,7 +197,7 @@ public class ContentsRepositoryTest {
 
         @Test
         public void 文字エンコーディングを指定してファイルの読み書きができること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             if (isWindows()) {
@@ -225,7 +225,7 @@ public class ContentsRepositoryTest {
 
         @Test
         public void deleteContents実行時にファイルの内容を空にできること() throws Exception {
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("test.txt");
 
             final Writer writer = sr.getWriter(attr);

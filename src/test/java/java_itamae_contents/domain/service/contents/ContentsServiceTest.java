@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java_itamae_contents.domain.model.ContentsAttribute;
+import java_itamae_contents.domain.model.contents.ContentsModel;
 
 @RunWith(Enclosed.class)
 public class ContentsServiceTest {
@@ -25,7 +25,7 @@ public class ContentsServiceTest {
         public void setUp() throws Exception {
             file = new File("cs_test.txt");
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("cs_test.txt");
             cs = new ContentsServiceImpl(attr);
         }
@@ -93,7 +93,7 @@ public class ContentsServiceTest {
             file = new File("cs_test.txt");
             file.createNewFile();
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("cs_test.txt");
             cs = new ContentsServiceImpl(attr);
         }
@@ -149,7 +149,7 @@ public class ContentsServiceTest {
             file = new File("cs_test.txt");
             file.createNewFile();
 
-            final ContentsAttribute attr = new ContentsAttribute();
+            final ContentsModel attr = new ContentsModel();
             attr.setPath("cs_test.txt");
 
             cs = new ContentsServiceImpl(attr);
