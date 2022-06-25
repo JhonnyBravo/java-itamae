@@ -7,12 +7,13 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java_itamae_contents.domain.model.ContentsAttribute;
+
+import java_itamae_contents.domain.model.contents.ContentsModel;
 
 public class StreamRepositoryImpl implements StreamRepository {
 
   @Override
-  public Reader getReader(ContentsAttribute attr) throws Exception {
+  public Reader getReader(ContentsModel attr) throws Exception {
     final File file = new File(attr.getPath());
 
     if (!file.isFile()) {
@@ -23,7 +24,7 @@ public class StreamRepositoryImpl implements StreamRepository {
   }
 
   @Override
-  public Writer getWriter(ContentsAttribute attr) throws Exception {
+  public Writer getWriter(ContentsModel attr) throws Exception {
     final File file = new File(attr.getPath());
 
     if (!file.isFile()) {
