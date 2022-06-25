@@ -5,18 +5,19 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java_itamae_contents.domain.model.ContentsAttribute;
+
+import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.repository.contents.ContentsRepository;
 import java_itamae_contents.domain.repository.contents.ContentsRepositoryImpl;
 import java_itamae_contents.domain.repository.stream.StreamRepository;
 import java_itamae_contents.domain.repository.stream.StreamRepositoryImpl;
 
 public class ContentsServiceImpl implements ContentsService {
-  private final ContentsAttribute attr;
+  private final ContentsModel attr;
   private final StreamRepository sr;
   private final ContentsRepository cr;
 
-  public ContentsServiceImpl(ContentsAttribute attr) {
+  public ContentsServiceImpl(ContentsModel attr) {
     this.attr = attr;
     sr = new StreamRepositoryImpl();
     cr = new ContentsRepositoryImpl();
@@ -31,6 +32,17 @@ public class ContentsServiceImpl implements ContentsService {
     }
 
     return contents;
+  }
+
+  @Override
+  public boolean updateContents(List<String> contents) throws Exception {
+    boolean status = false;
+
+    try (Writer writer = sr.getWriter(attr)) {
+      status = cr.updateContents(writer, contents);
+    }
+
+    return status;
   }
 
   @Override
