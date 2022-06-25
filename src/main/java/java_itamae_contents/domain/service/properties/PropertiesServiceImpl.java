@@ -5,26 +5,37 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import java_itamae_contents.domain.model.ContentsAttribute;
+
+import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.repository.properties.PropertiesRepository;
 import java_itamae_contents.domain.repository.properties.PropertiesRepositoryImpl;
 import java_itamae_contents.domain.repository.stream.StreamRepository;
 import java_itamae_contents.domain.repository.stream.StreamRepositoryImpl;
 
 public class PropertiesServiceImpl implements PropertiesService {
-  private final ContentsAttribute attr;
+  private final ContentsModel attr;
   private final StreamRepository sr;
   private final PropertiesRepository pr;
 
   /**
    * 初期化処理を実行する。
    *
-   * @param attr 操作対象とするファイルの情報を納めた {@link ContentsAttribute} を指定する。
+   * @param attr 操作対象とするファイルの情報を納めた {@link ContentsModel} を指定する。
    */
-  public PropertiesServiceImpl(ContentsAttribute attr) {
+  public PropertiesServiceImpl(ContentsModel attr) {
     this.attr = attr;
     sr = new StreamRepositoryImpl();
     pr = new PropertiesRepositoryImpl();
+  }
+
+  @Override
+  public Map<String, String> getProperties() throws Exception {
+    Map<String, String> properties = new HashMap<>();
+
+    try (Reader reader = sr.getReader(attr)) {
+      properties = pr.getProperties(reader);
+    }
+    return properties;
   }
 
   @Override
