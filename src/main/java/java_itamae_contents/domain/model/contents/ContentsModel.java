@@ -4,14 +4,11 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Optional;
 
-/**
- * 読み書きの対象とするファイルの情報を管理する。
- */
+/** 読み書きの対象とするファイルの情報を管理する。 */
 public class ContentsModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  @NotNull
-  private String path;
+  @NotNull private String path;
   private String encoding;
 
   /**

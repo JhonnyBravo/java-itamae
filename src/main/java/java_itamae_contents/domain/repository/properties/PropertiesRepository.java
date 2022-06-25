@@ -4,9 +4,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
 
-/**
- * プロパティファイルの読み書きを操作する。
- */
+/** プロパティファイルの読み書きを操作する。 */
 public interface PropertiesRepository {
   /**
    * プロパティファイルを読込んで Map に変換して返す。
@@ -24,10 +22,11 @@ public interface PropertiesRepository {
    * @param map 書込み対象とする Map を指定する。
    * @param comment プロパティファイルへ書込むコメントを指定する。
    * @return status
-   *         <ul>
-   *         <li>true: 書込みに成功したことを表す。</li>
-   *         <li>delete: 書込みを実行しなかったことを表す。</li>
-   *         </ul>
+   *     <ul>
+   *       <li>true: 書込みに成功したことを表す。
+   *       <li>delete: 書込みを実行しなかったことを表す。
+   *     </ul>
+   *
    * @throws Exception {@link java.lang.Exception}
    */
   boolean updateProperties(Writer writer, Map<String, String> map, String comment) throws Exception;
@@ -38,10 +37,11 @@ public interface PropertiesRepository {
    * @param writer 操作対象とするプロパティファイルの Writer を指定する。
    * @param comment プロパティファイルへ書込むコメントを指定する。
    * @return status
-   *         <ul>
-   *         <li>true: 削除に成功したことを表す。</li>
-   *         <li>false: 削除を実行しなかったことを表す。</li>
-   *         </ul>
+   *     <ul>
+   *       <li>true: 削除に成功したことを表す。
+   *       <li>false: 削除を実行しなかったことを表す。
+   *     </ul>
+   *
    * @throws Exception {@link java.lang.Exception}
    */
   boolean deleteProperties(Writer writer, String comment) throws Exception;

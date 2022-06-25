@@ -4,9 +4,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 
-/**
- * テキストファイルの読み書きを管理する。
- */
+/** テキストファイルの読み書きを管理する。 */
 public interface ContentsRepository {
   /**
    * テキストファイルからの読込みを実行する。
@@ -23,10 +21,11 @@ public interface ContentsRepository {
    * @param writer 操作対象とするテキストファイルの Writer を指定する。
    * @param contents 書込み対象とする List を指定する。
    * @return status
-   *         <ul>
-   *         <li>true: 書込みに成功したことを表す。</li>
-   *         <li>false: 書込みをしなかったことを表す。</li>
-   *         </ul>
+   *     <ul>
+   *       <li>true: 書込みに成功したことを表す。
+   *       <li>false: 書込みをしなかったことを表す。
+   *     </ul>
+   *
    * @throws Exception {@link java.lang.Exception}
    */
   boolean updateContents(Writer writer, List<String> contents) throws Exception;
@@ -36,10 +35,11 @@ public interface ContentsRepository {
    *
    * @param writer 操作対象とするテキストファイルの Writer を指定する。
    * @return status
-   *         <ul>
-   *         <li>true: 削除に成功したことを表す。</li>
-   *         <li>false: 削除をしなかったことを表す。</li>
-   *         </ul>
+   *     <ul>
+   *       <li>true: 削除に成功したことを表す。
+   *       <li>false: 削除をしなかったことを表す。
+   *     </ul>
+   *
    * @throws Exception {@link java.lang.Exception}
    */
   boolean deleteContents(Writer writer) throws Exception;

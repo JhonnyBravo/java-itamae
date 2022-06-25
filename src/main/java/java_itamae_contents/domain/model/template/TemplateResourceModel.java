@@ -1,11 +1,10 @@
 package java_itamae_contents.domain.model.template;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Optional;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 /** template resource のモデルクラス。 */
 @Create

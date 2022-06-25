@@ -5,7 +5,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
 import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.repository.properties.PropertiesRepository;
 import java_itamae_contents.domain.repository.properties.PropertiesRepositoryImpl;

@@ -1,21 +1,20 @@
 package java_itamae_contents.domain.repository.stream;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.UnsupportedCharsetException;
-
+import java_itamae_contents.domain.model.contents.ContentsModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-
-import java_itamae_contents.domain.model.contents.ContentsModel;
 
 @RunWith(Enclosed.class)
 public class StreamRepositoryTest {

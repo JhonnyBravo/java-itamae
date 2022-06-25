@@ -2,12 +2,9 @@ package java_itamae_contents.domain.repository.stream;
 
 import java.io.Reader;
 import java.io.Writer;
-
 import java_itamae_contents.domain.model.contents.ContentsModel;
 
-/**
- * テキストファイルの読み書きに使用するストリームを取得する。
- */
+/** テキストファイルの読み書きに使用するストリームを取得する。 */
 public interface StreamRepository {
   /**
    * ファイルストリームを読取モードで開いて返す。

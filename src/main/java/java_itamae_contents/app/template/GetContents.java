@@ -3,13 +3,11 @@ package java_itamae_contents.app.template;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.service.contents.ContentsService;
 import java_itamae_contents.domain.service.contents.ContentsServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** テキストファイルの内容を読み込む。 */
 public class GetContents implements Function<ContentsModel, List<String>> {

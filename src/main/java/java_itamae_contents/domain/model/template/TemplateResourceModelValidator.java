@@ -1,14 +1,12 @@
 package java_itamae_contents.domain.model.template;
 
-import java.util.Set;
-import java.util.function.Predicate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.util.Set;
+import java.util.function.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** {@link TemplateResourceModel} のバリデーションチェックを実行する。 */
 public class TemplateResourceModelValidator implements Predicate<TemplateResourceModel> {

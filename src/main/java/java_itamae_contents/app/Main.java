@@ -1,10 +1,9 @@
 package java_itamae_contents.app;
 
-import java.util.List;
-import java.util.Map;
-
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.util.List;
+import java.util.Map;
 import java_itamae_contents.app.template.DeleteContents;
 import java_itamae_contents.app.template.GetContents;
 import java_itamae_contents.app.template.GetProperties;
@@ -40,6 +39,7 @@ public class Main {
 
     if (args.length == 0) {
       usage.run();
+      status = 1;
     }
 
     while ((c = options.getopt()) != -1) {

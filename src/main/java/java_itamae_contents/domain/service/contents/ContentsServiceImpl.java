@@ -5,7 +5,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-
 import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.repository.contents.ContentsRepository;
 import java_itamae_contents.domain.repository.contents.ContentsRepositoryImpl;

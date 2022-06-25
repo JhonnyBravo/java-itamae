@@ -1,9 +1,8 @@
 package java_itamae_contents.domain.model.template;
 
-import java.util.function.Predicate;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import java.util.function.Predicate;
 
 public class CreateValidator implements ConstraintValidator<Create, TemplateResourceModel> {
   @Override
