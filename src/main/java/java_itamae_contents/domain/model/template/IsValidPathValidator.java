@@ -27,7 +27,7 @@ public class IsValidPathValidator
     final String action = model.getAction();
     final String path = model.getPath();
 
-    if (action.equals("create")) {
+    if (action != null && action.equals("create")) {
       // action = create かつ path が指定されていない場合
       if (isNull.test(path)) {
         result = false;
