@@ -12,6 +12,8 @@ import java_itamae_contents.domain.model.contents.ContentsModel;
 import java_itamae_contents.domain.model.contents.IsValidContentsModel;
 import java_itamae_contents.domain.model.template.TemplateResourceModel;
 import java_itamae_contents.domain.model.template.TemplateResourceModelValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** プロパティファイルを読込み、ファイルの設定値に従って動作を実行する。 */
 public class Main {
@@ -70,7 +72,7 @@ public class Main {
     final String resourceName = properties.get("resource_name");
     final String action = properties.get("action");
 
-    if (resourceName.equals("template")) {
+    if (resourceName != null && resourceName.equals("template")) {
       // 各プロパティの値をモデルへ設定する。
       final TemplateResourceModel resourceModel = new TemplateResourceModel();
       resourceModel.setAction(properties.get("action"));
@@ -111,6 +113,10 @@ public class Main {
         final DeleteContents deleteContents = new DeleteContents();
         status = deleteContents.apply(targetAttr);
       }
+    } else {
+      final Logger logger = LoggerFactory.getLogger(Main.class);
+      logger.warn("resource_name が指定されていない、または不正な値です。");
+      status = 1;
     }
 
     System.exit(status);
