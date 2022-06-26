@@ -18,6 +18,7 @@ public class TemplateResourceModel implements Serializable {
 
   private final String resourceName;
 
+  @NotNull
   @Pattern(regexp = "create|delete")
   private String action;
 
