@@ -7,7 +7,8 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 
 /** template resource のモデルクラス。 */
-@Create
+@IsValidPath
+@IsValidSource
 public class TemplateResourceModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -15,7 +16,7 @@ public class TemplateResourceModel implements Serializable {
     this.resourceName = "template";
   }
 
-  private String resourceName;
+  private final String resourceName;
 
   @Pattern(regexp = "create|delete")
   private String action;
@@ -97,7 +98,7 @@ public class TemplateResourceModel implements Serializable {
    * @return encoding 文字エンコーディング。
    */
   public String getEncoding() {
-    Optional<String> value = Optional.ofNullable(encoding);
+    final Optional<String> value = Optional.ofNullable(encoding);
     return value.orElse(Charset.defaultCharset().displayName());
   }
 
