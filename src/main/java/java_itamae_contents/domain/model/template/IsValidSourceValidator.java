@@ -27,7 +27,7 @@ public class IsValidSourceValidator
     final String action = model.getAction();
     final String source = model.getSource();
 
-    if (action.equals("create")) {
+    if (action != null && action.equals("create")) {
       // action = create かつ source が指定されていない場合
       if (isNull.test(source)) {
         result = false;
