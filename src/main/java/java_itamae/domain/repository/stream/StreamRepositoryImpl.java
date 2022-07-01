@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.repository.stream;
+package java_itamae.domain.repository.stream;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +7,8 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java_itamae_contents.domain.model.contents.ContentsModel;
+
+import java_itamae.domain.model.contents.ContentsModel;
 
 public class StreamRepositoryImpl implements StreamRepository {
 
