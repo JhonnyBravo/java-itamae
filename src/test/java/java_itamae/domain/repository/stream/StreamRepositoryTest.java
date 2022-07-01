@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.repository.stream;
+package java_itamae.domain.repository.stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -9,12 +9,16 @@ import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.UnsupportedCharsetException;
-import java_itamae_contents.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.repository.stream.StreamRepository;
+import java_itamae.domain.repository.stream.StreamRepositoryImpl;
 
 @RunWith(Enclosed.class)
 public class StreamRepositoryTest {
