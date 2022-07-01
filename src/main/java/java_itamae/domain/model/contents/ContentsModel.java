@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.model.contents;
+package java_itamae.domain.model.contents;
 
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
