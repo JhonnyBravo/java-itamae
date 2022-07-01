@@ -69,7 +69,7 @@ java{
 publishing{
     publications{
         mavenJava(MavenPublication){
-            artifactId='java-itamae-contents'
+            artifactId='java-itamae'
             from components.java
             versionMapping{
                 usage('java-api'){
@@ -80,9 +80,9 @@ publishing{
                 }
             }
             pom{
-                name='java-itamae-contents'
-                description='テキストファイルの読書きを管理する為の Java ライブラリ'
-                url='https://github.com/JhonnyBravo/java-itamae-contents'
+                name='java-itamae'
+                description='ファイルまたはディレクトリの作成・削除と、所有者・グループ所有者・パーミッションの設定を管理する為の Java ライブラリ'
+                url='https://github.com/JhonnyBravo/java-itamae'
             }
         }
     }
@@ -95,7 +95,7 @@ publishing{
     }
 }
 
-javadoc{
+javadoc {
     options.charSet='UTF-8'
     options.encoding='UTF-8'
 }
