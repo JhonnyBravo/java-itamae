@@ -1,4 +1,6 @@
 # Eclipse
+.project
+.classpath
 .metadata
 bin/
 tmp/
@@ -9,59 +11,14 @@ tmp/
 local.properties
 .settings/
 .loadpath
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# PyDev specific (Python IDE for Eclipse)
-*.pydevproject
-
-# CDT-specific (C/C++ Development Tooling)
-.cproject
-
-# CDT- autotools
-.autotools
-
-# Java annotation processor (APT)
-.factorypath
-
-# PDT-specific (PHP Development Tools)
-.buildpath
-
-# sbteclipse plugin
-.target
-
-# Tern plugin
-.tern-project
-
-# TeXlipse plugin
-.texlipse
-
-# STS (Spring Tool Suite)
-.springBeans
-.sts4-cache
-application.properties
-
-# Code Recommenders
-.recommenders/
-
-# Annotation Processing
-.apt_generated/
-.apt_generated_test/
-
-# Scala IDE specific (Scala & Java development for Eclipse)
-.cache-main
-.scala_dependencies
-.worksheet
-.classpath
-.project
+.recommenders
 
 # Gradle
 .gradle
-build
+gradlew
+gradlew.bat
+/build/
+gradle/wrapper
 
 # Ignore Gradle GUI config
 gradle-app.setting
