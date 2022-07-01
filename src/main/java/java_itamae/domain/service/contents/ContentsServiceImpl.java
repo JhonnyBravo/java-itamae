@@ -1,15 +1,16 @@
-package java_itamae_contents.domain.service.contents;
+package java_itamae.domain.service.contents;
 
 import java.io.File;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java_itamae_contents.domain.model.contents.ContentsModel;
-import java_itamae_contents.domain.repository.contents.ContentsRepository;
-import java_itamae_contents.domain.repository.contents.ContentsRepositoryImpl;
-import java_itamae_contents.domain.repository.stream.StreamRepository;
-import java_itamae_contents.domain.repository.stream.StreamRepositoryImpl;
+
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.repository.contents.ContentsRepository;
+import java_itamae.domain.repository.contents.ContentsRepositoryImpl;
+import java_itamae.domain.repository.stream.StreamRepository;
+import java_itamae.domain.repository.stream.StreamRepositoryImpl;
 
 public class ContentsServiceImpl implements ContentsService {
   private final ContentsModel attr;

@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.service.contents;
+package java_itamae.domain.service.contents;
 
 import java.util.List;
 
