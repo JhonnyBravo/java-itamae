@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.model.template;
+package java_itamae.domain.model.template;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

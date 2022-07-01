@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.model.template;
+package java_itamae.domain.model.template;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
-@Constraint(validatedBy = {IsValidPathValidator.class})
-public @interface IsValidPath {
-  String message() default "{java_itamae_contents.domain.model.template.IsValidPath}";
+@Constraint(validatedBy = {IsValidSourceValidator.class})
+public @interface IsValidSource {
+  String message() default "{java_itamae_contents.domain.model.template.IsValidSource}";
 
   Class<?>[] groups() default {};
 
