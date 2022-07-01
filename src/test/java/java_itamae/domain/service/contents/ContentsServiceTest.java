@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.service.contents;
+package java_itamae.domain.service.contents;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -6,12 +6,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
-import java_itamae_contents.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.service.contents.ContentsService;
+import java_itamae.domain.service.contents.ContentsServiceImpl;
 
 @RunWith(Enclosed.class)
 public class ContentsServiceTest {
