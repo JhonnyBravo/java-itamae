@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.service.properties;
+package java_itamae.domain.service.properties;
 
 import java.util.Map;
 
