@@ -1,4 +1,4 @@
-package java_itamae_contents.domain.repository.properties;
+package java_itamae.domain.repository.properties;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -8,14 +8,18 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import java_itamae_contents.domain.model.contents.ContentsModel;
-import java_itamae_contents.domain.repository.stream.StreamRepository;
-import java_itamae_contents.domain.repository.stream.StreamRepositoryImpl;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.repository.properties.PropertiesRepository;
+import java_itamae.domain.repository.properties.PropertiesRepositoryImpl;
+import java_itamae.domain.repository.stream.StreamRepository;
+import java_itamae.domain.repository.stream.StreamRepositoryImpl;
 
 @RunWith(Enclosed.class)
 public class PropertiesRepositoryTest {
