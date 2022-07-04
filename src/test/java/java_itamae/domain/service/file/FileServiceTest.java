@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java_itamae.domain.model.Attribute;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
 
@@ -24,7 +24,7 @@ public class FileServiceTest {
     private FileService fs;
     private PropertiesService ps;
 
-    private Attribute attr;
+    private FileResourceModel attr;
     private File file;
 
     @Before
@@ -34,7 +34,7 @@ public class FileServiceTest {
       ps = new PropertiesServiceImpl(ca);
 
       fs = new FileServiceImpl();
-      attr = new Attribute();
+      attr = new FileResourceModel();
       attr.setPath("test.txt");
 
       file = new File("test.txt");
@@ -94,7 +94,7 @@ public class FileServiceTest {
       ca.setPath("src/test/resources/test.properties");
       ps = new PropertiesServiceImpl(ca);
 
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup(ps.getProperty("group"));
@@ -115,7 +115,7 @@ public class FileServiceTest {
 
     @Test
     public void パスに指定したファイルが既に存在する場合に終了ステータスがfalseであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
 
       final boolean status = fs.create(attr);
@@ -124,7 +124,7 @@ public class FileServiceTest {
 
     @Test
     public void 新しいファイル所有者として現在設定されているファイル所有者と同一のユーザ名を指定した場合に終了ステータスがfalseであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setOwner(ps.getProperty("owner"));
 
@@ -135,7 +135,7 @@ public class FileServiceTest {
     @Test
     public void 新しいグループ所有者として現在設定されているグループ所有者と同一のグループ名を指定した場合に終了ステータスがfalseであること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setGroup(ps.getProperty("group"));
 
@@ -145,7 +145,7 @@ public class FileServiceTest {
 
     @Test
     public void 新しいパーミッションとして現在設定されているパーミッションと同一の値を指定した場合に終了ステータスがfalseであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setMode("640");
 
@@ -155,7 +155,7 @@ public class FileServiceTest {
 
     @Test
     public void delete実行時にファイルを削除できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
 
       final boolean status = fs.delete(attr);
@@ -174,7 +174,7 @@ public class FileServiceTest {
       ca.setPath("src/test/resources/test.properties");
       ps = new PropertiesServiceImpl(ca);
 
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
 
       fs = new FileServiceImpl();
@@ -192,7 +192,7 @@ public class FileServiceTest {
 
     @Test
     public void ファイル所有者を変更できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setOwner(ps.getProperty("owner"));
 
@@ -202,7 +202,7 @@ public class FileServiceTest {
 
     @Test
     public void グループ所有者を変更できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setGroup(ps.getProperty("group"));
 
@@ -212,7 +212,7 @@ public class FileServiceTest {
 
     @Test
     public void パーミッションを変更できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setMode("640");
 
@@ -245,7 +245,7 @@ public class FileServiceTest {
 
     @Test(expected = Exception.class)
     public void pathが指定されないままcreateを実行した場合にExceptionが送出されること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup(ps.getProperty("group"));
       attr.setMode("640");
@@ -260,7 +260,7 @@ public class FileServiceTest {
 
     @Test(expected = Exception.class)
     public void pathが指定されないままdeleteを実行した場合にExceptionが送出されること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
 
       try {
         fs.delete(attr);
@@ -272,7 +272,7 @@ public class FileServiceTest {
 
     @Test(expected = NoSuchFileException.class)
     public void 親ディレクトリが存在しない場合にNoSuchFileExceptionが送出されること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("NotExist/test.txt");
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup(ps.getProperty("group"));
@@ -289,7 +289,7 @@ public class FileServiceTest {
     @Test(expected = UserPrincipalNotFoundException.class)
     public void 新しいファイル所有者として存在しないユーザ名を指定した場合にUserPrincipalNotFoundExceptionが送出されること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setOwner("NotExist");
       attr.setGroup(ps.getProperty("group"));
@@ -306,7 +306,7 @@ public class FileServiceTest {
     @Test(expected = UserPrincipalNotFoundException.class)
     public void 新しいグループ所有者として存在しないグループ名を指定した場合にUserPrincipalNotFoundExceptionが送出されること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup("NotExist");
@@ -322,7 +322,7 @@ public class FileServiceTest {
 
     @Test(expected = Exception.class)
     public void 新しいパーミッションとして不正なパーミッション値を指定した場合にExceptionが送出されること() throws Exception {
-      final Attribute attr = new Attribute();
+      final FileResourceModel attr = new FileResourceModel();
       attr.setPath("test.txt");
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup(ps.getProperty("group"));
