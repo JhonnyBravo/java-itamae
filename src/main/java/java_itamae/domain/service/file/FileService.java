@@ -1,6 +1,6 @@
 package java_itamae.domain.service.file;
 
-import java_itamae.domain.model.Attribute;
+import java_itamae.domain.model.file.FileResourceModel;
 
 /**
  * ファイルの操作を管理する。
@@ -32,7 +32,7 @@ public interface FileService {
    *         </ul>
    * @throws Exception {@link java.lang.Exception}
    */
-  boolean create(Attribute attr) throws Exception;
+  boolean create(FileResourceModel attr) throws Exception;
 
   /**
    * ファイルを削除する。
@@ -45,5 +45,5 @@ public interface FileService {
    *         </ul>
    * @throws Exception {@link java.lang.Exception}
    */
-  boolean delete(Attribute attr) throws Exception;
+  boolean delete(FileResourceModel attr) throws Exception;
 }
