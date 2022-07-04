@@ -1,7 +1,8 @@
 package java_itamae.app.file;
 
 import java.util.function.Function;
-import java_itamae.domain.model.Attribute;
+
+import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.file.FileService;
 import java_itamae.domain.service.file.FileServiceImpl;
 import org.slf4j.Logger;
@@ -10,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * ファイルを削除する。
  */
-public class DeleteFile implements Function<Attribute, Integer> {
+public class DeleteFile implements Function<FileResourceModel, Integer> {
   /**
    * ファイルを削除する。
    *
@@ -23,7 +24,7 @@ public class DeleteFile implements Function<Attribute, Integer> {
    *         </ul>
    */
   @Override
-  public Integer apply(Attribute attr) {
+  public Integer apply(FileResourceModel attr) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     final FileService service = new FileServiceImpl();
 
