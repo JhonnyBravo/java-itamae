@@ -1,7 +1,8 @@
 package java_itamae.app.file;
 
 import java.util.function.Function;
-import java_itamae.domain.model.Attribute;
+
+import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.file.FileService;
 import java_itamae.domain.service.file.FileServiceImpl;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * <li>パーミッションの変更</li>
  * </ul>
  */
-public class CreateFile implements Function<Attribute, Integer> {
+public class CreateFile implements Function<FileResourceModel, Integer> {
   /**
    * ファイルに対して以下の操作を実行する。
    * <ul>
@@ -35,7 +36,7 @@ public class CreateFile implements Function<Attribute, Integer> {
    *         </ul>
    */
   @Override
-  public Integer apply(Attribute attr) {
+  public Integer apply(FileResourceModel attr) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     final FileService service = new FileServiceImpl();
 
