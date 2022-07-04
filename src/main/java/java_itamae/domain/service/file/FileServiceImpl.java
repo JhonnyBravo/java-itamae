@@ -1,6 +1,6 @@
 package java_itamae.domain.service.file;
 
-import java_itamae.domain.model.Attribute;
+import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.repository.file.FileRepository;
 import java_itamae.domain.repository.file.FileRepositoryImpl;
 import java_itamae.domain.repository.group.GroupRepository;
@@ -24,7 +24,7 @@ public class FileServiceImpl implements FileService {
   }
 
   @Override
-  public boolean create(Attribute attr) throws Exception {
+  public boolean create(FileResourceModel attr) throws Exception {
     boolean status = fr.create(attr.getPath());
 
     if (attr.getOwner() != null) {
@@ -43,7 +43,7 @@ public class FileServiceImpl implements FileService {
   }
 
   @Override
-  public boolean delete(Attribute attr) throws Exception {
+  public boolean delete(FileResourceModel attr) throws Exception {
     return fr.delete(attr.getPath());
   }
 }
