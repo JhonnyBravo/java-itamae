@@ -1,4 +1,4 @@
-package java_itamae.app.validator;
+package java_itamae.domain.model.file;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
