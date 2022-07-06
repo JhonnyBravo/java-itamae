@@ -6,17 +6,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.service.properties.PropertiesService;
+import java_itamae.domain.service.properties.PropertiesServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-
-import java_itamae.domain.model.contents.ContentsModel;
-import java_itamae.domain.model.directory.DirectoryResourceModel;
-import java_itamae.domain.service.properties.PropertiesService;
-import java_itamae.domain.service.properties.PropertiesServiceImpl;
 
 @RunWith(Enclosed.class)
 public class DirectoryServiceTest {

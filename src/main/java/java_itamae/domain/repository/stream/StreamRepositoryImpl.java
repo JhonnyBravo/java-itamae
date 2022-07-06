@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import java_itamae.domain.model.contents.ContentsModel;
 
 public class StreamRepositoryImpl implements StreamRepository {

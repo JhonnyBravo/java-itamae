@@ -1,13 +1,11 @@
 package java_itamae.app.template;
 
 import java.util.function.Function;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.service.contents.ContentsService;
 import java_itamae.domain.service.contents.ContentsServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** テキストファイルの内容を削除して空にする。 */
 public class DeleteContents implements Function<ContentsModel, Integer> {

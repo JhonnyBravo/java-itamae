@@ -2,9 +2,7 @@ package java_itamae.domain.repository.group;
 
 import java.nio.file.attribute.GroupPrincipal;
 
-/**
- * リソースのグループ所有者を管理する。
- */
+/** リソースのグループ所有者を管理する。 */
 public interface GroupRepository {
   /**
    * {@link GroupPrincipal} を生成する。
@@ -30,10 +28,11 @@ public interface GroupRepository {
    * @param path 操作対象とするリソースのパスを指定する。
    * @param group 新しいグループ所有者として設定するグループ名を指定する。
    * @return status
-   *         <ul>
-   *         <li>true: グループ所有者が変更されたことを表す。</li>
-   *         <li>false: グループ所有者が変更されなかったことを表す。</li>
-   *         </ul>
+   *     <ul>
+   *       <li>true: グループ所有者が変更されたことを表す。
+   *       <li>false: グループ所有者が変更されなかったことを表す。
+   *     </ul>
+   *
    * @throws Exception {@link java.lang.Exception}
    */
   boolean updateGroup(String path, String group) throws Exception;

@@ -1,9 +1,8 @@
 package java_itamae.domain.model.file;
 
-import java.io.Serializable;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import java.io.Serializable;
 
 /** file resource のモデルクラス */
 public class FileResourceModel implements Serializable {

@@ -3,9 +3,7 @@ package java_itamae.domain.repository.mode;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
-/**
- * リソースのパーミッション設定を管理する。
- */
+/** リソースのパーミッション設定を管理する。 */
 public interface ModeRepository {
   /**
    * {@link PosixFilePermission} の {@link Set} を生成する。
@@ -31,10 +29,11 @@ public interface ModeRepository {
    * @param path 操作対象とするリソースのパスを指定する。
    * @param mode 新しく設定するパーミッション値を指定する。
    * @return status
-   *         <ul>
-   *         <li>true: パーミッション値が変更されたことを表す。</li>
-   *         <li>false: パーミッション値が変更されなかったことを表す。</li>
-   *         </ul>
+   *     <ul>
+   *       <li>true: パーミッション値が変更されたことを表す。
+   *       <li>false: パーミッション値が変更されなかったことを表す。
+   *     </ul>
+   *
    * @throws Exception {@link java.lang.Exception}
    */
   boolean updateMode(String path, String mode) throws Exception;

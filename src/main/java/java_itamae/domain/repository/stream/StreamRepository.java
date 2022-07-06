@@ -2,7 +2,6 @@ package java_itamae.domain.repository.stream;
 
 import java.io.Reader;
 import java.io.Writer;
-
 import java_itamae.domain.model.contents.ContentsModel;
 
 /** テキストファイルの読み書きに使用するストリームを取得する。 */

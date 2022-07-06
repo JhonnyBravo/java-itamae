@@ -19,9 +19,15 @@ public class ModeRepositoryImpl implements ModeRepository {
 
   @Override
   public Set<PosixFilePermission> createMode(String mode) throws Exception {
-    final String converted = mode.replaceAll("0", "---").replaceAll("1", "--x")
-        .replaceAll("2", "-w-").replaceAll("3", "-wx").replaceAll("4", "r--").replaceAll("5", "r-x")
-        .replaceAll("6", "rw-").replaceAll("7", "rwx");
+    final String converted =
+        mode.replaceAll("0", "---")
+            .replaceAll("1", "--x")
+            .replaceAll("2", "-w-")
+            .replaceAll("3", "-wx")
+            .replaceAll("4", "r--")
+            .replaceAll("5", "r-x")
+            .replaceAll("6", "rw-")
+            .replaceAll("7", "rwx");
     return PosixFilePermissions.fromString(converted);
   }
 

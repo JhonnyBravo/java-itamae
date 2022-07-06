@@ -1,14 +1,12 @@
 package java_itamae.domain.model.file;
 
-import java.util.Set;
-import java.util.function.Predicate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.util.Set;
+import java.util.function.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** {@link FileResourceModel} のバリデーションチェックを実行する。 */
 public class FileResourceModelValidator implements Predicate<FileResourceModel> {

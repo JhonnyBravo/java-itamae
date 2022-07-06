@@ -2,9 +2,7 @@ package java_itamae.domain.repository.owner;
 
 import java.nio.file.attribute.UserPrincipal;
 
-/**
- * リソースの所有者を管理する。
- */
+/** リソースの所有者を管理する。 */
 public interface OwnerRepository {
   /**
    * {@link UserPrincipal} を生成する。
@@ -30,10 +28,11 @@ public interface OwnerRepository {
    * @param path 操作対象とするリソースのパスを指定する。
    * @param owner 新しい所有者として設定するユーザ名を指定する。
    * @return status
-   *         <ul>
-   *         <li>true: 所有者が変更されたことを表す。</li>
-   *         <li>false: 所有者が変更されなかったことを表す。</li>
-   *         </ul>
+   *     <ul>
+   *       <li>true: 所有者が変更されたことを表す。
+   *       <li>false: 所有者が変更されなかったことを表す。
+   *     </ul>
+   *
    * @throws Exception {@link java.lang.Exception}
    */
   boolean updateOwner(String path, String owner) throws Exception;

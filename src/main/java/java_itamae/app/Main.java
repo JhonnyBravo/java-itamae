@@ -1,13 +1,9 @@
 package java_itamae.app;
 
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.util.List;
+import java.util.Map;
 import java_itamae.app.directory.CreateDirectory;
 import java_itamae.app.directory.DeleteDirectory;
 import java_itamae.app.file.CreateFile;
@@ -24,6 +20,8 @@ import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.model.file.FileResourceModelValidator;
 import java_itamae.domain.model.template.TemplateResourceModel;
 import java_itamae.domain.model.template.TemplateResourceModelValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** プロパティファイルを読込み、ファイルの設定値に従って動作を実行する。 */
 public class Main {
