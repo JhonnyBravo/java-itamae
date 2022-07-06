@@ -1,6 +1,6 @@
 package java_itamae.domain.service.directory;
 
-import java_itamae.domain.model.Attribute;
+import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.repository.directory.DirectoryRepository;
 import java_itamae.domain.repository.directory.DirectoryRepositoryImpl;
 import java_itamae.domain.repository.group.GroupRepository;
@@ -31,7 +31,7 @@ public class DirectoryServiceImpl implements DirectoryService {
   }
 
   @Override
-  public boolean create(Attribute attr) throws Exception {
+  public boolean create(DirectoryResourceModel attr) throws Exception {
     boolean status = false;
 
     if (recursive) {
@@ -56,7 +56,7 @@ public class DirectoryServiceImpl implements DirectoryService {
   }
 
   @Override
-  public boolean delete(Attribute attr) throws Exception {
+  public boolean delete(DirectoryResourceModel attr) throws Exception {
     boolean status = false;
 
     if (recursive) {
