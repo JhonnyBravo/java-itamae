@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java_itamae.domain.model.Attribute;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
 
@@ -44,7 +44,7 @@ public class DirectoryServiceTest {
 
     @Test(expected = Exception.class)
     public void pathが指定されないままcreateを実行した場合にExceptionが送出されること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup(ps.getProperty("group"));
       attr.setMode("640");
@@ -59,7 +59,7 @@ public class DirectoryServiceTest {
 
     @Test(expected = Exception.class)
     public void pathが指定されないままdeleteを実行した場合にExceptionが送出されること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
 
       try {
         ds.delete(attr);
@@ -72,7 +72,7 @@ public class DirectoryServiceTest {
     @Test(expected = UserPrincipalNotFoundException.class)
     public void 新しいディレクトリ所有者として存在しないユーザ名を指定した場合にUserPrincipalNotFoundExceptionが送出されること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setOwner("NotExist");
       attr.setGroup(ps.getProperty("group"));
@@ -89,7 +89,7 @@ public class DirectoryServiceTest {
     @Test(expected = UserPrincipalNotFoundException.class)
     public void 新しいグループ所有者として存在しないグループ名を指定した場合にUserPrincipalNotFoundExceptionが送出されること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup("NotExist");
@@ -105,7 +105,7 @@ public class DirectoryServiceTest {
 
     @Test(expected = Exception.class)
     public void 新しいパーミッションとして不正なパーミッション値を指定した場合にExceptionが送出されること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup(ps.getProperty("group"));
@@ -131,7 +131,7 @@ public class DirectoryServiceTest {
       ca.setPath("src/test/resources/test.properties");
       ps = new PropertiesServiceImpl(ca);
 
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setOwner(ps.getProperty("owner"));
       attr.setGroup(ps.getProperty("group"));
@@ -152,7 +152,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void パスに指定したディレクトリが既に存在する場合に終了ステータスがfalseであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
 
       final boolean status = ds.create(attr);
@@ -162,7 +162,7 @@ public class DirectoryServiceTest {
     @Test
     public void 新しいディレクトリ所有者として現在設定されているディレクトリ所有者と同一のユーザ名を指定した場合に終了ステータスがfalseであること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setOwner(ps.getProperty("owner"));
 
@@ -173,7 +173,7 @@ public class DirectoryServiceTest {
     @Test
     public void 新しいグループ所有者として現在設定されているグループ所有者と同一のグループ名を指定した場合に終了ステータスがfalseであること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setGroup(ps.getProperty("group"));
 
@@ -183,7 +183,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void 新しいパーミッションとして現在設定されているパーミッションと同一の値を指定した場合に終了ステータスがfalseであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setMode("640");
 
@@ -218,7 +218,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void ディレクトリ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setOwner(ps.getProperty("owner"));
 
@@ -228,7 +228,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void グループ所有者の変更ができて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setGroup(ps.getProperty("group"));
 
@@ -238,7 +238,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void パーミッション設定の変更ができて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setMode("741");
 
@@ -271,7 +271,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void ディレクトリを作成できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
 
       final boolean status = ds.create(attr);
@@ -281,7 +281,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void ディレクトリの所有者を変更できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setOwner(ps.getProperty("owner"));
 
@@ -291,7 +291,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void ディレクトリのグループ所有者を変更できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setGroup(ps.getProperty("group"));
 
@@ -301,7 +301,7 @@ public class DirectoryServiceTest {
 
     @Test
     public void ディレクトリのパーミッション設定を変更できて終了ステータスがtrueであること() throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
       attr.setMode("741");
 
@@ -312,12 +312,12 @@ public class DirectoryServiceTest {
 
   public static class 親ディレクトリが存在しない場合 {
     private DirectoryService ds;
-    private Attribute attr;
+    private DirectoryResourceModel attr;
 
     @Before
     public void setUp() throws Exception {
       ds = new DirectoryServiceImpl();
-      attr = new Attribute();
+      attr = new DirectoryResourceModel();
       attr.setPath("parent/sub1/sub2");
     }
 
@@ -368,7 +368,7 @@ public class DirectoryServiceTest {
     @Test
     public void 削除対象とするディレクトリが存在しない状態でsetRecursiveを指定せずにdeleteを実行した場合に終了ステータスがfalseであること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
 
       final boolean status = ds.delete(attr);
@@ -378,7 +378,7 @@ public class DirectoryServiceTest {
     @Test
     public void 削除対象とするディレクトリが存在しない状態でsetRecursiveにtrueを指定してdeleteを実行した場合に終了ステータスがfalseであること()
         throws Exception {
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
 
       ds.setRecursive(true);
@@ -393,7 +393,7 @@ public class DirectoryServiceTest {
       final File directory = new File("test_dir");
       directory.mkdir();
 
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("test_dir");
 
       final boolean status = ds.delete(attr);
@@ -408,7 +408,7 @@ public class DirectoryServiceTest {
       final File directory = new File("parent/sub1/sub2");
       directory.mkdirs();
 
-      final Attribute attr = new Attribute();
+      final DirectoryResourceModel attr = new DirectoryResourceModel();
       attr.setPath("parent");
 
       ds.setRecursive(true);
