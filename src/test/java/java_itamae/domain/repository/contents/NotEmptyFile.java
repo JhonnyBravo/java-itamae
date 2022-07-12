@@ -8,15 +8,13 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.repository.stream.StreamRepository;
 import java_itamae.domain.repository.stream.StreamRepositoryImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** ファイルが空ではない場合のテスト。 */
 public class NotEmptyFile {

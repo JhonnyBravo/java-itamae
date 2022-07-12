@@ -1,7 +1,6 @@
 package java_itamae.domain.repository.mode;
 
 import java.io.FileNotFoundException;
-
 import org.junit.Before;
 import org.junit.Test;
 

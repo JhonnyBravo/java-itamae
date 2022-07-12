@@ -4,11 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
-
+import java_itamae.domain.model.directory.DirectoryResourceModel;
 import org.junit.Before;
 import org.junit.Test;
-
-import java_itamae.domain.model.directory.DirectoryResourceModel;
 
 /** ディレクトリを削除する場合のテスト。 */
 public class DeleteDirectory {

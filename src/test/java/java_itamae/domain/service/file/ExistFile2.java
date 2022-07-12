@@ -4,15 +4,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** ファイルが既に存在する場合のテスト */
 public class ExistFile2 {

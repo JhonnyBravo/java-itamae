@@ -5,12 +5,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.nio.file.NoSuchFileException;
-
+import java_itamae.domain.model.directory.DirectoryResourceModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java_itamae.domain.model.directory.DirectoryResourceModel;
 
 /** 親ディレクトリが存在しない場合のテスト。 */
 public class NotExistParentDirectory {

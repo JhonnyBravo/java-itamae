@@ -5,13 +5,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
+import java_itamae.domain.common.GetTestEncoding;
+import java_itamae.domain.model.contents.ContentsModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java_itamae.domain.common.GetTestEncoding;
-import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在して空である場合のテスト */
 public class EmptyFile {

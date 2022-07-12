@@ -10,13 +10,11 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-
+import java_itamae.domain.common.GetTestEncoding;
+import java_itamae.domain.model.contents.ContentsModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java_itamae.domain.common.GetTestEncoding;
-import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在する場合のテスト */
 public class ExistFile {

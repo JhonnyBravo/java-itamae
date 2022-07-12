@@ -6,12 +6,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
-
+import java_itamae.domain.model.contents.ContentsModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在しない場合のテスト */
 public class NotExistFile {

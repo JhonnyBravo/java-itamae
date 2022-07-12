@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.nio.file.NoSuchFileException;
-
 import org.junit.Before;
 import org.junit.Test;
 

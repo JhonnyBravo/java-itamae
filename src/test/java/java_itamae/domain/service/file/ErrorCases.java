@@ -3,15 +3,13 @@ package java_itamae.domain.service.file;
 import java.io.File;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** エラーケースのテスト */
 public class ErrorCases {

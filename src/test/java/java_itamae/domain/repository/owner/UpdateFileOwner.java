@@ -6,14 +6,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** ファイル所有者を変更する場合のテスト。 */
 public class UpdateFileOwner {

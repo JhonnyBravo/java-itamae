@@ -3,7 +3,6 @@ package java_itamae.domain.repository.mode;
 import static org.junit.Assert.assertThrows;
 
 import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.experimental.theories.DataPoint;
