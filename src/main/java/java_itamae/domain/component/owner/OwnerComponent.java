@@ -1,9 +1,11 @@
-package java_itamae.domain.repository.owner;
+package java_itamae.domain.component.owner;
 
 import java.nio.file.attribute.UserPrincipal;
 
-/** リソースの所有者を管理する。 */
-public interface OwnerRepository {
+import java_itamae.domain.component.common.BaseComponent;
+
+/** ファイル/ディレクトリの所有者を管理する。 */
+public interface OwnerComponent extends BaseComponent {
   /**
    * {@link UserPrincipal} を生成する。
    *
@@ -16,24 +18,23 @@ public interface OwnerRepository {
   /**
    * {@link UserPrincipal} を取得する。
    *
-   * @param path 操作対象とするリソースのパスを指定する。
+   * @param path 操作対象とするファイル/ディレクトリのパスを指定する。
    * @return owner 現在の所有者として設定されている {@link UserPrincipal} を取得する。
    * @throws Exception {@link java.lang.Exception}
    */
   UserPrincipal getOwner(String path) throws Exception;
 
   /**
-   * リソースの所有者を変更する。
+   * ファイル/ディレクトリの所有者を変更する。
    *
-   * @param path 操作対象とするリソースのパスを指定する。
+   * @param path 操作対象とするファイル/ディレクトリのパスを指定する。
    * @param owner 新しい所有者として設定するユーザ名を指定する。
    * @return status
    *     <ul>
-   *       <li>true: 所有者が変更されたことを表す。
-   *       <li>false: 所有者が変更されなかったことを表す。
+   *       <li>0: 何も実行せずに正常終了したことを表す。
+   *       <li>1: 異常終了したことを表す。
+   *       <li>2: 所有者が変更されて正常終了したことを表す。
    *     </ul>
-   *
-   * @throws Exception {@link java.lang.Exception}
    */
-  boolean updateOwner(String path, String owner) throws Exception;
+  int updateOwner(String path, String owner);
 }
