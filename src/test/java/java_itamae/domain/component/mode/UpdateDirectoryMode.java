@@ -1,9 +1,13 @@
-package java_itamae.domain.repository.mode;
+package java_itamae.domain.component.mode;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.experimental.theories.DataPoint;
@@ -45,19 +49,19 @@ public class UpdateDirectoryMode {
   // owner, group, others パーミッション同時変更
   @DataPoint public static String ALL = "740";
 
-  private ModeRepository mr;
-  private File directory;
+  private ModeComponent component;
+  private Path path;
 
   @Before
   public void setUp() throws Exception {
-    mr = new ModeRepositoryImpl();
-    directory = new File("test_dir");
-    directory.mkdir();
+    component = new ModeComponentImpl();
+    path = component.convertToPath("test_dir");
+    Files.createDirectory(path);
   }
 
   @After
   public void tearDown() throws Exception {
-    directory.delete();
+    Files.delete(path);
   }
 
   /**
@@ -65,20 +69,35 @@ public class UpdateDirectoryMode {
    *
    * <ul>
    *   <li>ディレクトリのパーミッション設定値が変更されること。
-   *   <li>終了ステータスが true であること。
+   *   <li>終了ステータスが 2 であること。
    * </ul>
    */
   @Theory
   public void mrs001(String mode) throws Exception {
-    final boolean status = mr.updateMode("test_dir", mode);
-    assertThat(status, is(true));
+    final Set<PosixFilePermission> curPermission = component.getMode(path.toFile().getPath());
+    final int status = component.updateMode(path.toFile().getPath(), mode);
+    final Set<PosixFilePermission> newPermission = component.getMode(path.toFile().getPath());
+
+    assertThat(status, is(2));
+    assertThat(curPermission.equals(newPermission), is(false));
   }
 
-  /** 新しく設定するパーミッション設定値が、現在設定されているパーミッション設定値と同一である場合に終了ステータスが false であること。 */
+  /**
+   * 新しく設定するパーミッション設定値が、現在設定されているパーミッション設定値と同一である場合に
+   *
+   * <ul>
+   *   <li>パーミッション設定値が変更されないこと。
+   *   <li>終了ステータスが 0 であること。
+   * </ul>
+   */
   @Theory
   public void mrs002(String mode) throws Exception {
-    mr.updateMode("test_dir", mode);
-    final boolean status = mr.updateMode("test_dir", mode);
-    assertThat(status, is(false));
+    component.updateMode(path.toFile().getPath(), mode);
+    final Set<PosixFilePermission> curPermission = component.getMode(path.toFile().getPath());
+    final int status = component.updateMode("test_dir", mode);
+    final Set<PosixFilePermission> newPermission = component.getMode(path.toFile().getPath());
+
+    assertThat(status, is(0));
+    assertThat(curPermission.equals(newPermission), is(true));
   }
 }
