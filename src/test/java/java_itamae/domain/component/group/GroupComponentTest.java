@@ -1,10 +1,10 @@
-package java_itamae.domain.repository.group;
+package java_itamae.domain.component.group;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-/** {@link GroupRepository} の単体テスト。 */
+/** {@link GroupComponent} の単体テスト。 */
 @RunWith(Suite.class)
 @SuiteClasses({UpdateDirectoryGroup.class, UpdateFileGroup.class})
-public class GroupRepositoryTest {}
+public class GroupComponentTest {}
