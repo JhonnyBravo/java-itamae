@@ -1,4 +1,4 @@
-package java_itamae.domain.repository.owner;
+package java_itamae.domain.component.owner;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileSystems;
@@ -6,16 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class OwnerRepositoryImpl implements OwnerRepository {
-  private final Logger logger;
-
-  public OwnerRepositoryImpl() {
-    logger = LoggerFactory.getLogger(this.getClass());
-  }
-
+public class OwnerComponentImpl implements OwnerComponent {
   @Override
   public UserPrincipal createOwner(String owner) throws Exception {
     final UserPrincipalLookupService upls =
@@ -35,21 +27,27 @@ public class OwnerRepositoryImpl implements OwnerRepository {
   }
 
   @Override
-  public boolean updateOwner(String path, String owner) throws Exception {
-    boolean status = false;
+  public int updateOwner(String path, String owner) {
+    int status = 0;
 
-    final UserPrincipal curOwner = getOwner(path);
-    final UserPrincipal newOwner = createOwner(owner);
+    try {
+      final UserPrincipal curOwner = getOwner(path);
+      final UserPrincipal newOwner = createOwner(owner);
 
-    if (curOwner.equals(newOwner)) {
-      return status;
+      if (curOwner.equals(newOwner)) {
+        return status;
+      }
+
+      this.getLogger().info("所有者を変更しています......");
+      final Path p = this.convertToPath(path);
+      Files.setOwner(p, newOwner);
+
+      status = 2;
+    } catch (final Exception e) {
+      this.getLogger().warn(e.toString());
+      status = 1;
     }
 
-    logger.info("所有者を変更しています......");
-    final Path p = FileSystems.getDefault().getPath(path);
-    Files.setOwner(p, newOwner);
-
-    status = true;
     return status;
   }
 }
