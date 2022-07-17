@@ -1,4 +1,4 @@
-package java_itamae.domain.repository.group;
+package java_itamae.domain.component.group;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileSystems;
@@ -7,16 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.UserPrincipalLookupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class GroupRepositoryImpl implements GroupRepository {
-  private final Logger logger;
-
-  public GroupRepositoryImpl() {
-    logger = LoggerFactory.getLogger(this.getClass());
-  }
-
+public class GroupComponentImpl implements GroupComponent {
   @Override
   public GroupPrincipal createGroup(String group) throws Exception {
     final UserPrincipalLookupService upls =
@@ -26,7 +18,7 @@ public class GroupRepositoryImpl implements GroupRepository {
 
   @Override
   public GroupPrincipal getGroup(String path) throws Exception {
-    final Path p = FileSystems.getDefault().getPath(path);
+    final Path p = this.convertToPath(path);
 
     if (!p.toFile().exists()) {
       throw new FileNotFoundException(path + " が見つかりません。");
@@ -37,22 +29,30 @@ public class GroupRepositoryImpl implements GroupRepository {
   }
 
   @Override
-  public boolean updateGroup(String path, String group) throws Exception {
-    boolean status = false;
+  public int updateGroup(String path, String group) {
+    int status = 0;
 
-    final GroupPrincipal curGroup = getGroup(path);
-    final GroupPrincipal newGroup = createGroup(group);
+    try {
+      final GroupPrincipal curGroup = getGroup(path);
+      final GroupPrincipal newGroup = createGroup(group);
 
-    if (curGroup.equals(newGroup)) {
-      return status;
+      if (curGroup.equals(newGroup)) {
+        return status;
+      }
+
+      this.getLogger().info("グループ所有者を変更しています......");
+
+      final Path p = this.convertToPath(path);
+      final PosixFileAttributeView pfav =
+          Files.getFileAttributeView(p, PosixFileAttributeView.class);
+      pfav.setGroup(newGroup);
+
+      status = 2;
+    } catch (final Exception e) {
+      this.getLogger().warn(e.toString());
+      status = 1;
     }
 
-    logger.info("グループ所有者を変更しています......");
-    final Path p = FileSystems.getDefault().getPath(path);
-    final PosixFileAttributeView pfav = Files.getFileAttributeView(p, PosixFileAttributeView.class);
-    pfav.setGroup(newGroup);
-
-    status = true;
     return status;
   }
 }
