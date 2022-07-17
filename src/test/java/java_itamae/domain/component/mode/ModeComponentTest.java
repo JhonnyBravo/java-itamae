@@ -1,10 +1,10 @@
-package java_itamae.domain.repository.mode;
+package java_itamae.domain.component.mode;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-/** {@link ModeRepository} の単体テスト。 */
+/** {@link ModeComponent} の単体テスト。 */
 @RunWith(Suite.class)
 @SuiteClasses({
   UpdateDirectoryMode.class,
@@ -12,4 +12,4 @@ import org.junit.runners.Suite.SuiteClasses;
   ErrorCases1.class,
   ErrorCases2.class
 })
-public class ModeRepositoryTest {}
+public class ModeComponentTest {}
