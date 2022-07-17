@@ -1,22 +1,13 @@
-package java_itamae.domain.repository.mode;
+package java_itamae.domain.component.mode;
 
 import java.io.FileNotFoundException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class ModeRepositoryImpl implements ModeRepository {
-  private final Logger logger;
-
-  public ModeRepositoryImpl() {
-    logger = LoggerFactory.getLogger(this.getClass());
-  }
-
+public class ModeComponentImpl implements ModeComponent {
   @Override
   public Set<PosixFilePermission> createMode(String mode) throws Exception {
     final String converted =
@@ -33,7 +24,7 @@ public class ModeRepositoryImpl implements ModeRepository {
 
   @Override
   public Set<PosixFilePermission> getMode(String path) throws Exception {
-    final Path p = FileSystems.getDefault().getPath(path);
+    final Path p = this.convertToPath(path);
 
     if (!p.toFile().exists()) {
       throw new FileNotFoundException(path + " が見つかりません。");
@@ -43,21 +34,27 @@ public class ModeRepositoryImpl implements ModeRepository {
   }
 
   @Override
-  public boolean updateMode(String path, String mode) throws Exception {
-    boolean status = false;
+  public int updateMode(String path, String mode) {
+    int status = 0;
 
-    final Set<PosixFilePermission> curPermission = getMode(path);
-    final Set<PosixFilePermission> newPermission = createMode(mode);
+    try {
+      final Set<PosixFilePermission> curPermission = getMode(path);
+      final Set<PosixFilePermission> newPermission = createMode(mode);
 
-    if (curPermission.equals(newPermission)) {
-      return status;
+      if (curPermission.equals(newPermission)) {
+        return status;
+      }
+
+      this.getLogger().info("パーミッションを変更しています......");
+      final Path p = this.convertToPath(path);
+      Files.setPosixFilePermissions(p, newPermission);
+
+      status = 2;
+    } catch (final Exception e) {
+      this.getLogger().warn(e.toString());
+      status = 1;
     }
 
-    logger.info("パーミッションを変更しています......");
-    final Path p = FileSystems.getDefault().getPath(path);
-    Files.setPosixFilePermissions(p, newPermission);
-
-    status = true;
     return status;
   }
 }
