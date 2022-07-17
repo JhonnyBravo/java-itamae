@@ -1,8 +1,13 @@
-package java_itamae.domain.repository.mode;
+package java_itamae.domain.component.mode;
 
-import static org.junit.Assert.assertThrows;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.experimental.theories.DataPoint;
@@ -28,33 +33,37 @@ public class ErrorCases2 {
   @DataPoint public static String ERROR7 = "781";
   @DataPoint public static String ERROR8 = "768";
 
-  private ModeRepository mr;
-  private File file;
+  private ModeComponent component;
+  private Path path;
 
   @Before
   public void setUp() throws Exception {
-    mr = new ModeRepositoryImpl();
-    file = new File("test.txt");
-    file.createNewFile();
+    component = new ModeComponentImpl();
+    path = component.convertToPath("test.txt");
+    Files.createFile(path);
   }
 
   @After
   public void tearDown() throws Exception {
-    file.delete();
+    Files.delete(path);
   }
 
-  /** {@link ModeRepository#updateMode(String, String)} 実行時に {@link Exception} が送出されること。 */
+  /**
+   * 不正なパーミッション設定値を指定して {@link ModeComponent#updateMode(String, String)} 実行した場合に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>パーミッション設定値が変更されないこと。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
+   */
   @Theory
   public void mre001(String mode) throws Exception {
-    assertThrows(
-        Exception.class,
-        () -> {
-          try {
-            mr.updateMode("test.txt", mode);
-          } catch (final Exception e) {
-            System.err.println(e);
-            throw e;
-          }
-        });
+    final Set<PosixFilePermission> curPermission = component.getMode(path.toFile().getPath());
+    final int status = component.updateMode(path.toFile().getPath(), mode);
+    final Set<PosixFilePermission> newPermission = component.getMode(path.toFile().getPath());
+
+    assertThat(status, is(1));
+    assertThat(curPermission.equals(newPermission), is(true));
   }
 }
