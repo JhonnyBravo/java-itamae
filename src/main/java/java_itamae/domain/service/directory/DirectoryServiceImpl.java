@@ -1,68 +1,79 @@
 package java_itamae.domain.service.directory;
 
+import java_itamae.domain.component.directory.DirectoryComponent;
+import java_itamae.domain.component.directory.DirectoryComponentImpl;
+import java_itamae.domain.component.group.GroupComponent;
+import java_itamae.domain.component.group.GroupComponentImpl;
+import java_itamae.domain.component.mode.ModeComponent;
+import java_itamae.domain.component.mode.ModeComponentImpl;
+import java_itamae.domain.component.owner.OwnerComponent;
+import java_itamae.domain.component.owner.OwnerComponentImpl;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
-import java_itamae.domain.repository.directory.DirectoryRepository;
-import java_itamae.domain.repository.directory.DirectoryRepositoryImpl;
-import java_itamae.domain.repository.group.GroupRepository;
-import java_itamae.domain.repository.group.GroupRepositoryImpl;
-import java_itamae.domain.repository.mode.ModeRepository;
-import java_itamae.domain.repository.mode.ModeRepositoryImpl;
-import java_itamae.domain.repository.owner.OwnerRepository;
-import java_itamae.domain.repository.owner.OwnerRepositoryImpl;
 
 public class DirectoryServiceImpl implements DirectoryService {
-  private boolean recursive;
-  private final DirectoryRepository dr;
-  private final OwnerRepository or;
-  private final GroupRepository gr;
-  private final ModeRepository mr;
+  private final DirectoryComponent dc;
+  private final OwnerComponent oc;
+  private final GroupComponent gc;
+  private final ModeComponent mc;
 
   public DirectoryServiceImpl() {
-    recursive = false;
-    dr = new DirectoryRepositoryImpl();
-    or = new OwnerRepositoryImpl();
-    gr = new GroupRepositoryImpl();
-    mr = new ModeRepositoryImpl();
+    dc = new DirectoryComponentImpl();
+    oc = new OwnerComponentImpl();
+    gc = new GroupComponentImpl();
+    mc = new ModeComponentImpl();
   }
 
   @Override
-  public void setRecursive(boolean recursive) {
-    this.recursive = recursive;
-  }
+  public int create(DirectoryResourceModel model) {
+    int status = 0;
 
-  @Override
-  public boolean create(DirectoryResourceModel attr) throws Exception {
-    boolean status = false;
+    try {
+      status = dc.create(model.getPath(), model.isRecursive());
 
-    if (recursive) {
-      status = dr.createRecursive(attr.getPath());
-    } else {
-      status = dr.create(attr.getPath());
-    }
+      if (status == 1) {
+        return status;
+      }
 
-    if (attr.getOwner() != null) {
-      status = or.updateOwner(attr.getPath(), attr.getOwner());
-    }
+      if (model.getOwner() != null) {
+        status = oc.updateOwner(model.getPath(), model.getOwner());
 
-    if (attr.getGroup() != null) {
-      status = gr.updateGroup(attr.getPath(), attr.getGroup());
-    }
+        if (status == 1) {
+          return status;
+        }
+      }
 
-    if (attr.getMode() != null) {
-      status = mr.updateMode(attr.getPath(), attr.getMode());
+      if (model.getGroup() != null) {
+        status = gc.updateGroup(model.getPath(), model.getGroup());
+
+        if (status == 1) {
+          return status;
+        }
+      }
+
+      if (model.getMode() != null) {
+        status = mc.updateMode(model.getPath(), model.getMode());
+
+        if (status == 1) {
+          return status;
+        }
+      }
+    } catch (final Exception e) {
+      this.getLogger().warn(e.toString());
+      status = 1;
     }
 
     return status;
   }
 
   @Override
-  public boolean delete(DirectoryResourceModel attr) throws Exception {
-    boolean status = false;
+  public int delete(DirectoryResourceModel model) {
+    int status = 0;
 
-    if (recursive) {
-      status = dr.deleteRecursive(attr.getPath());
-    } else {
-      status = dr.delete(attr.getPath());
+    try {
+      status = dc.delete(model.getPath(), model.isRecursive());
+    } catch (final Exception e) {
+      this.getLogger().warn(e.toString());
+      status = 1;
     }
 
     return status;
