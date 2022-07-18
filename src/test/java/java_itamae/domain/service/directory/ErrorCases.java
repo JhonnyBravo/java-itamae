@@ -1,123 +1,140 @@
 package java_itamae.domain.service.directory;
 
-import java.io.File;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 /** 例外発生時のテスト。 */
 public class ErrorCases {
   private DirectoryService ds;
   private PropertiesService ps;
-  private File file;
+  private Path path;
 
   @Before
   public void setUp() throws Exception {
     ds = new DirectoryServiceImpl();
-    file = new File("test_dir");
+    path = FileSystems.getDefault().getPath("test_dir");
 
-    final ContentsModel attr = new ContentsModel();
-    attr.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl(attr);
+    final ContentsModel model = new ContentsModel();
+    model.setPath("src/test/resources/test.properties");
+    ps = new PropertiesServiceImpl(model);
   }
 
   @After
   public void tearDown() throws Exception {
-    if (file.isDirectory()) {
-      file.delete();
+    if (path.toFile().isDirectory()) {
+      Files.delete(path);
     }
   }
 
   /**
-   * path が指定されないまま {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合に {@link
-   * NullPointerException} が送出されること。
+   * path が指定されないまま {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
    */
-  @Test(expected = NullPointerException.class)
+  @Test
   public void dse001() throws Exception {
-    final DirectoryResourceModel attr = new DirectoryResourceModel();
-    attr.setOwner(ps.getProperty("owner"));
-    attr.setGroup(ps.getProperty("group"));
-    attr.setMode("640");
+    final DirectoryResourceModel model = new DirectoryResourceModel();
+    model.setOwner(ps.getProperty("owner"));
+    model.setGroup(ps.getProperty("group"));
+    model.setMode("640");
 
-    try {
-      ds.create(attr);
-    } catch (final Exception e) {
-      System.err.println(e);
-      throw e;
-    }
+    final int status = ds.create(model);
+    assertThat(status, is(1));
   }
 
   /**
-   * path が指定されないまま {@link DirectoryService#delete(DirectoryResourceModel)} を実行した場合に {@link
-   * NullPointerException} が送出されること。
+   * path が指定されないまま {@link DirectoryService#delete(DirectoryResourceModel)} を実行した場合に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
    */
-  @Test(expected = NullPointerException.class)
+  @Test
   public void dse002() throws Exception {
-    final DirectoryResourceModel attr = new DirectoryResourceModel();
-
-    try {
-      ds.delete(attr);
-    } catch (final Exception e) {
-      System.err.println(e);
-      throw e;
-    }
+    final DirectoryResourceModel model = new DirectoryResourceModel();
+    final int status = ds.delete(model);
+    assertThat(status, is(1));
   }
 
-  /** 新しいディレクトリ所有者のユーザ名として存在しないユーザの名前を指定した場合に {@link UserPrincipalNotFoundException} が送出されること。 */
-  @Test(expected = UserPrincipalNotFoundException.class)
+  /**
+   * 新しいディレクトリ所有者のユーザ名として、存在しないユーザの名前を指定した場合に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
+   */
+  @Test
   public void dse003() throws Exception {
-    final DirectoryResourceModel attr = new DirectoryResourceModel();
-    attr.setPath("test_dir");
-    attr.setOwner("NotExist");
-    attr.setGroup(ps.getProperty("group"));
-    attr.setMode("640");
+    final DirectoryResourceModel model = new DirectoryResourceModel();
+    model.setPath(path.toFile().getPath());
+    model.setOwner("NotExist");
+    model.setGroup(ps.getProperty("group"));
+    model.setMode("640");
 
-    try {
-      ds.create(attr);
-    } catch (final Exception e) {
-      System.err.println(e);
-      throw e;
-    }
+    final int status = ds.create(model);
+    assertThat(status, is(1));
+    assertThat(path.toFile().isDirectory(), is(true));
   }
 
-  /** 新しいグループ所有者のグループ名として存在しないグループの名前を指定した場合に {@link UserPrincipalNotFoundException} が送出されること。 */
+  /**
+   * 新しいグループ所有者のグループ名として、存在しないグループの名前を指定した場合に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
+   */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
-  @Test(expected = UserPrincipalNotFoundException.class)
+  @Test
   public void dse004() throws Exception {
-    final DirectoryResourceModel attr = new DirectoryResourceModel();
-    attr.setPath("test_dir");
-    attr.setOwner(ps.getProperty("owner"));
-    attr.setGroup("NotExist");
-    attr.setMode("640");
+    final DirectoryResourceModel model = new DirectoryResourceModel();
+    model.setPath(path.toFile().getPath());
+    model.setOwner(ps.getProperty("owner"));
+    model.setGroup("NotExist");
+    model.setMode("640");
 
-    try {
-      ds.create(attr);
-    } catch (final Exception e) {
-      System.err.println(e);
-      throw e;
-    }
+    final int status = ds.create(model);
+    assertThat(status, is(1));
+    assertThat(path.toFile().isDirectory(), is(true));
   }
 
-  /** 新しいパーミッション設定値として不正なパーミッション値を指定した場合に {@link Exception} が送出されること。 */
+  /**
+   * 新しいパーミッション設定値として不正なパーミッション値を指定した場合に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
+   */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
-  @Test(expected = Exception.class)
+  @Test
   public void dse005() throws Exception {
-    final DirectoryResourceModel attr = new DirectoryResourceModel();
-    attr.setPath("test_dir");
-    attr.setOwner(ps.getProperty("owner"));
-    attr.setGroup(ps.getProperty("group"));
-    attr.setMode("a40");
+    final DirectoryResourceModel model = new DirectoryResourceModel();
+    model.setPath(path.toFile().getPath());
+    model.setOwner(ps.getProperty("owner"));
+    model.setGroup(ps.getProperty("group"));
+    model.setMode("a40");
 
-    try {
-      ds.create(attr);
-    } catch (final Exception e) {
-      System.err.println(e);
-      throw e;
-    }
+    final int status = ds.create(model);
+    assertThat(status, is(1));
+    assertThat(path.toFile().isDirectory(), is(true));
   }
 }
