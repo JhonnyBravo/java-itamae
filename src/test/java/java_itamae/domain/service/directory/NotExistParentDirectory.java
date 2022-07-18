@@ -3,65 +3,75 @@ package java_itamae.domain.service.directory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.io.File;
-import java.nio.file.NoSuchFileException;
-import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java_itamae.domain.model.directory.DirectoryResourceModel;
+
 /** 親ディレクトリが存在しない場合のテスト。 */
 public class NotExistParentDirectory {
   private DirectoryService ds;
-  private DirectoryResourceModel attr;
+  private DirectoryResourceModel model;
+  private Path path;
+  private Path rootDir;
 
   @Before
   public void setUp() throws Exception {
+    path = FileSystems.getDefault().getPath("parent/sub1/sub2");
+    rootDir = path.getParent().getParent();
     ds = new DirectoryServiceImpl();
-    attr = new DirectoryResourceModel();
-    attr.setPath("parent/sub1/sub2");
+
+    model = new DirectoryResourceModel();
+    model.setPath(path.toFile().getPath());
   }
 
   @After
   public void tearDown() throws Exception {
-    attr.setPath("parent");
-    ds.setRecursive(true);
-    ds.delete(attr);
-  }
+    model.setPath(rootDir.toFile().getPath());
+    model.setRecursive("true");
 
-  /** recursive を指定しない場合に {@link NoSuchFileException} が送出されること。 */
-  @Test(expected = NoSuchFileException.class)
-  public void dse001() throws Exception {
-    try {
-      ds.create(attr);
-    } catch (final Exception e) {
-      System.err.println(e);
-      final File parent = new File("parent");
-      assertThat(parent.isDirectory(), is(false));
-      throw e;
-    }
+    ds.delete(model);
   }
 
   /**
-   *
+   * recursive を指定せずに {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合に
    *
    * <ul>
-   *   <li>recursive を true に設定した場合に親ディレクトリも含めてディレクトリが作成されること。
-   *   <li>終了ステータスが true であること。
+   *   <li>異常終了すること。
+   *   <li>ディレクトリが作成されないこと。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
+   */
+  @Test
+  public void dse001() throws Exception {
+    final int status = ds.create(model);
+    assertThat(status, is(1));
+    assertThat(rootDir.toFile().isDirectory(), is(false));
+  }
+
+  /**
+   * recursive に true を設定した場合に
+   *
+   * <ul>
+   *   <li>親ディレクトリも含めてディレクトリが作成されること。
+   *   <li>終了ステータスが 2 であること。
    * </ul>
    */
   @Test
   public void dss001() throws Exception {
-    ds.setRecursive(true);
-    final boolean status = ds.create(attr);
-    assertThat(status, is(true));
+    model.setRecursive("true");
+    final int status = ds.create(model);
+    assertThat(status, is(2));
 
-    final File parent = new File("parent");
-    final File sub1 = new File("parent/sub1");
-    final File sub2 = new File("parent/sub1/sub2");
-
-    assertThat(parent.isDirectory(), is(true));
-    assertThat(sub1.isDirectory(), is(true));
-    assertThat(sub2.isDirectory(), is(true));
+    // parent/sub1/sub2
+    assertThat(path.toFile().isDirectory(), is(true));
+    // parent/sub1
+    assertThat(path.getParent().toFile().isDirectory(), is(true));
+    // parent
+    assertThat(rootDir.toFile().isDirectory(), is(true));
   }
 }
