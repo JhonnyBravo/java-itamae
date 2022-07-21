@@ -4,28 +4,35 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java_itamae.domain.common.GetTestContents;
+import java_itamae.domain.model.contents.ContentsModel;
+
 /** ファイルが存在して内容が空ではない場合のテスト */
 public class NotEmptyFile {
   private File file;
-  private ContentsService cs;
+  private ContentsService service;
+  private GetTestContents getTestContents;
 
   @Before
   public void setUp() throws Exception {
+    getTestContents = new GetTestContents();
+
     file = new File("cs_test.txt");
     file.createNewFile();
 
-    final ContentsModel attr = new ContentsModel();
-    attr.setPath("cs_test.txt");
+    final ContentsModel model = new ContentsModel();
+    model.setPath(file.getPath());
 
-    cs = new ContentsServiceImpl(attr);
-    cs.appendContent("1 行目");
-    cs.appendContent("2 行目");
+    service = new ContentsServiceImpl();
+    service.init(model);
+    service.updateContents(getTestContents.get());
   }
 
   @After
@@ -36,72 +43,55 @@ public class NotEmptyFile {
   /** {@link ContentsService#getContents()} 実行時にファイルを読込み、内容を {@link List} に変換して返すこと。 */
   @Test
   public void css001() throws Exception {
-    final List<String> contents = cs.getContents();
-    assertThat(contents.size(), is(2));
-    assertThat(contents.get(0), is("1 行目"));
-    assertThat(contents.get(1), is("2 行目"));
+    final List<String> newContents = getTestContents.get();
+    final List<String> curContents = service.getContents();
+    assertThat(curContents.size(), is(2));
 
-    for (final String line : contents) {
-      System.out.println(line);
+    for (int i = 0; i < curContents.size(); i++) {
+      assertThat(curContents.get(i), is(newContents.get(i)));
+      System.out.println(curContents.get(i));
     }
   }
 
   /**
-   *
+   * {@link ContentsService#deleteContents()} 実行時に
    *
    * <ul>
-   *   <li>{@link ContentsService#deleteContents()} 実行時にファイルの内容が全削除されること。
-   *   <li>終了ステータスが true であること。
+   *   <li>ファイルの内容が全削除されること。
+   *   <li>終了ステータスが 2 であること。
    * </ul>
    */
   @Test
   public void css002() throws Exception {
-    final boolean status = cs.deleteContents();
-    assertThat(status, is(true));
+    final int status = service.deleteContents();
+    assertThat(status, is(2));
 
-    final List<String> contents = cs.getContents();
+    final List<String> contents = service.getContents();
     assertThat(contents.size(), is(0));
   }
 
   /**
-   *
+   * {@link ContentsService#updateContents(List)} 実行時に
    *
    * <ul>
-   *   <li>{@link ContentsService#updateContent(String)} 実行時にファイルの内容が上書きされること。
-   *   <li>終了ステータスが true であること。
+   *   <li>ファイルの内容が更新されること。
+   *   <li>終了ステータスが 2 であること。
    * </ul>
    */
   @Test
   public void css003() throws Exception {
-    final boolean status = cs.updateContent("上書きテスト");
-    assertThat(status, is(true));
+    final List<String> newContents = new ArrayList<>();
+    newContents.add("update");
 
-    final List<String> contents = cs.getContents();
-    assertThat(contents.size(), is(1));
-    assertThat(contents.get(0), is("上書きテスト"));
+    final int status = service.updateContents(newContents);
+    assertThat(status, is(2));
 
-    System.out.println(contents.get(0));
-  }
+    final List<String> curContents = service.getContents();
+    assertThat(curContents.size(), is(1));
 
-  /**
-   *
-   *
-   * <ul>
-   *   <li>{@link ContentsService#appendContent(String)} 実行時にファイルの末尾へ文字列が追記されること。
-   *   <li>終了ステータスが true であること。
-   * </ul>
-   */
-  @Test
-  public void css004() throws Exception {
-    final boolean status = cs.appendContent("追記テスト");
-    assertThat(status, is(true));
-
-    final List<String> contents = cs.getContents();
-    assertThat(contents.size(), is(3));
-    assertThat(contents.get(2), is("追記テスト"));
-
-    for (final String line : contents) {
-      System.out.println(line);
+    for (int i = 0; i < curContents.size(); i++) {
+      assertThat(curContents.get(i), is(newContents.get(i)));
+      System.out.println(curContents.get(i));
     }
   }
 }
