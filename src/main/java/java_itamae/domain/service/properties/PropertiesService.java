@@ -2,8 +2,18 @@ package java_itamae.domain.service.properties;
 
 import java.util.Map;
 
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.service.common.BaseService;
+
 /** プロパティファイルの読み書きを操作する。 */
-public interface PropertiesService {
+public interface PropertiesService extends BaseService {
+  /**
+   * 初期化処理を実行する。
+   *
+   * @param model 操作対象とするファイルの情報を収めた {@link ContentsModel} を指定する。
+   */
+  public void init(ContentsModel model);
+
   /**
    * プロパティファイルからキーと値を読込み、 {@link Map} に変換して返す。
    *
@@ -26,42 +36,39 @@ public interface PropertiesService {
    *
    * @param key 新規登録するプロパティのキー名を指定する。
    * @param value 新規登録するプロパティの値を指定する。
-   * @return status
+   * @return status 終了ステータスを返す。
    *     <ul>
-   *       <li>true: 新規登録に成功したことを表す。
-   *       <li>false: 新規登録を実行しなかったことを表す。
+   *       <li>0: 何も実行せずに正常終了したことを表す。
+   *       <li>1: 異常終了したことを表す。
+   *       <li>2: 書込みを実行して正常終了したことを表す。
    *     </ul>
-   *
-   * @throws Exception {@link Exception}
    */
-  boolean createProperty(String key, String value) throws Exception;
+  int createProperty(String key, String value);
 
   /**
    * 既存のプロパティを上書きする。
    *
    * @param key 上書き対象とするプロパティのキー名を指定する。
    * @param value プロパティへ上書きする値を指定する。
-   * @return status
+   * @return status 終了ステータスを返す。
    *     <ul>
-   *       <li>true: プロパティの上書きに成功したことを表す。
-   *       <li>false: プロパティを上書きしなかったことを表す。
+   *       <li>0: 何も実行せずに正常終了したことを表す。
+   *       <li>1: 異常終了したことを表す。
+   *       <li>2: 書込みを実行して正常終了したことを表す。
    *     </ul>
-   *
-   * @throws Exception {@link Exception}
    */
-  boolean updateProperty(String key, String value) throws Exception;
+  int updateProperty(String key, String value);
 
   /**
    * 既存のプロパティを削除する。
    *
    * @param key 削除対象とするプロパティのキー名を指定する。
-   * @return status
+   * @return status 終了ステータスを返す。
    *     <ul>
-   *       <li>true: 削除に成功したことを表す。
-   *       <li>false: 削除を実行しなかったことを表す。
+   *       <li>0: 何も実行せずに正常終了したことを表す。
+   *       <li>1: 異常終了したことを表す。
+   *       <li>2: 削除を実行して正常終了したことを表す。
    *     </ul>
-   *
-   * @throws Exception {@link Exception}
    */
-  boolean deleteProperty(String key) throws Exception;
+  int deleteProperty(String key);
 }
