@@ -5,9 +5,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在しない場合のテスト。 */
 public class NotExistFile {
@@ -19,7 +21,8 @@ public class NotExistFile {
     final ContentsModel attr = new ContentsModel();
     attr.setPath("NotExist.txt");
 
-    service = new PropertiesServiceImpl(attr);
+    service = new PropertiesServiceImpl();
+    service.init(attr);
     file = new File(attr.getPath());
   }
 
@@ -35,46 +38,47 @@ public class NotExistFile {
   }
 
   /**
-   * {@link PropertiesService#createProperty(String, String)} 実行時に {@link FileNotFoundException}
-   * が送出されること。
+   * {@link PropertiesService#createProperty(String, String)} 実行時に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
    */
-  @Test(expected = FileNotFoundException.class)
+  @Test
   public void pse002() throws Exception {
-    try {
-      service.createProperty("test", "登録テスト");
-    } catch (final Exception e) {
-      assertThat(file.isFile(), is(false));
-      System.err.println(e);
-      throw e;
-    }
+    final int status = service.createProperty("test", "登録テスト");
+    assertThat(status, is(1));
+    assertThat(file.isFile(), is(false));
   }
 
   /**
-   * {@link PropertiesService#updateProperty(String, String)} 実行時に {@link FileNotFoundException}
-   * が送出されること。
+   * {@link PropertiesService#updateProperty(String, String)} 実行時に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
    */
-  @Test(expected = FileNotFoundException.class)
+  @Test
   public void pse003() throws Exception {
-    try {
-      service.updateProperty("test", "更新テスト");
-    } catch (final Exception e) {
-      assertThat(file.isFile(), is(false));
-      System.err.println(e);
-      throw e;
-    }
+    final int status = service.updateProperty("test", "更新テスト");
+    assertThat(status, is(1));
+    assertThat(file.isFile(), is(false));
   }
 
   /**
-   * {@link PropertiesService#deleteProperty(String)} 実行時に {@link FileNotFoundException} が送出されること。
+   * {@link PropertiesService#deleteProperty(String)} 実行時に
+   *
+   * <ul>
+   *   <li>異常終了すること。
+   *   <li>終了ステータスが 1 であること。
+   * </ul>
    */
-  @Test(expected = FileNotFoundException.class)
+  @Test
   public void pse004() throws Exception {
-    try {
-      service.deleteProperty("test");
-    } catch (final Exception e) {
-      assertThat(file.isFile(), is(false));
-      System.err.println(e);
-      throw e;
-    }
+    final int status = service.deleteProperty("test");
+    assertThat(status, is(1));
+    assertThat(file.isFile(), is(false));
   }
 }
