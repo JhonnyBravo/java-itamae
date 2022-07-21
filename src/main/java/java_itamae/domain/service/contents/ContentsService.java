@@ -2,12 +2,22 @@ package java_itamae.domain.service.contents;
 
 import java.util.List;
 
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.service.common.BaseService;
+
 /** ファイルの読み書きを操作する。 */
-public interface ContentsService {
+public interface ContentsService extends BaseService {
+  /**
+   * 初期化処理を実行する。
+   *
+   * @param model 操作対象とするファイルの情報を収めた {@link ContentsModel} を指定する。
+   */
+  public void init(ContentsModel model);
+
   /**
    * ファイルを読込み、 {@link List} に変換して返す。
    *
-   * @return contents {@link String} の {@link List}
+   * @return contents 変換された {@link List}
    * @throws Exception {@link Exception}
    */
   List<String> getContents() throws Exception;
@@ -15,55 +25,25 @@ public interface ContentsService {
   /**
    * ファイルを上書きする。
    *
-   * @param contents 書込み対象とする文字列の {@link List} を指定する。
-   * @return status
+   * @param contents 書込み対象とする文字列を収めた {@link List} を指定する。
+   * @return status 終了ステータスを返す。
    *     <ul>
-   *       <li>true: 上書きに成功したことを表す。
-   *       <li>false: 上書きを実行しなかったことを表す。
+   *       <li>0: 何も実行せずに正常終了したことを表す
+   *       <li>1: 異常終了したことを表す。
+   *       <li>2: 書込みを実行して正常終了したことを表す。
    *     </ul>
-   *
-   * @throws Exception {@link Exception}
    */
-  boolean updateContents(List<String> contents) throws Exception;
-
-  /**
-   * ファイルを上書きする。
-   *
-   * @param content 書込み対象とする文字列を指定する。
-   * @return status
-   *     <ul>
-   *       <li>true: 上書きに成功したことを表す。
-   *       <li>false: 上書きを実行しなかったことを表す。
-   *     </ul>
-   *
-   * @throws Exception {@link Exception}
-   */
-  boolean updateContent(String content) throws Exception;
-
-  /**
-   * ファイル末尾へ文字列を追記する。
-   *
-   * @param content 書込み対象とする文字列を指定する。
-   * @return status
-   *     <ul>
-   *       <li>true: 追記に成功したことを表す。
-   *       <li>false: 追記を実行しなかったことを表す。
-   *     </ul>
-   *
-   * @throws Exception {@link Exception}
-   */
-  boolean appendContent(String content) throws Exception;
+  int updateContents(List<String> contents);
 
   /**
    * ファイルを空にする。
    *
-   * @return status
+   * @return status 終了ステータスを返す。
    *     <ul>
-   *       <li>true: ファイルの内容削除に成功したことを表す。
-   *       <li>false: ファイルの内容削除を実行しなかったことを表す。
+   *       <li>0: 何も実行せずに正常終了したことを表す
+   *       <li>1: 異常終了したことを表す。
+   *       <li>2: 削除を実行して正常終了したことを表す。
    *     </ul>
-   *
-   * @throws Exception {@link Exception}
    */
-  boolean deleteContents() throws Exception;
+  int deleteContents();
 }
