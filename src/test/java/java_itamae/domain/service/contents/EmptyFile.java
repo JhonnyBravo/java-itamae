@@ -5,24 +5,32 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.util.List;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java_itamae.domain.common.GetTestContents;
+import java_itamae.domain.model.contents.ContentsModel;
+
 /** ファイルが存在して内容が空である場合のテスト */
 public class EmptyFile {
   private File file;
-  private ContentsService cs;
+  private GetTestContents getTestContents;
+  private ContentsService service;
 
   @Before
   public void setUp() throws Exception {
+    getTestContents = new GetTestContents();
+
     file = new File("cs_test.txt");
     file.createNewFile();
 
-    final ContentsModel attr = new ContentsModel();
-    attr.setPath("cs_test.txt");
-    cs = new ContentsServiceImpl(attr);
+    final ContentsModel model = new ContentsModel();
+    model.setPath(file.getPath());
+
+    service = new ContentsServiceImpl();
+    service.init(model);
   }
 
   @After
@@ -33,54 +41,37 @@ public class EmptyFile {
   /** {@link ContentsService#getContents()} 実行時に空の {@link List} が返されること。 */
   @Test
   public void css001() throws Exception {
-    final List<String> contents = cs.getContents();
+    final List<String> contents = service.getContents();
     assertThat(contents.size(), is(0));
   }
 
-  /** {@link ContentsService#deleteContents()} 実行時に終了ステータスが false であること。 */
+  /** {@link ContentsService#deleteContents()} 実行時に終了ステータスが 0 であること。 */
   @Test
   public void css002() throws Exception {
-    final boolean status = cs.deleteContents();
-    assertThat(status, is(false));
+    final int status = service.deleteContents();
+    assertThat(status, is(0));
   }
 
   /**
-   *
+   * {@link ContentsService#updateContents(List)} 実行時に
    *
    * <ul>
-   *   <li>{@link ContentsService#updateContent(String)} 実行時にファイルへ文字列が書き込まれること。
-   *   <li>終了ステータスが true であること。
+   *   <li>ファイルへの書込みができること。
+   *   <li>終了ステータスが 2 であること。
    * </ul>
    */
   @Test
   public void css003() throws Exception {
-    final boolean status = cs.updateContent("書込みテスト");
-    assertThat(status, is(true));
+    final List<String> newContents = getTestContents.get();
 
-    final List<String> contents = cs.getContents();
-    assertThat(contents.size(), is(1));
-    assertThat(contents.get(0), is("書込みテスト"));
+    final int status = service.updateContents(newContents);
+    assertThat(status, is(2));
 
-    System.out.println(contents.get(0));
-  }
+    final List<String> curContents = service.getContents();
 
-  /**
-   *
-   *
-   * <ul>
-   *   <li>{@link ContentsService#appendContent(String)} 実行時にファイルへ文字列が書き込まれること。
-   *   <li>終了ステータスが true であること。
-   * </ul>
-   */
-  @Test
-  public void css004() throws Exception {
-    final boolean status = cs.appendContent("追記テスト");
-    assertThat(status, is(true));
-
-    final List<String> contents = cs.getContents();
-    assertThat(contents.size(), is(1));
-    assertThat(contents.get(0), is("追記テスト"));
-
-    System.out.println(contents.get(0));
+    for (int i = 0; i < curContents.size(); i++) {
+      assertThat(curContents.get(i), is(newContents.get(i)));
+      System.out.println(curContents.get(i));
+    }
   }
 }
