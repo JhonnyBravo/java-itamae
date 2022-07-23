@@ -29,7 +29,8 @@ public class ExistDirectory2 {
 
     final ContentsModel model = new ContentsModel();
     model.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl(model);
+    ps = new PropertiesServiceImpl();
+    ps.init(model);
     ds = new DirectoryServiceImpl();
   }
 

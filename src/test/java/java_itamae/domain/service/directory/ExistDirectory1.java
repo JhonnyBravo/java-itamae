@@ -29,7 +29,8 @@ public class ExistDirectory1 {
     isWindows = new IsWindows();
     final ContentsModel cm = new ContentsModel();
     cm.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl(cm);
+    ps = new PropertiesServiceImpl();
+    ps.init(cm);
 
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath("test_dir");
