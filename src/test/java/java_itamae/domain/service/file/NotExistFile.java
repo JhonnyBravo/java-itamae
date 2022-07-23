@@ -27,7 +27,8 @@ public class NotExistFile {
   public void setUp() throws Exception {
     final ContentsModel ca = new ContentsModel();
     ca.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl(ca);
+    ps = new PropertiesServiceImpl();
+    ps.init(ca);
 
     fs = new FileServiceImpl();
     model = new FileResourceModel();

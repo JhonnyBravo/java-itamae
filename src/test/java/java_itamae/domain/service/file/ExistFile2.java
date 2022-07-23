@@ -28,7 +28,8 @@ public class ExistFile2 {
     final ContentsModel cm = new ContentsModel();
     cm.setPath("src/test/resources/test.properties");
 
-    ps = new PropertiesServiceImpl(cm);
+    ps = new PropertiesServiceImpl();
+    ps.init(cm);
 
     final FileResourceModel frm = new FileResourceModel();
     frm.setPath("test.txt");

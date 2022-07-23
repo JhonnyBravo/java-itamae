@@ -29,7 +29,8 @@ public class ErrorCases {
 
     final ContentsModel model = new ContentsModel();
     model.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl(model);
+    ps = new PropertiesServiceImpl();
+    ps.init(model);
   }
 
   @After
