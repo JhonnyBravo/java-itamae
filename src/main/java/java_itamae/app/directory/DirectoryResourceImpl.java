@@ -15,6 +15,7 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
 
     model.setAction(properties.get("action"));
     model.setPath(properties.get("path"));
+    model.setRecursive(properties.get("recursive"));
     model.setGroup(properties.get("group"));
     model.setMode(properties.get("mode"));
     model.setOwner(properties.get("owner"));
