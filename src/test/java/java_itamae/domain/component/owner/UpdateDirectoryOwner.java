@@ -29,7 +29,8 @@ public class UpdateDirectoryOwner {
 
     final ContentsModel model = new ContentsModel();
     model.setPath("src/test/resources/test.properties");
-    final PropertiesService service = new PropertiesServiceImpl(model);
+    final PropertiesService service = new PropertiesServiceImpl();
+    service.init(model);
 
     owner = service.getProperty("owner");
   }
