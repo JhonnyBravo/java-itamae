@@ -2,6 +2,8 @@ package java_itamae.domain.model.file;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import java_itamae.domain.model.common.NotWindows;
+
 import java.io.Serializable;
 
 /** file resource のモデルクラス */
