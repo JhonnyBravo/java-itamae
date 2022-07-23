@@ -1,4 +1,4 @@
-package java_itamae.domain.model.file;
+package java_itamae.domain.model.common;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
