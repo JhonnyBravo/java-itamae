@@ -1,7 +1,6 @@
 package java_itamae.domain.service.properties;
 
 import java.util.Map;
-
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.service.common.BaseService;
 

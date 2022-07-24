@@ -7,11 +7,9 @@ import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
+import java_itamae.domain.model.directory.DirectoryResourceModel;
 import org.junit.Before;
 import org.junit.Test;
-
-import java_itamae.domain.model.directory.DirectoryResourceModel;
 
 /** ディレクトリを削除する場合のテスト。 */
 public class DeleteDirectory {

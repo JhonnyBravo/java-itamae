@@ -1,7 +1,6 @@
 package java_itamae.domain.component.properties;
 
 import java.util.Map;
-
 import java_itamae.domain.component.common.StreamComponent;
 import java_itamae.domain.model.contents.ContentsModel;
 

@@ -6,16 +6,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java_itamae.domain.common.IsWindows;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** ディレクトリが存在する場合のテスト。 */
 public class ExistDirectory1 {

@@ -2,7 +2,6 @@ package java_itamae.app.template;
 
 import java.util.List;
 import java.util.Map;
-
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.template.TemplateResourceModel;

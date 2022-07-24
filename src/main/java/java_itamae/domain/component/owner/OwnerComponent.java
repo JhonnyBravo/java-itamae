@@ -1,7 +1,6 @@
 package java_itamae.domain.component.owner;
 
 import java.nio.file.attribute.UserPrincipal;
-
 import java_itamae.domain.component.common.BaseComponent;
 
 /** ファイル/ディレクトリの所有者を管理する。 */

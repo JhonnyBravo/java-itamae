@@ -3,10 +3,9 @@ package java_itamae.app.properties;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java_itamae.domain.model.contents.ContentsModel;
-
 import java.util.Set;
 import java.util.function.Predicate;
+import java_itamae.domain.model.contents.ContentsModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

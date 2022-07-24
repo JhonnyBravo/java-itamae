@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.experimental.theories.DataPoint;

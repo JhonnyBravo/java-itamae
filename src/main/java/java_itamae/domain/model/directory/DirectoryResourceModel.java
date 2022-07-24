@@ -2,9 +2,8 @@ package java_itamae.domain.model.directory;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import java_itamae.domain.model.common.NotWindows;
-
 import java.io.Serializable;
+import java_itamae.domain.model.common.NotWindows;
 
 /** directory resource のモデルクラス */
 public class DirectoryResourceModel implements Serializable {

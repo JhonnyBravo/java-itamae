@@ -1,7 +1,6 @@
 package java_itamae.domain.component.group;
 
 import java.nio.file.attribute.GroupPrincipal;
-
 import java_itamae.domain.component.common.BaseComponent;
 
 /** ファイル/ディレクトリのグループ所有者を管理する。 */

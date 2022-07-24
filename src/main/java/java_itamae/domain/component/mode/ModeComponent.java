@@ -2,7 +2,6 @@ package java_itamae.domain.component.mode;
 
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
-
 import java_itamae.domain.component.common.BaseComponent;
 
 /** ファイル/ディレクトリのパーミッション設定を管理する。 */

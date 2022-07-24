@@ -1,7 +1,6 @@
 package java_itamae.app.directory;
 
 import java.util.Map;
-
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.directory.DirectoryService;

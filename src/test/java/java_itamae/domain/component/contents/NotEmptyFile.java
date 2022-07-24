@@ -7,14 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java_itamae.domain.common.GetTestContents;
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.model.contents.ContentsModel;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** ファイルが空ではない場合のテスト。 */
 public class NotEmptyFile {

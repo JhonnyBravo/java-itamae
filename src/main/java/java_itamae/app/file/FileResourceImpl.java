@@ -1,7 +1,6 @@
 package java_itamae.app.file;
 
 import java.util.Map;
-
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.file.FileService;

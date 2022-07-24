@@ -5,7 +5,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import java_itamae.domain.model.contents.ContentsModel;
 
 public class PropertiesComponentImpl implements PropertiesComponent {

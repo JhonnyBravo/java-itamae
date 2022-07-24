@@ -6,14 +6,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.GroupPrincipal;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** ファイルのグループ所有者を変更する場合のテスト。 */
 // @Ignore("Windows の場合は非対応である為、実行しない。")

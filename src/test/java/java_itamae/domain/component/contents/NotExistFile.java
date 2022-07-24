@@ -7,11 +7,9 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
+import java_itamae.domain.model.contents.ContentsModel;
 import org.junit.Before;
 import org.junit.Test;
-
-import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在しない場合のテスト */
 public class NotExistFile {
