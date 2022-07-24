@@ -28,7 +28,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'com.github.JhonnyBravo:java-se-template-bom:dependency-management-SNAPSHOT'
+        mavenBom 'com.github.JhonnyBravo:java-se-template-bom:master-SNAPSHOT'
     }
 }
 
@@ -42,7 +42,7 @@ dependencies {
 }
 
 group='com.github.JhonnyBravo'
-version='dependency-management-SNAPSHOT'
+version='master-SNAPSHOT'
 sourceCompatibility=1.8
 targetCompatibility=1.8
 
