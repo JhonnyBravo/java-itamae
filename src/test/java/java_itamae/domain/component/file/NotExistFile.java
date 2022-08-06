@@ -6,18 +6,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /** ファイルが存在しない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotExistFile {
-  private FileComponent component;
+  @Autowired private FileComponent component;
   private Path path;
 
   @Before
   public void setUp() throws Exception {
-    component = new FileComponentImpl();
     path = component.convertToPath("test.txt");
   }
 
