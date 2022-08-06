@@ -5,19 +5,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /** ディレクトリが存在しない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotExistDirectory {
-  private DirectoryComponent component;
+  @Autowired private DirectoryComponent component;
   private Path rootDir;
   private Path subDir;
 
   @Before
   public void setUp() throws Exception {
-    component = new DirectoryComponentImpl();
     // test_dir
     rootDir = component.convertToPath("test_dir");
     // test_dir/sub_dir
