@@ -6,7 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ModeComponentImpl implements ModeComponent {
   @Override
   public Set<PosixFilePermission> createMode(String mode) throws Exception {
