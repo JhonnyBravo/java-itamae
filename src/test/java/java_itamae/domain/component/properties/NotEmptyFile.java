@@ -7,26 +7,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java_itamae.domain.common.GetTestEncoding;
-import java_itamae.domain.common.GetTestProperties;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.common.GetTestEncoding;
+import java_itamae.domain.common.GetTestProperties;
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** プロパティファイルが空ではない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotEmptyFile {
-  private PropertiesComponent component;
-  private GetTestEncoding getTestEncoding;
+  @Autowired private PropertiesComponent component;
+  @Autowired private GetTestEncoding getTestEncoding;
+  @Autowired private GetTestProperties getTestProperties;
   private Path path;
-  private GetTestProperties getTestProperties;
 
   @Before
   public void setUp() throws Exception {
-    component = new PropertiesComponentImpl();
-    getTestEncoding = new GetTestEncoding();
-    getTestProperties = new GetTestProperties();
-
     path = component.convertToPath("test.properties");
     Files.createFile(path);
 
