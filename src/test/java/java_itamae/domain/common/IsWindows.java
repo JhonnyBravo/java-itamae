@@ -2,7 +2,10 @@ package java_itamae.domain.common;
 
 import java.util.function.Supplier;
 
+import org.springframework.stereotype.Service;
+
 /** OS が Windows であるかどうかを判定する。 */
+@Service
 public class IsWindows implements Supplier<Boolean> {
   /**
    * OS が Windows であるかどうかを判定する。
