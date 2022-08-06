@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FileComponentImpl implements FileComponent {
   private final Function<String, Integer> createFile =
       path -> {
