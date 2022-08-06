@@ -2,16 +2,14 @@ package java_itamae.domain.service.contents;
 
 import java.util.List;
 import java_itamae.domain.component.contents.ContentsComponent;
-import java_itamae.domain.component.contents.ContentsComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ContentsServiceImpl implements ContentsService {
   private ContentsModel model;
-  private final ContentsComponent component;
-
-  public ContentsServiceImpl() {
-    component = new ContentsComponentImpl();
-  }
+  @Autowired private ContentsComponent component;
 
   @Override
   public void init(ContentsModel model) {
