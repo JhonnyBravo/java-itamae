@@ -7,20 +7,26 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在しない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotExistFile {
   private Path path;
   private ContentsModel model;
-  private ContentsComponent component;
+  @Autowired private ContentsComponent component;
 
   @Before
   public void setUp() throws Exception {
-    component = new ContentsComponentImpl();
-
     model = new ContentsModel();
     model.setPath("NotExist.txt");
 
