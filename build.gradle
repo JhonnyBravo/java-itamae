@@ -11,6 +11,7 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'org.springframework.boot' version '2.7.2'
     id 'maven-publish'
     id 'checkstyle'
     id 'pmd'
@@ -35,14 +36,16 @@ dependencyManagement {
 dependencies {
     api 'gnu.getopt:java-getopt'
     api 'ch.qos.logback:logback-classic'
-    api 'org.hibernate.validator:hibernate-validator'
-    api 'org.glassfish:jakarta.el'
+    api 'org.hibernate.validator:hibernate-validator:6.2.3.Final'
+    api 'org.springframework.boot:spring-boot-starter'
+    api 'org.springframework.boot:spring-boot-starter-validation'
     // Use JUnit test framework
     testImplementation 'junit:junit'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 group='com.github.JhonnyBravo'
-version='master-SNAPSHOT'
+version='SpringBoot-SNAPSHOT'
 sourceCompatibility=1.8
 targetCompatibility=1.8
 
@@ -68,7 +71,8 @@ java{
 
 publishing{
     publications{
-        mavenJava(MavenPublication){
+        bootJava(MavenPublication){
+            artifact bootJar
             artifactId='java-itamae'
             from components.java
             versionMapping{
@@ -117,20 +121,4 @@ googleJavaFormat {
 
 tasks.withType(JavaCompile){
     options.encoding='UTF-8'
-}
-
-afterEvaluate{
-    jar{
-        manifest{
-            attributes 'Main-Class': getProperty('jar.manifest.attributes.Main-Class')
-            attributes 'Class-Path': configurations.runtimeClasspath.collect{it.name}.join(' ')
-        }
-        
-        doLast{
-            copy{
-                from configurations.runtimeClasspath
-                into destinationDirectory
-            }
-        }
-    }
 }
