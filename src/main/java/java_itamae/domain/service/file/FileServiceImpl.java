@@ -1,27 +1,19 @@
 package java_itamae.domain.service.file;
 
 import java_itamae.domain.component.file.FileComponent;
-import java_itamae.domain.component.file.FileComponentImpl;
 import java_itamae.domain.component.group.GroupComponent;
-import java_itamae.domain.component.group.GroupComponentImpl;
 import java_itamae.domain.component.mode.ModeComponent;
-import java_itamae.domain.component.mode.ModeComponentImpl;
 import java_itamae.domain.component.owner.OwnerComponent;
-import java_itamae.domain.component.owner.OwnerComponentImpl;
 import java_itamae.domain.model.file.FileResourceModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FileServiceImpl implements FileService {
-  private final FileComponent fc;
-  private final OwnerComponent oc;
-  private final GroupComponent gc;
-  private final ModeComponent mc;
-
-  public FileServiceImpl() {
-    fc = new FileComponentImpl();
-    oc = new OwnerComponentImpl();
-    gc = new GroupComponentImpl();
-    mc = new ModeComponentImpl();
-  }
+  @Autowired private FileComponent fc;
+  @Autowired private OwnerComponent oc;
+  @Autowired private GroupComponent gc;
+  @Autowired private ModeComponent mc;
 
   @Override
   public int create(FileResourceModel model) {
