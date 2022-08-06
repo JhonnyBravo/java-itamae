@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class GetTestContents implements Supplier<List<String>> {
 
   @Override
