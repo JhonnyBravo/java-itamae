@@ -5,13 +5,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在しない場合のテスト。 */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotExistFile {
-  private PropertiesService service;
+  @Autowired private PropertiesService service;
   private File file;
 
   @Before
@@ -19,7 +27,6 @@ public class NotExistFile {
     final ContentsModel attr = new ContentsModel();
     attr.setPath("NotExist.txt");
 
-    service = new PropertiesServiceImpl();
     service.init(attr);
     file = new File(attr.getPath());
   }
