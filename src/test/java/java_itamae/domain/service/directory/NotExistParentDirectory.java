@@ -5,14 +5,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java_itamae.domain.model.directory.DirectoryResourceModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.model.directory.DirectoryResourceModel;
 
 /** 親ディレクトリが存在しない場合のテスト。 */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotExistParentDirectory {
-  private DirectoryService ds;
+  @Autowired private DirectoryService ds;
   private DirectoryResourceModel model;
   private Path path;
   private Path rootDir;
@@ -21,7 +29,6 @@ public class NotExistParentDirectory {
   public void setUp() throws Exception {
     path = FileSystems.getDefault().getPath("parent/sub1/sub2");
     rootDir = path.getParent().getParent();
-    ds = new DirectoryServiceImpl();
 
     model = new DirectoryResourceModel();
     model.setPath(path.toFile().getPath());
