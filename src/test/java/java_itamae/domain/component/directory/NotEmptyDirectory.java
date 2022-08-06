@@ -9,21 +9,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /** ディレクトリが既に存在して空ではない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotEmptyDirectory {
-  private DirectoryComponent component;
+  @Autowired private DirectoryComponent component;
   private Path path;
   private Path rootDir;
   private final List<Path> pathList = new ArrayList<>();
 
   @Before
   public void setUp() throws Exception {
-    component = new DirectoryComponentImpl();
-
     // ディレクトリ作成
     path = component.convertToPath("test_dir/sub1/sub2");
     rootDir = path.getParent().getParent();
