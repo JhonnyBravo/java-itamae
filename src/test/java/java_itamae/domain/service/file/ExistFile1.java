@@ -6,30 +6,35 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import java_itamae.domain.common.IsWindows;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
-import java_itamae.domain.service.properties.PropertiesServiceImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 /** ファイルが既に存在する場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ExistFile1 {
-  private FileService fs;
-  private PropertiesService ps;
-  private IsWindows isWindows;
+  @Autowired private FileService fs;
+  @Autowired private PropertiesService ps;
+  @Autowired private IsWindows isWindows;
   private Path path;
 
   @Before
   public void setUp() throws Exception {
-    isWindows = new IsWindows();
     path = FileSystems.getDefault().getPath("test.txt");
 
     final ContentsModel cm = new ContentsModel();
     cm.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl();
     ps.init(cm);
 
     final FileResourceModel frm = new FileResourceModel();
@@ -41,7 +46,6 @@ public class ExistFile1 {
       frm.setMode("640");
     }
 
-    fs = new FileServiceImpl();
     fs.create(frm);
   }
 
