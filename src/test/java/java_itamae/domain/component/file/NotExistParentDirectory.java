@@ -4,17 +4,23 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.Path;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /** 親ディレクトリが存在しない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotExistParentDirectory {
-  private FileComponent component;
+  @Autowired private FileComponent component;
   private Path path;
 
   @Before
   public void setUp() throws Exception {
-    component = new FileComponentImpl();
     path = component.convertToPath("NotExist/test.txt");
   }
 
