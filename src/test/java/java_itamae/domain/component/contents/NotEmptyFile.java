@@ -7,32 +7,36 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java_itamae.domain.common.GetTestContents;
-import java_itamae.domain.common.GetTestEncoding;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.common.GetTestContents;
+import java_itamae.domain.common.GetTestEncoding;
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが空ではない場合のテスト。 */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotEmptyFile {
-  private ContentsComponent component;
+  @Autowired private ContentsComponent component;
+  @Autowired private GetTestEncoding getTestEncoding;
+  @Autowired private GetTestContents getTestContents;
   private Path path;
-  private GetTestEncoding getTestEncoding;
-  private GetTestContents getTestContents;
 
   @Before
   public void setUp() throws Exception {
-    getTestEncoding = new GetTestEncoding();
-    getTestContents = new GetTestContents();
-
     final ContentsModel model = new ContentsModel();
     model.setPath("test.txt");
 
-    component = new ContentsComponentImpl();
     path = component.convertToPath(model.getPath());
-
     Files.createFile(path);
+
     component.updateContents(model, getTestContents.get());
   }
 
