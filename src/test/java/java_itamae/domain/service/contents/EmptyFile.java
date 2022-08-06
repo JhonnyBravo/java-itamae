@@ -5,29 +5,34 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.util.List;
-import java_itamae.domain.common.GetTestContents;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.common.GetTestContents;
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在して内容が空である場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class EmptyFile {
   private File file;
-  private GetTestContents getTestContents;
-  private ContentsService service;
+  @Autowired private GetTestContents getTestContents;
+  @Autowired private ContentsService service;
 
   @Before
   public void setUp() throws Exception {
-    getTestContents = new GetTestContents();
-
     file = new File("cs_test.txt");
     file.createNewFile();
 
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    service = new ContentsServiceImpl();
     service.init(model);
   }
 
