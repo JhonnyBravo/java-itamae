@@ -4,13 +4,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在して内容が空ではない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotEmptyFile {
+  @Autowired private PropertiesService service;
   private File file;
 
   @Before
@@ -21,7 +30,6 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
     service.createProperty("property1", "1 つ目のプロパティ");
     service.createProperty("property2", "2 つ目のプロパティ");
@@ -45,7 +53,6 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
 
     final int status = service.createProperty("property1", "登録テスト");
@@ -59,7 +66,6 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
     assertThat(service.getProperty("property1"), is("1 つ目のプロパティ"));
     assertThat(service.getProperty("property2"), is("2 つ目のプロパティ"));
@@ -78,7 +84,6 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
 
     final int status = service.updateProperty("property2", "更新テスト");
@@ -96,7 +101,6 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
     final int status = service.updateProperty("property1", "1 つ目のプロパティ");
     assertThat(status, is(0));
@@ -117,7 +121,6 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
     final int status = service.deleteProperty("property1");
     assertThat(status, is(2));
