@@ -2,8 +2,10 @@ package java_itamae.app;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /** CLI コマンドの使用法を表示する。 */
+@Service
 public class Usage implements Runnable {
   /** CLI コマンドの使用法を表示する。 */
   @Override
