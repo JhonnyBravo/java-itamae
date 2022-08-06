@@ -6,26 +6,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import java_itamae.domain.common.GetTestEncoding;
-import java_itamae.domain.common.GetTestProperties;
-import java_itamae.domain.model.contents.ContentsModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.common.GetTestEncoding;
+import java_itamae.domain.common.GetTestProperties;
+import java_itamae.domain.model.contents.ContentsModel;
 
 /** プロパティファイルが空である場合のテスト。 */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class EmptyFile {
-  private PropertiesComponent component;
+  @Autowired private PropertiesComponent component;
+  @Autowired private GetTestEncoding getTestEncoding;
+  @Autowired private GetTestProperties getTestProperties;
   private Path path;
-  private GetTestEncoding getTestEncoding;
-  private GetTestProperties getTestProperties;
 
   @Before
   public void setUp() throws Exception {
-    getTestEncoding = new GetTestEncoding();
-    getTestProperties = new GetTestProperties();
-    component = new PropertiesComponentImpl();
-
     path = component.convertToPath("test.properties");
     Files.createFile(path);
   }
