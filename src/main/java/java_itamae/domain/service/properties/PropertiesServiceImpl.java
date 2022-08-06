@@ -4,16 +4,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java_itamae.domain.component.properties.PropertiesComponent;
-import java_itamae.domain.component.properties.PropertiesComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PropertiesServiceImpl implements PropertiesService {
   private ContentsModel model;
-  private final PropertiesComponent component;
-
-  public PropertiesServiceImpl() {
-    component = new PropertiesComponentImpl();
-  }
+  @Autowired private PropertiesComponent component;
 
   @Override
   public void init(ContentsModel model) {
