@@ -6,18 +6,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java_itamae.domain.model.contents.ContentsModel;
-import java_itamae.domain.model.file.FileResourceModel;
-import java_itamae.domain.service.properties.PropertiesService;
-import java_itamae.domain.service.properties.PropertiesServiceImpl;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.file.FileResourceModel;
+import java_itamae.domain.service.properties.PropertiesService;
 
 /** ファイルが存在しない場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class NotExistFile {
-  private FileService fs;
-  private PropertiesService ps;
+  @Autowired private FileService fs;
+  @Autowired private PropertiesService ps;
   private FileResourceModel model;
   private Path path;
 
@@ -25,10 +32,8 @@ public class NotExistFile {
   public void setUp() throws Exception {
     final ContentsModel ca = new ContentsModel();
     ca.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl();
     ps.init(ca);
 
-    fs = new FileServiceImpl();
     model = new FileResourceModel();
     model.setPath("test.txt");
 
