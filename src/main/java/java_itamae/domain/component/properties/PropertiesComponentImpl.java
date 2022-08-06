@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java_itamae.domain.model.contents.ContentsModel;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PropertiesComponentImpl implements PropertiesComponent {
 
   @Override
