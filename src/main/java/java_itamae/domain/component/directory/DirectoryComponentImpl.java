@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.BiFunction;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DirectoryComponentImpl implements DirectoryComponent {
   private final BiFunction<String, Boolean, Integer> createDirectory =
       (path, recursive) -> {
