@@ -6,14 +6,12 @@ import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.template.TemplateResourceModel;
 import java_itamae.domain.service.contents.ContentsService;
-import java_itamae.domain.service.contents.ContentsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TemplateResourceImpl implements BaseResource<TemplateResourceModel> {
-  private final ContentsService service;
-
-  public TemplateResourceImpl() {
-    this.service = new ContentsServiceImpl();
-  }
+  @Autowired private ContentsService service;
 
   @Override
   public TemplateResourceModel convertToModel(Map<String, String> properties) {
