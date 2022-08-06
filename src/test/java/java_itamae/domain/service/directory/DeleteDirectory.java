@@ -7,18 +7,20 @@ import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java_itamae.domain.model.directory.DirectoryResourceModel;
-import org.junit.Before;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.model.directory.DirectoryResourceModel;
 
 /** ディレクトリを削除する場合のテスト。 */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class DeleteDirectory {
-  private DirectoryService ds;
-
-  @Before
-  public void setUp() throws Exception {
-    ds = new DirectoryServiceImpl();
-  }
+  @Autowired private DirectoryService service;
 
   /**
    * 削除対象とするディレクトリが存在しない状態で recursive を指定せずに {@link DirectoryService#delete(DirectoryResourceModel)}
@@ -34,7 +36,7 @@ public class DeleteDirectory {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath("test_dir");
 
-    final int status = ds.delete(model);
+    final int status = service.delete(model);
     assertThat(status, is(0));
   }
 
@@ -53,7 +55,7 @@ public class DeleteDirectory {
     model.setPath("test_dir");
     model.setRecursive("true");
 
-    final int status = ds.delete(model);
+    final int status = service.delete(model);
     assertThat(status, is(0));
   }
 
@@ -74,7 +76,7 @@ public class DeleteDirectory {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath("test_dir");
 
-    final int status = ds.delete(model);
+    final int status = service.delete(model);
     assertThat(status, is(2));
     assertThat(directory.isDirectory(), is(false));
   }
@@ -101,7 +103,7 @@ public class DeleteDirectory {
     model.setPath(rootDir.toFile().getPath());
     model.setRecursive("true");
 
-    final int status = ds.delete(model);
+    final int status = service.delete(model);
 
     assertThat(status, is(2));
     assertThat(rootDir.toFile().isDirectory(), is(false));
