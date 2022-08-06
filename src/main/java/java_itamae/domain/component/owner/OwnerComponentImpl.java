@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OwnerComponentImpl implements OwnerComponent {
   @Override
   public UserPrincipal createOwner(String owner) throws Exception {
