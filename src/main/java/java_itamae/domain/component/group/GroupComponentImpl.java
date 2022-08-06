@@ -7,7 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.UserPrincipalLookupService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GroupComponentImpl implements GroupComponent {
   @Override
   public GroupPrincipal createGroup(String group) throws Exception {
