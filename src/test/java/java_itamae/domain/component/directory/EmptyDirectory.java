@@ -5,18 +5,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /** ディレクトリが既に存在するが空である場合のテスト */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class EmptyDirectory {
-  private DirectoryComponent component;
+  @Autowired private DirectoryComponent component;
   private Path path;
 
   @Before
   public void setUp() throws Exception {
-    component = new DirectoryComponentImpl();
     path = component.convertToPath("test_dir/sub1/sub2");
     Files.createDirectories(path);
   }
@@ -48,7 +54,7 @@ public class EmptyDirectory {
    *
    * <ul>
    *   <li>複数階層のディレクトリが一括削除されること。
-   *   <li>終了ステータスが true であること。
+   *   <li>終了ステータスが 2 であること。
    * </ul>
    */
   @Test
