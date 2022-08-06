@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class GetTestProperties implements Supplier<Map<String, String>> {
 
   @Override
