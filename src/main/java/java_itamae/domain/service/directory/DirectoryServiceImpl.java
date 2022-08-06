@@ -1,27 +1,19 @@
 package java_itamae.domain.service.directory;
 
 import java_itamae.domain.component.directory.DirectoryComponent;
-import java_itamae.domain.component.directory.DirectoryComponentImpl;
 import java_itamae.domain.component.group.GroupComponent;
-import java_itamae.domain.component.group.GroupComponentImpl;
 import java_itamae.domain.component.mode.ModeComponent;
-import java_itamae.domain.component.mode.ModeComponentImpl;
 import java_itamae.domain.component.owner.OwnerComponent;
-import java_itamae.domain.component.owner.OwnerComponentImpl;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DirectoryServiceImpl implements DirectoryService {
-  private final DirectoryComponent dc;
-  private final OwnerComponent oc;
-  private final GroupComponent gc;
-  private final ModeComponent mc;
-
-  public DirectoryServiceImpl() {
-    dc = new DirectoryComponentImpl();
-    oc = new OwnerComponentImpl();
-    gc = new GroupComponentImpl();
-    mc = new ModeComponentImpl();
-  }
+  @Autowired private DirectoryComponent dc;
+  @Autowired private OwnerComponent oc;
+  @Autowired private GroupComponent gc;
+  @Autowired private ModeComponent mc;
 
   @Override
   public int create(DirectoryResourceModel model) {
