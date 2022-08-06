@@ -6,28 +6,34 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
-import java_itamae.domain.model.contents.ContentsModel;
-import java_itamae.domain.service.properties.PropertiesService;
-import java_itamae.domain.service.properties.PropertiesServiceImpl;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.service.properties.PropertiesService;
 
 /** ファイル所有者を変更する場合のテスト。 */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class UpdateFileOwner {
-  private OwnerComponent component;
+  @Autowired private OwnerComponent component;
+  @Autowired private PropertiesService service;
   private Path path;
   private String owner;
 
   @Before
   public void setUp() throws Exception {
-    component = new OwnerComponentImpl();
     path = component.convertToPath("test.txt");
     Files.createFile(path);
 
     final ContentsModel model = new ContentsModel();
     model.setPath("src/test/resources/test.properties");
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
 
     owner = service.getProperty("owner");
