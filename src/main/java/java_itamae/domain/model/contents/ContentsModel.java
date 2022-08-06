@@ -1,8 +1,9 @@
 package java_itamae.domain.model.contents;
 
-import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.Optional;
+import javax.validation.constraints.NotNull;
 
 /** 読み書きの対象とするファイルの情報を管理する。 */
 public class ContentsModel implements Serializable {
@@ -36,7 +37,7 @@ public class ContentsModel implements Serializable {
    */
   public String getEncoding() {
     final Optional<String> value = Optional.ofNullable(encoding);
-    return value.orElse(System.getProperty("file.encoding"));
+    return value.orElse(Charset.defaultCharset().displayName());
   }
 
   /**
