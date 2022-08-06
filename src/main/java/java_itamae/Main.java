@@ -3,7 +3,6 @@ package java_itamae;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.util.Map;
-
 import java_itamae.app.Usage;
 import java_itamae.app.common.BaseResource;
 import java_itamae.app.directory.DirectoryResourceImpl;

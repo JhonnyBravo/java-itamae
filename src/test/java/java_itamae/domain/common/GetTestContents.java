@@ -3,7 +3,6 @@ package java_itamae.domain.common;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
 import org.springframework.stereotype.Service;
 
 @Service

@@ -5,7 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.util.List;
-
+import java_itamae.domain.common.GetTestContents;
+import java_itamae.domain.model.contents.ContentsModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java_itamae.domain.common.GetTestContents;
-import java_itamae.domain.model.contents.ContentsModel;
 
 /** ファイルが存在して内容が空である場合のテスト */
 @RunWith(SpringRunner.class)

@@ -6,7 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.GroupPrincipal;
-
+import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.service.properties.PropertiesService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +15,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java_itamae.domain.model.contents.ContentsModel;
-import java_itamae.domain.service.properties.PropertiesService;
 
 /** ディレクトリのグループ所有者を変更する場合のテスト。 */
 @RunWith(SpringRunner.class)

@@ -1,7 +1,6 @@
 package java_itamae.domain.common;
 
 import java.util.function.Supplier;
-
 import org.springframework.stereotype.Service;
 
 /** テスト用の文字エンコーディングを取得する。 */
