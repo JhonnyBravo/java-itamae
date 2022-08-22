@@ -7,18 +7,30 @@ import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java_itamae.domain.component.directory.DirectoryComponentImpl;
+import java_itamae.domain.component.group.GroupComponentImpl;
+import java_itamae.domain.component.mode.ModeComponentImpl;
+import java_itamae.domain.component.owner.OwnerComponentImpl;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
-import org.junit.Before;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ディレクトリを削除する場合のテスト。 */
 public class DeleteDirectory {
-  private DirectoryService ds;
+  @Inject private DirectoryService ds;
 
-  @Before
-  public void setUp() throws Exception {
-    ds = new DirectoryServiceImpl();
-  }
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              DirectoryServiceImpl.class,
+              DirectoryComponentImpl.class,
+              OwnerComponentImpl.class,
+              GroupComponentImpl.class,
+              ModeComponentImpl.class)
+          .inject(this)
+          .build();
 
   /**
    * 削除対象とするディレクトリが存在しない状態で recursive を指定せずに {@link DirectoryService#delete(DirectoryResourceModel)}
