@@ -3,18 +3,18 @@ package java_itamae.domain.component.mode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Before;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** 例外発生時のテスト。 */
 // @Ignore("Windows の場合は非対応である為、実行しない。")
 public class ErrorCases1 {
-  private ModeComponent component;
+  @Inject private ModeComponent component;
 
-  @Before
-  public void setUp() throws Exception {
-    component = new ModeComponentImpl();
-  }
+  @Rule
+  public WeldInitiator weld = WeldInitiator.from(ModeComponentImpl.class).inject(this).build();
 
   /**
    * 存在しないディレクトリのパーミッション設定値を変更しようとした場合に
