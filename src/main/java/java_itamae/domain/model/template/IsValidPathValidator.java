@@ -1,9 +1,9 @@
 package java_itamae.domain.model.template;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 import java.io.File;
 import java.util.function.Predicate;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 public class IsValidPathValidator
     implements ConstraintValidator<IsValidPath, TemplateResourceModel> {
