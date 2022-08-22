@@ -9,23 +9,28 @@ import java.util.List;
 import java_itamae.domain.common.GetTestContents;
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.model.contents.ContentsModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ファイルが空である場合のテスト。 */
 public class EmptyFile {
-  private ContentsComponent component;
-  private GetTestEncoding getTestEncoding;
-  private GetTestContents getTestContents;
+  @Inject private ContentsComponent component;
+  @Inject private GetTestEncoding getTestEncoding;
+  @Inject private GetTestContents getTestContents;
   private Path path;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(ContentsComponentImpl.class, GetTestEncoding.class, GetTestContents.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
-    getTestEncoding = new GetTestEncoding();
-    getTestContents = new GetTestContents();
-
-    component = new ContentsComponentImpl();
     path = component.convertToPath("test.txt");
     Files.createFile(path);
   }
