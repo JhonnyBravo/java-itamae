@@ -6,30 +6,40 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
+import java_itamae.domain.component.properties.PropertiesComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ディレクトリ所有者を変更する場合のテスト。 */
 public class UpdateDirectoryOwner {
-  private OwnerComponent component;
+  @Inject private OwnerComponent component;
+  @Inject private PropertiesService service;
   private Path path;
   private String owner;
 
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              OwnerComponentImpl.class, PropertiesServiceImpl.class, PropertiesComponentImpl.class)
+          .inject(this)
+          .build();
+
   @Before
   public void setUp() throws Exception {
-    component = new OwnerComponentImpl();
     path = component.convertToPath("test_dir");
     Files.createDirectory(path);
 
     final ContentsModel model = new ContentsModel();
     model.setPath("src/test/resources/test.properties");
-    final PropertiesService service = new PropertiesServiceImpl();
-    service.init(model);
 
+    service.init(model);
     owner = service.getProperty("owner");
   }
 
