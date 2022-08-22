@@ -4,17 +4,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.Path;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** 親ディレクトリが存在しない場合のテスト */
 public class NotExistParentDirectory {
-  private FileComponent component;
+  @Inject private FileComponent component;
   private Path path;
+
+  @Rule
+  public WeldInitiator weld = WeldInitiator.from(FileComponentImpl.class).inject(this).build();
 
   @Before
   public void setUp() throws Exception {
-    component = new FileComponentImpl();
     path = component.convertToPath("NotExist/test.txt");
   }
 
