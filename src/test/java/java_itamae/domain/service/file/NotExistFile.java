@@ -6,29 +6,49 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java_itamae.domain.component.file.FileComponentImpl;
+import java_itamae.domain.component.group.GroupComponentImpl;
+import java_itamae.domain.component.mode.ModeComponentImpl;
+import java_itamae.domain.component.owner.OwnerComponentImpl;
+import java_itamae.domain.component.properties.PropertiesComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ファイルが存在しない場合のテスト */
 public class NotExistFile {
-  private FileService fs;
-  private PropertiesService ps;
+  @Inject private FileService fs;
+  @Inject private PropertiesService ps;
   private FileResourceModel model;
   private Path path;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              FileServiceImpl.class,
+              FileComponentImpl.class,
+              OwnerComponentImpl.class,
+              GroupComponentImpl.class,
+              ModeComponentImpl.class,
+              PropertiesServiceImpl.class,
+              PropertiesComponentImpl.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
     final ContentsModel ca = new ContentsModel();
     ca.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl();
+
     ps.init(ca);
 
-    fs = new FileServiceImpl();
     model = new FileResourceModel();
     model.setPath("test.txt");
 
