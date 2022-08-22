@@ -8,19 +8,23 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java_itamae.domain.model.contents.ContentsModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ファイルが存在しない場合のテスト */
 public class NotExistFile {
   private Path path;
   private ContentsModel model;
-  private ContentsComponent component;
+  @Inject private ContentsComponent component;
+
+  @Rule
+  public WeldInitiator weld = WeldInitiator.from(ContentsComponentImpl.class).inject(this).build();
 
   @Before
   public void setUp() throws Exception {
-    component = new ContentsComponentImpl();
-
     model = new ContentsModel();
     model.setPath("NotExist.txt");
 
