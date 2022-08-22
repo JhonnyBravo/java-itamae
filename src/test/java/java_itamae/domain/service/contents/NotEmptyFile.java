@@ -7,28 +7,36 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java_itamae.domain.common.GetTestContents;
+import java_itamae.domain.component.contents.ContentsComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ファイルが存在して内容が空ではない場合のテスト */
 public class NotEmptyFile {
   private File file;
-  private ContentsService service;
-  private GetTestContents getTestContents;
+  @Inject private ContentsService service;
+  @Inject private GetTestContents getTestContents;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              ContentsServiceImpl.class, ContentsComponentImpl.class, GetTestContents.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
-    getTestContents = new GetTestContents();
-
     file = new File("cs_test.txt");
     file.createNewFile();
 
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    service = new ContentsServiceImpl();
     service.init(model);
     service.updateContents(getTestContents.get());
   }
