@@ -10,23 +10,29 @@ import java.util.Map;
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.common.GetTestProperties;
 import java_itamae.domain.model.contents.ContentsModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** プロパティファイルが空ではない場合のテスト */
 public class NotEmptyFile {
-  private PropertiesComponent component;
-  private GetTestEncoding getTestEncoding;
+  @Inject private PropertiesComponent component;
+  @Inject private GetTestEncoding getTestEncoding;
+  @Inject private GetTestProperties getTestProperties;
   private Path path;
-  private GetTestProperties getTestProperties;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              PropertiesComponentImpl.class, GetTestEncoding.class, GetTestProperties.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
-    component = new PropertiesComponentImpl();
-    getTestEncoding = new GetTestEncoding();
-    getTestProperties = new GetTestProperties();
-
     path = component.convertToPath("test.properties");
     Files.createFile(path);
 
