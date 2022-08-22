@@ -5,21 +5,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java_itamae.domain.component.properties.PropertiesComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ファイルが存在しない場合のテスト。 */
 public class NotExistFile {
-  private PropertiesService service;
+  @Inject private PropertiesService service;
   private File file;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(PropertiesServiceImpl.class, PropertiesComponentImpl.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
     final ContentsModel attr = new ContentsModel();
     attr.setPath("NotExist.txt");
 
-    service = new PropertiesServiceImpl();
     service.init(attr);
     file = new File(attr.getPath());
   }
