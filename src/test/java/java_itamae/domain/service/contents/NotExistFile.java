@@ -6,25 +6,34 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java_itamae.domain.common.GetTestContents;
+import java_itamae.domain.component.contents.ContentsComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ファイルが存在しない場合のテスト */
 public class NotExistFile {
   private File file;
-  private GetTestContents getTestContents;
-  private ContentsService service;
+  @Inject private GetTestContents getTestContents;
+  @Inject private ContentsService service;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              ContentsServiceImpl.class, ContentsComponentImpl.class, GetTestContents.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
-    getTestContents = new GetTestContents();
     file = new File("NotExist.txt");
 
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    service = new ContentsServiceImpl();
     service.init(model);
   }
 
