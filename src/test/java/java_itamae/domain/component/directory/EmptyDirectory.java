@@ -5,18 +5,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ディレクトリが既に存在するが空である場合のテスト */
 public class EmptyDirectory {
-  private DirectoryComponent component;
+  @Inject private DirectoryComponent component;
   private Path path;
+
+  @Rule
+  public WeldInitiator weld = WeldInitiator.from(DirectoryComponentImpl.class).inject(this).build();
 
   @Before
   public void setUp() throws Exception {
-    component = new DirectoryComponentImpl();
     path = component.convertToPath("test_dir/sub1/sub2");
     Files.createDirectories(path);
   }
