@@ -5,19 +5,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java_itamae.domain.common.GetTestEncoding;
+import java_itamae.domain.component.properties.PropertiesComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ファイルが存在して空である場合のテスト */
 public class EmptyFile {
   private File file;
-  private GetTestEncoding getTestEncoding;
+  @Inject private PropertiesService service;
+  @Inject private GetTestEncoding getTestEncoding;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              PropertiesServiceImpl.class, PropertiesComponentImpl.class, GetTestEncoding.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
-    getTestEncoding = new GetTestEncoding();
     file = new File("test.properties");
     file.createNewFile();
   }
@@ -33,7 +44,6 @@ public class EmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
 
     try {
@@ -57,7 +67,6 @@ public class EmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
 
     final int status = service.updateProperty("test", "更新テスト");
@@ -77,7 +86,6 @@ public class EmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
 
     final int status = service.deleteProperty("test");
@@ -97,7 +105,6 @@ public class EmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
     final int status = service.createProperty("test", "登録テスト");
     assertThat(status, is(2));
@@ -118,7 +125,6 @@ public class EmptyFile {
     model.setPath(file.getPath());
     model.setEncoding(getTestEncoding.get());
 
-    final PropertiesService service = new PropertiesServiceImpl();
     service.init(model);
     final int status = service.createProperty("test", "登録テスト");
     assertThat(status, is(2));
