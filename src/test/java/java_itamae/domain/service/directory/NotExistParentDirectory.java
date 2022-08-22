@@ -5,23 +5,40 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java_itamae.domain.component.directory.DirectoryComponentImpl;
+import java_itamae.domain.component.group.GroupComponentImpl;
+import java_itamae.domain.component.mode.ModeComponentImpl;
+import java_itamae.domain.component.owner.OwnerComponentImpl;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** 親ディレクトリが存在しない場合のテスト。 */
 public class NotExistParentDirectory {
-  private DirectoryService ds;
+  @Inject private DirectoryService ds;
   private DirectoryResourceModel model;
   private Path path;
   private Path rootDir;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              DirectoryServiceImpl.class,
+              DirectoryComponentImpl.class,
+              OwnerComponentImpl.class,
+              GroupComponentImpl.class,
+              ModeComponentImpl.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
     path = FileSystems.getDefault().getPath("parent/sub1/sub2");
     rootDir = path.getParent().getParent();
-    ds = new DirectoryServiceImpl();
 
     model = new DirectoryResourceModel();
     model.setPath(path.toFile().getPath());
