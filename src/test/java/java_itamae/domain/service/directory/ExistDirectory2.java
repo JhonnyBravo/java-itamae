@@ -6,19 +6,40 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java_itamae.domain.component.directory.DirectoryComponentImpl;
+import java_itamae.domain.component.group.GroupComponentImpl;
+import java_itamae.domain.component.mode.ModeComponentImpl;
+import java_itamae.domain.component.owner.OwnerComponentImpl;
+import java_itamae.domain.component.properties.PropertiesComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /** ディレクトリが存在する場合のテスト。 */
 public class ExistDirectory2 {
-  private DirectoryService ds;
-  private PropertiesService ps;
+  @Inject private DirectoryService ds;
+  @Inject private PropertiesService ps;
   private Path path;
+
+  @Rule
+  public WeldInitiator weld =
+      WeldInitiator.from(
+              DirectoryServiceImpl.class,
+              DirectoryComponentImpl.class,
+              OwnerComponentImpl.class,
+              GroupComponentImpl.class,
+              ModeComponentImpl.class,
+              PropertiesServiceImpl.class,
+              PropertiesComponentImpl.class)
+          .inject(this)
+          .build();
 
   @Before
   public void setUp() throws Exception {
@@ -27,9 +48,8 @@ public class ExistDirectory2 {
 
     final ContentsModel model = new ContentsModel();
     model.setPath("src/test/resources/test.properties");
-    ps = new PropertiesServiceImpl();
+
     ps.init(model);
-    ds = new DirectoryServiceImpl();
   }
 
   @After
