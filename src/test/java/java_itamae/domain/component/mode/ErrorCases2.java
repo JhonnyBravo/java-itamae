@@ -7,8 +7,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
+import javax.inject.Inject;
+import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.experimental.theories.DataPoint;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
@@ -31,13 +34,14 @@ public class ErrorCases2 {
   @DataPoint public static String ERROR6 = "871";
   @DataPoint public static String ERROR7 = "781";
   @DataPoint public static String ERROR8 = "768";
-
-  private ModeComponent component;
+  @Inject private ModeComponent component;
   private Path path;
+
+  @Rule
+  public WeldInitiator weld = WeldInitiator.from(ModeComponentImpl.class).inject(this).build();
 
   @Before
   public void setUp() throws Exception {
-    component = new ModeComponentImpl();
     path = component.convertToPath("test.txt");
     Files.createFile(path);
   }
