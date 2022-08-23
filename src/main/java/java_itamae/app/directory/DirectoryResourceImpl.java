@@ -4,9 +4,10 @@ import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.directory.DirectoryService;
-import java_itamae.domain.service.directory.DirectoryServiceImpl;
+import javax.inject.Inject;
 
 public class DirectoryResourceImpl implements BaseResource<DirectoryResourceModel> {
+  @Inject private DirectoryService service;
 
   @Override
   public DirectoryResourceModel convertToModel(Map<String, String> properties) {
@@ -31,8 +32,6 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
       status = 1;
       return status;
     }
-
-    final DirectoryService service = new DirectoryServiceImpl();
 
     if (model.getAction().equals("create")) {
       status = service.create(model);
