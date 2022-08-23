@@ -4,9 +4,10 @@ import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.file.FileService;
-import java_itamae.domain.service.file.FileServiceImpl;
+import javax.inject.Inject;
 
 public class FileResourceImpl implements BaseResource<FileResourceModel> {
+  @Inject private FileService service;
 
   @Override
   public FileResourceModel convertToModel(Map<String, String> properties) {
@@ -30,8 +31,6 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
       status = 1;
       return status;
     }
-
-    final FileService service = new FileServiceImpl();
 
     if (model.getAction().equals("create")) {
       status = service.create(model);
