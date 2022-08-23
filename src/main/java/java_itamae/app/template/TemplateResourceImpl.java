@@ -6,14 +6,10 @@ import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.template.TemplateResourceModel;
 import java_itamae.domain.service.contents.ContentsService;
-import java_itamae.domain.service.contents.ContentsServiceImpl;
+import javax.inject.Inject;
 
 public class TemplateResourceImpl implements BaseResource<TemplateResourceModel> {
-  private final ContentsService service;
-
-  public TemplateResourceImpl() {
-    this.service = new ContentsServiceImpl();
-  }
+  @Inject private ContentsService service;
 
   @Override
   public TemplateResourceModel convertToModel(Map<String, String> properties) {
