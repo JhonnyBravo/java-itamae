@@ -1,11 +1,11 @@
 package java_itamae.domain.service.file;
 
+import jakarta.inject.Inject;
 import java_itamae.domain.component.file.FileComponent;
 import java_itamae.domain.component.group.GroupComponent;
 import java_itamae.domain.component.mode.ModeComponent;
 import java_itamae.domain.component.owner.OwnerComponent;
 import java_itamae.domain.model.file.FileResourceModel;
-import javax.inject.Inject;
 
 public class FileServiceImpl implements FileService {
   @Inject private FileComponent fc;
