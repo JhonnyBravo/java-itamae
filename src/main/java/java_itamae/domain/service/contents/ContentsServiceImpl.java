@@ -1,9 +1,9 @@
 package java_itamae.domain.service.contents;
 
+import jakarta.inject.Inject;
 import java.util.List;
 import java_itamae.domain.component.contents.ContentsComponent;
 import java_itamae.domain.model.contents.ContentsModel;
-import javax.inject.Inject;
 
 public class ContentsServiceImpl implements ContentsService {
   private ContentsModel model;
