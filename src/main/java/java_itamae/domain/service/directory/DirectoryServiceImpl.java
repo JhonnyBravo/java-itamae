@@ -1,11 +1,11 @@
 package java_itamae.domain.service.directory;
 
+import jakarta.inject.Inject;
 import java_itamae.domain.component.directory.DirectoryComponent;
 import java_itamae.domain.component.group.GroupComponent;
 import java_itamae.domain.component.mode.ModeComponent;
 import java_itamae.domain.component.owner.OwnerComponent;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
-import javax.inject.Inject;
 
 public class DirectoryServiceImpl implements DirectoryService {
   @Inject private DirectoryComponent dc;
