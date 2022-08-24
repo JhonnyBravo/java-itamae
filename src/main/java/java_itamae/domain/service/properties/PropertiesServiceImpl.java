@@ -1,11 +1,11 @@
 package java_itamae.domain.service.properties;
 
+import jakarta.inject.Inject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java_itamae.domain.component.properties.PropertiesComponent;
 import java_itamae.domain.model.contents.ContentsModel;
-import javax.inject.Inject;
 
 public class PropertiesServiceImpl implements PropertiesService {
   private ContentsModel model;
