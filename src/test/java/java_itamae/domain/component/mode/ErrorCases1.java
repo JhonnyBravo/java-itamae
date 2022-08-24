@@ -3,7 +3,7 @@ package java_itamae.domain.component.mode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Rule;
 import org.junit.Test;
