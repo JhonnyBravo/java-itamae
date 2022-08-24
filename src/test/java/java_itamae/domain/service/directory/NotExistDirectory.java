@@ -3,6 +3,7 @@ package java_itamae.domain.service.directory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import jakarta.inject.Inject;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +16,6 @@ import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
-import javax.inject.Inject;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
