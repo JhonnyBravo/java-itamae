@@ -2,6 +2,7 @@ package java_itamae.app;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import jakarta.inject.Inject;
 import java.util.Map;
 import java_itamae.app.directory.DirectoryResourceImpl;
 import java_itamae.app.file.FileResourceImpl;
@@ -9,7 +10,6 @@ import java_itamae.app.properties.ContentsModelValidator;
 import java_itamae.app.properties.GetProperties;
 import java_itamae.app.template.TemplateResourceImpl;
 import java_itamae.domain.model.contents.ContentsModel;
-import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
