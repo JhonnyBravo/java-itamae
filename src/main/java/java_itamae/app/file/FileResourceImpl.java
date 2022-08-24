@@ -1,10 +1,10 @@
 package java_itamae.app.file;
 
+import jakarta.inject.Inject;
 import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.file.FileService;
-import javax.inject.Inject;
 
 public class FileResourceImpl implements BaseResource<FileResourceModel> {
   @Inject private FileService service;
