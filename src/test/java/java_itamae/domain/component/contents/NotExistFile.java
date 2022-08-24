@@ -3,12 +3,12 @@ package java_itamae.domain.component.contents;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import jakarta.inject.Inject;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java_itamae.domain.model.contents.ContentsModel;
-import javax.inject.Inject;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Before;
 import org.junit.Rule;
