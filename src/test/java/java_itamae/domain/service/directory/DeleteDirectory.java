@@ -3,6 +3,7 @@ package java_itamae.domain.service.directory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import jakarta.inject.Inject;
 import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -12,7 +13,6 @@ import java_itamae.domain.component.group.GroupComponentImpl;
 import java_itamae.domain.component.mode.ModeComponentImpl;
 import java_itamae.domain.component.owner.OwnerComponentImpl;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
-import javax.inject.Inject;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Rule;
 import org.junit.Test;
