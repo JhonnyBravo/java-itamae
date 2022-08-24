@@ -1,12 +1,12 @@
 package java_itamae.app.template;
 
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.template.TemplateResourceModel;
 import java_itamae.domain.service.contents.ContentsService;
-import javax.inject.Inject;
 
 public class TemplateResourceImpl implements BaseResource<TemplateResourceModel> {
   @Inject private ContentsService service;
