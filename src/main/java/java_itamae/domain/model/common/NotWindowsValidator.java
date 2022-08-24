@@ -1,7 +1,7 @@
 package java_itamae.domain.model.common;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /** OS が Windows であるかどうかを確認する。 */
 public class NotWindowsValidator implements ConstraintValidator<NotWindows, String> {
