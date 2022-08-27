@@ -40,9 +40,9 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
 
     final DirectoryService service = new DirectoryServiceImpl();
 
-    if (model.getAction().equals("create")) {
+    if ("create".equals(model.getAction())) {
       status = service.create(model);
-    } else if (model.getAction().equals("delete")) {
+    } else if ("delete".equals(model.getAction())) {
       status = service.delete(model);
     }
 
