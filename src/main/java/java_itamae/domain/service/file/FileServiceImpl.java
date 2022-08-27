@@ -16,6 +16,16 @@ public class FileServiceImpl implements FileService {
   private final GroupComponent gc;
   private final ModeComponent mc;
 
+  /**
+   * 初期化処理として以下のインスタンス生成を実行する。
+   *
+   * <ul>
+   *   <li>{@link FileComponent}
+   *   <li>{@link OwnerComponent}
+   *   <li>{@link GroupComponent}
+   *   <li>{@link ModeComponent}
+   * </ul>
+   */
   public FileServiceImpl() {
     fc = new FileComponentImpl();
     oc = new OwnerComponentImpl();

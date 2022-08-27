@@ -6,8 +6,14 @@ import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.directory.DirectoryService;
 import java_itamae.domain.service.directory.DirectoryServiceImpl;
 
+/** ディレクトリの操作を管理する。 */
 public class DirectoryResourceImpl implements BaseResource<DirectoryResourceModel> {
-
+  /**
+   * プロパティ群を収めた {@link Map} を {@link DirectoryResourceModel} に変換して返す。
+   *
+   * @param properties プロパティ群を収めた {@link Map} を指定する。
+   * @return model {@link Map} から変換された {@link DirectoryResourceModel} を返す。
+   */
   @Override
   public DirectoryResourceModel convertToModel(Map<String, String> properties) {
     final DirectoryResourceModel model = new DirectoryResourceModel();

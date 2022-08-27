@@ -16,6 +16,16 @@ public class DirectoryServiceImpl implements DirectoryService {
   private final GroupComponent gc;
   private final ModeComponent mc;
 
+  /**
+   * 初期化処理として以下のインスタンス生成処理を実行する。
+   *
+   * <ul>
+   *   <li>{@link DirectoryComponent}
+   *   <li>{@link OwnerComponent}
+   *   <li>{@link GroupComponent}
+   *   <li>{@link ModeComponent}
+   * </ul>
+   */
   public DirectoryServiceImpl() {
     dc = new DirectoryComponentImpl();
     oc = new OwnerComponentImpl();

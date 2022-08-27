@@ -9,7 +9,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/** OS が Windows であるかどうかを確認する。 */
+/** OS が Windows ではないことを確認する。 */
 @Documented
 @Retention(RUNTIME)
 @Target({

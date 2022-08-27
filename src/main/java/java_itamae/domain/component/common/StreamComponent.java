@@ -8,7 +8,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java_itamae.domain.model.contents.ContentsModel;
 
+/** ファイルストリームを管理する。 */
 public interface StreamComponent extends BaseComponent {
+
+  /**
+   * {@link Reader} を取得する。
+   *
+   * @param model 読込み対象とするテキストファイルの情報を収めた {@link ContentsModel} を指定する。
+   * @return reader {@link Reader} を返す。
+   * @throws Exception {@link Exception}
+   */
   public default Reader getReader(ContentsModel model) throws Exception {
     final Path path = this.convertToPath(model.getPath());
 
@@ -19,6 +28,13 @@ public interface StreamComponent extends BaseComponent {
     return Files.newBufferedReader(path, Charset.forName(model.getEncoding()));
   }
 
+  /**
+   * {@link Writer} を取得する。
+   *
+   * @param model 書込み対象とするテキストファイルの情報を収めた {@link ContentsModel} を指定する。
+   * @return writer {@link Writer} を返す。
+   * @throws Exception {@link Exception}
+   */
   public default Writer getWriter(ContentsModel model) throws Exception {
     final Path path = this.convertToPath(model.getPath());
 

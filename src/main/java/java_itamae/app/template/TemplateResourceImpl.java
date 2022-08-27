@@ -8,6 +8,7 @@ import java_itamae.domain.model.template.TemplateResourceModel;
 import java_itamae.domain.service.contents.ContentsService;
 import java_itamae.domain.service.contents.ContentsServiceImpl;
 
+/** ファイルの読書きを管理する。 */
 public class TemplateResourceImpl implements BaseResource<TemplateResourceModel> {
   private final ContentsService service;
 
@@ -15,6 +16,12 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
     this.service = new ContentsServiceImpl();
   }
 
+  /**
+   * プロパティ群を収めた {@link Map} を {@link TemplateResourceModel} に変換して返す。
+   *
+   * @param properties プロパティ群を収めた {@link Map} を指定する。
+   * @return model {@link Map} から変換された {@link TemplateResourceModel} を返す。
+   */
   @Override
   public TemplateResourceModel convertToModel(Map<String, String> properties) {
     final TemplateResourceModel model = new TemplateResourceModel();
@@ -27,6 +34,13 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
     return model;
   }
 
+  /**
+   * ファイルを読込み、 {@link List} に変換して返す。
+   *
+   * @param model 読込み対象とするテキストファイルの情報を収めた {@link TemplateResourceModel} を指定する。
+   * @return contents 変換された {@link List}
+   * @throws Exception {@link Exception}
+   */
   private List<String> getSourceContents(TemplateResourceModel model) throws Exception {
     final ContentsModel sourceModel = new ContentsModel();
 
@@ -42,6 +56,18 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
     return service.getContents();
   }
 
+  /**
+   * ファイルを上書きする。
+   *
+   * @param model 書込み対象とするテキストファイルの情報を収めた {@link TemplateResourceModel} を指定する。
+   * @param contents 書込み対象とする文字列を収めた {@link List} を指定する。
+   * @return status 終了ステータスを返す。
+   *     <ul>
+   *       <li>0: 何も実行せずに正常終了したことを表す
+   *       <li>1: 異常終了したことを表す。
+   *       <li>2: 書込みを実行して正常終了したことを表す。
+   *     </ul>
+   */
   private int updateContents(TemplateResourceModel model, List<String> contents) {
     int status = 0;
 
