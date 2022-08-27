@@ -39,9 +39,9 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
 
     final FileService service = new FileServiceImpl();
 
-    if (model.getAction().equals("create")) {
+    if ("create".equals(model.getAction())) {
       status = service.create(model);
-    } else if (model.getAction().equals("delete")) {
+    } else if ("delete".equals(model.getAction())) {
       status = service.delete(model);
     }
 

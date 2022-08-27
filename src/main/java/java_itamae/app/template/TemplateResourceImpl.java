@@ -44,7 +44,7 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
   private List<String> getSourceContents(TemplateResourceModel model) throws Exception {
     final ContentsModel sourceModel = new ContentsModel();
 
-    if (model.getAction().equals("delete")) {
+    if ("delete".equals(model.getAction())) {
       sourceModel.setPath(model.getPath());
     } else {
       sourceModel.setPath(model.getSource());
@@ -77,9 +77,9 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
 
     service.init(targetModel);
 
-    if (model.getAction().equals("create")) {
+    if ("create".equals(model.getAction())) {
       status = service.updateContents(contents);
-    } else if (model.getAction().equals("delete")) {
+    } else if ("delete".equals(model.getAction())) {
       status = service.deleteContents();
     }
 
