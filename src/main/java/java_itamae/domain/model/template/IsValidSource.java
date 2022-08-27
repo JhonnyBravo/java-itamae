@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+/** {@link TemplateResourceModel} の action の値として create が指定されている場合に複合チェックを実行する。 */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)

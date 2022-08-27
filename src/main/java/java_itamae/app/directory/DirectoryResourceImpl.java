@@ -7,10 +7,17 @@ import java_itamae.domain.service.directory.DirectoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/** ディレクトリの操作を管理する。 */
 @Service
 public class DirectoryResourceImpl implements BaseResource<DirectoryResourceModel> {
   @Autowired private DirectoryService service;
 
+  /**
+   * プロパティ群を収めた {@link Map} を {@link DirectoryResourceModel} に変換して返す。
+   *
+   * @param properties プロパティ群を収めた {@link Map} を指定する。
+   * @return model {@link Map} から変換された {@link DirectoryResourceModel} を返す。
+   */
   @Override
   public DirectoryResourceModel convertToModel(Map<String, String> properties) {
     final DirectoryResourceModel model = new DirectoryResourceModel();
@@ -35,9 +42,9 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
       return status;
     }
 
-    if (model.getAction().equals("create")) {
+    if ("create".equals(model.getAction())) {
       status = service.create(model);
-    } else if (model.getAction().equals("delete")) {
+    } else if ("delete".equals(model.getAction())) {
       status = service.delete(model);
     }
 

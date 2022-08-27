@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-/** OS が Windows であるかどうかを確認する。 */
+/** OS が Windows ではないことを確認する。 */
 @Documented
 @Retention(RUNTIME)
 @Target({
