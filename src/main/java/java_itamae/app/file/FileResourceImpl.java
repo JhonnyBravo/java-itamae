@@ -6,8 +6,14 @@ import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.file.FileService;
 import java_itamae.domain.service.file.FileServiceImpl;
 
+/** ファイルの操作を管理する。 */
 public class FileResourceImpl implements BaseResource<FileResourceModel> {
-
+  /**
+   * プロパティ群を収めた {@link Map} を {@link FileResourceModel} に変換して返す。
+   *
+   * @param properties プロパティ群を収めた {@link Map} を指定する。
+   * @return model {@link Map} から変換された {@link FileResourceModel} を返す。
+   */
   @Override
   public FileResourceModel convertToModel(Map<String, String> properties) {
     final FileResourceModel model = new FileResourceModel();

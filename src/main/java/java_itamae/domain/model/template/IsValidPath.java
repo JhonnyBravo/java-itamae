@@ -9,6 +9,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/** {@link TemplateResourceModel} の action の値として create が指定されている場合に複合チェックを実行する。 */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)

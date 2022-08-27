@@ -11,6 +11,7 @@ public class PropertiesServiceImpl implements PropertiesService {
   private ContentsModel model;
   private final PropertiesComponent component;
 
+  /** 初期化処理として {@link PropertiesComponent} のインスタンス生成を実行する。 */
   public PropertiesServiceImpl() {
     component = new PropertiesComponentImpl();
   }
