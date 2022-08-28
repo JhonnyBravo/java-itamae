@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.io.File;
 import java.util.function.Predicate;
 
+/** {@link TemplateResourceModel} の action の値として create が指定されている場合に複合チェックを実行する。 */
 public class IsValidSourceValidator
     implements ConstraintValidator<IsValidSource, TemplateResourceModel> {
   @Override
@@ -21,6 +22,23 @@ public class IsValidSourceValidator
         return result;
       };
 
+  /**
+   * {@link TemplateResourceModel} の action の値として create が指定されている場合に以下の複合チェックを実行する。
+   *
+   * <ul>
+   *   <li>action の値が create であること。
+   *   <li>かつ source の値が null または 空文字ではないこと。
+   *   <li>かつ source に指定されたファイルが既に存在していること。
+   * </ul>
+   *
+   * @param model 確認対象とする {@link TemplateResourceModel} を指定する。
+   * @param context {@link ConstraintValidatorContext} を指定する。
+   * @return result
+   *     <ul>
+   *       <li>true: 複合チェックの条件を全て満たしていることを表す。
+   *       <li>false: 複合チェックのいずれかの条件を満たしていないことを表す。
+   *     </ul>
+   */
   @Override
   public boolean isValid(TemplateResourceModel model, ConstraintValidatorContext context) {
     boolean result = true;

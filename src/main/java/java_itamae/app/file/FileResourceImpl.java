@@ -6,9 +6,16 @@ import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.service.file.FileService;
 
+/** ファイルの操作を管理する。 */
 public class FileResourceImpl implements BaseResource<FileResourceModel> {
   @Inject private FileService service;
 
+  /**
+   * プロパティ群を収めた {@link Map} を {@link FileResourceModel} に変換して返す。
+   *
+   * @param properties プロパティ群を収めた {@link Map} を指定する。
+   * @return model {@link Map} から変換された {@link FileResourceModel} を返す。
+   */
   @Override
   public FileResourceModel convertToModel(Map<String, String> properties) {
     final FileResourceModel model = new FileResourceModel();
@@ -32,9 +39,9 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
       return status;
     }
 
-    if (model.getAction().equals("create")) {
+    if ("create".equals(model.getAction())) {
       status = service.create(model);
-    } else if (model.getAction().equals("delete")) {
+    } else if ("delete".equals(model.getAction())) {
       status = service.delete(model);
     }
 

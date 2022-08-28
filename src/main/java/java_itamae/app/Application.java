@@ -21,6 +21,7 @@ public class Application {
   @Inject private FileResourceImpl fileResource;
   @Inject private DirectoryResourceImpl directoryResource;
   @Inject private TemplateResourceImpl templateResource;
+
   /**
    * プロパティファイルを読込み、動作を実行する。
    *

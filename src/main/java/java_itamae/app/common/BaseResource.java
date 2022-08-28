@@ -8,6 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** Resource クラスの土台となるインターフェイス */
 public interface BaseResource<T> {
   /**
    * {@link Logger} を生成して返す。

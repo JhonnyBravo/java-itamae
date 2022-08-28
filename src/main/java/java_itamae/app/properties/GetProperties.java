@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 public class GetProperties implements Function<ContentsModel, Map<String, String>> {
   @Inject private PropertiesService service;
 
-  @Override
   /**
    * プロパティファイルからキーと値を読込み、 {@link Map} 変換して返す。
    *
    * @param model 読込み対象とするプロパティファイルの情報を収めた {@link ContentsModel} を指定する。
    * @return properties キーと値を収めた {@link Map}
    */
+  @Override
   public Map<String, String> apply(ContentsModel model) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     Map<String, String> properties = new HashMap<>();
