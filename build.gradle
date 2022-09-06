@@ -105,7 +105,7 @@ javadoc {
 }
 
 checkstyle {
-    toolVersion='8.41.1'
+    toolVersion='10.3.3'
 }
 
 pmd {
