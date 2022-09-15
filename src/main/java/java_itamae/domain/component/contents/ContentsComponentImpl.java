@@ -9,7 +9,7 @@ import java_itamae.domain.model.contents.ContentsModel;
 public class ContentsComponentImpl implements ContentsComponent {
 
   @Override
-  public List<String> getContents(ContentsModel model) throws Exception {
+  public List<String> getContents(final ContentsModel model) throws Exception {
     final List<String> contents = new ArrayList<>();
 
     try (BufferedReader buffer = new BufferedReader(this.getReader(model))) {
@@ -24,7 +24,8 @@ public class ContentsComponentImpl implements ContentsComponent {
   }
 
   @Override
-  public int updateContents(ContentsModel model, List<String> contents) {
+  @SuppressWarnings("unused")
+  public int updateContents(final ContentsModel model, final List<String> contents) {
     int status = 0;
 
     try (BufferedWriter buffer = new BufferedWriter(this.getWriter(model))) {
@@ -35,7 +36,8 @@ public class ContentsComponentImpl implements ContentsComponent {
 
       status = 2;
     } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
+      final String message = e.toString();
+      this.getLogger().warn("{}", message);
       status = 1;
     }
 
@@ -43,22 +45,21 @@ public class ContentsComponentImpl implements ContentsComponent {
   }
 
   @Override
-  public int deleteContents(ContentsModel model) {
+  public int deleteContents(final ContentsModel model) {
     int status = 0;
 
     try {
       final List<String> curContents = this.getContents(model);
 
-      if (curContents.isEmpty()) {
-        return status;
-      }
-
-      try (BufferedWriter buffer = new BufferedWriter(this.getWriter(model))) {
-        buffer.write("");
-        status = 2;
+      if (!curContents.isEmpty()) {
+        try (BufferedWriter buffer = new BufferedWriter(this.getWriter(model))) {
+          buffer.write("");
+          status = 2;
+        }
       }
     } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
+      final String message = e.toString();
+      this.getLogger().warn("{}", message);
       status = 1;
     }
 

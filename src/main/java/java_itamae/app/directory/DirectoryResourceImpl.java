@@ -15,7 +15,7 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
    * @return model {@link Map} から変換された {@link DirectoryResourceModel} を返す。
    */
   @Override
-  public DirectoryResourceModel convertToModel(Map<String, String> properties) {
+  public DirectoryResourceModel convertToModel(final Map<String, String> properties) {
     final DirectoryResourceModel model = new DirectoryResourceModel();
 
     model.setAction(properties.get("action"));
@@ -29,21 +29,20 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
   }
 
   @Override
-  public int apply(Map<String, String> properties) {
+  public int apply(final Map<String, String> properties) {
     int status = 0;
     final DirectoryResourceModel model = this.convertToModel(properties);
 
-    if (!this.validate(model)) {
+    if (this.validate(model)) {
+      final DirectoryService service = new DirectoryServiceImpl();
+
+      if ("create".equals(model.getAction())) {
+        status = service.create(model);
+      } else if ("delete".equals(model.getAction())) {
+        status = service.delete(model);
+      }
+    } else {
       status = 1;
-      return status;
-    }
-
-    final DirectoryService service = new DirectoryServiceImpl();
-
-    if ("create".equals(model.getAction())) {
-      status = service.create(model);
-    } else if ("delete".equals(model.getAction())) {
-      status = service.delete(model);
     }
 
     return status;

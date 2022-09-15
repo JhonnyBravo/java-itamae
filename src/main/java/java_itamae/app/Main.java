@@ -24,7 +24,8 @@ public class Main {
    *       <li>--encoding, -e &lt;encoding&gt;: 文字エンコーディングを指定する。
    *     </ul>
    */
-  public static void main(String[] args) {
+  @SuppressWarnings("unused")
+  public static void main(final String[] args) {
     final LongOpt[] longopts = new LongOpt[2];
     longopts[0] = new LongOpt("path", LongOpt.REQUIRED_ARGUMENT, null, 'p');
     longopts[1] = new LongOpt("encoding", LongOpt.REQUIRED_ARGUMENT, null, 'e');
@@ -33,7 +34,7 @@ public class Main {
 
     final ContentsModel cliArgs = new ContentsModel();
 
-    int c;
+    int option;
     int status = 0;
     final Usage usage = new Usage();
 
@@ -42,8 +43,8 @@ public class Main {
       status = 1;
     }
 
-    while ((c = options.getopt()) != -1) {
-      switch (c) {
+    while ((option = options.getopt()) != -1) {
+      switch (option) {
         case 'p':
           cliArgs.setPath(options.getOptarg());
           break;
@@ -69,13 +70,13 @@ public class Main {
     // resource_name を取得し、実行するリソースを判定する。
     final String resourceName = properties.get("resource_name");
 
-    if (resourceName != null && resourceName.equals("file")) {
+    if ("file".equals(resourceName)) {
       final BaseResource<?> resource = new FileResourceImpl();
       status = resource.apply(properties);
-    } else if (resourceName != null && resourceName.equals("directory")) {
+    } else if ("directory".equals(resourceName)) {
       final BaseResource<?> resource = new DirectoryResourceImpl();
       status = resource.apply(properties);
-    } else if (resourceName != null && resourceName.equals("template")) {
+    } else if ("template".equals(resourceName)) {
       final BaseResource<?> resource = new TemplateResourceImpl();
       status = resource.apply(properties);
     } else {

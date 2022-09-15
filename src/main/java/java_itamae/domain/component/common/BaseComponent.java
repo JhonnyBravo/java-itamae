@@ -12,7 +12,7 @@ public interface BaseComponent {
    *
    * @return logger {@link Logger}
    */
-  public default Logger getLogger() {
+  default Logger getLogger() {
     return LoggerFactory.getLogger(this.getClass());
   }
 
@@ -22,7 +22,7 @@ public interface BaseComponent {
    * @param path 変換対象とするファイル/ディレクトリのパスを指定する。
    * @return path 変換された {@link Path}
    */
-  public default Path convertToPath(String path) {
+  default Path convertToPath(final String path) {
     return FileSystems.getDefault().getPath(path);
   }
 }

@@ -12,19 +12,27 @@ import java.util.Optional;
 public class TemplateResourceModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public TemplateResourceModel() {
-    this.resourceName = "template";
-  }
-
+  /** リソース名 */
   private final String resourceName;
 
+  /** 実行する動作の名前 */
   @NotNull
   @Pattern(regexp = "create|delete")
   private String action;
 
+  /** 書込みの対象とするファイルのパス */
   @NotNull private String path;
+
+  /** 読込みの対象とするファイルのパス */
   private String source;
+
+  /** ファイルの読書きに使用する文字エンコーディング */
   private String encoding;
+
+  /** 初期化処理を実行する。 */
+  public TemplateResourceModel() {
+    this.resourceName = "template";
+  }
 
   /**
    * リソース名を返す。
@@ -53,7 +61,7 @@ public class TemplateResourceModel implements Serializable {
    *       <li>delete: テキストファイルの内容を全削除する。
    *     </ul>
    */
-  public void setAction(String action) {
+  public void setAction(final String action) {
     this.action = action;
   }
 
@@ -71,7 +79,7 @@ public class TemplateResourceModel implements Serializable {
    *
    * @param path 書込み対象とするファイルのパスを指定する。
    */
-  public void setPath(String path) {
+  public void setPath(final String path) {
     this.path = path;
   }
 
@@ -89,7 +97,7 @@ public class TemplateResourceModel implements Serializable {
    *
    * @param source 読込み対象とするファイルのパスを指定する。
    */
-  public void setSource(String source) {
+  public void setSource(final String source) {
     this.source = source;
   }
 
@@ -108,7 +116,7 @@ public class TemplateResourceModel implements Serializable {
    *
    * @param encoding 文字エンコーディングを指定する。
    */
-  public void setEncoding(String encoding) {
+  public void setEncoding(final String encoding) {
     this.encoding = encoding;
   }
 }
