@@ -9,23 +9,32 @@ import java_itamae.domain.model.common.NotWindows;
 public class FileResourceModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public FileResourceModel() {
-    this.resourceName = "file";
-  }
-
+  /** リソース名 */
   private final String resourceName;
 
+  /** 実行する動作の名前 */
   @NotNull
   @Pattern(regexp = "create|delete")
   private String action;
 
+  /** 操作対象とするファイルのパス */
   @NotNull private String path;
+
+  /** ファイル所有者の名前 */
   private String owner;
+
+  /** ファイルのグループ所有者の名前 */
   @NotWindows private String group;
 
+  /** ファイルパーミッションの設定値 */
   @Pattern(regexp = "[0-7]{3}")
   @NotWindows
   private String mode;
+
+  /** 初期化処理を実行する。 */
+  public FileResourceModel() {
+    this.resourceName = "file";
+  }
 
   /**
    * リソース名を返す。
@@ -54,7 +63,7 @@ public class FileResourceModel implements Serializable {
    *       <li>delete: ファイルを削除する。
    *     </ul>
    */
-  public void setAction(String action) {
+  public void setAction(final String action) {
     this.action = action;
   }
 
@@ -72,7 +81,7 @@ public class FileResourceModel implements Serializable {
    *
    * @param path 操作対象とするファイルのパス
    */
-  public void setPath(String path) {
+  public void setPath(final String path) {
     this.path = path;
   }
 
@@ -90,7 +99,7 @@ public class FileResourceModel implements Serializable {
    *
    * @param owner ファイルに設定する所有者名を指定する。
    */
-  public void setOwner(String owner) {
+  public void setOwner(final String owner) {
     this.owner = owner;
   }
 
@@ -108,7 +117,7 @@ public class FileResourceModel implements Serializable {
    *
    * @param group ファイルに設定するグループ所有者名
    */
-  public void setGroup(String group) {
+  public void setGroup(final String group) {
     this.group = group;
   }
 
@@ -136,7 +145,7 @@ public class FileResourceModel implements Serializable {
    *       <li>7: rwx
    *     </ul>
    */
-  public void setMode(String mode) {
+  public void setMode(final String mode) {
     this.mode = mode;
   }
 }

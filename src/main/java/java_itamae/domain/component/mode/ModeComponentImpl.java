@@ -9,47 +9,45 @@ import java.util.Set;
 
 public class ModeComponentImpl implements ModeComponent {
   @Override
-  public Set<PosixFilePermission> createMode(String mode) throws Exception {
+  public Set<PosixFilePermission> createMode(final String mode) throws Exception {
     final String converted =
-        mode.replaceAll("0", "---")
-            .replaceAll("1", "--x")
-            .replaceAll("2", "-w-")
-            .replaceAll("3", "-wx")
-            .replaceAll("4", "r--")
-            .replaceAll("5", "r-x")
-            .replaceAll("6", "rw-")
-            .replaceAll("7", "rwx");
+        mode.replace("0", "---")
+            .replace("1", "--x")
+            .replace("2", "-w-")
+            .replace("3", "-wx")
+            .replace("4", "r--")
+            .replace("5", "r-x")
+            .replace("6", "rw-")
+            .replace("7", "rwx");
     return PosixFilePermissions.fromString(converted);
   }
 
   @Override
-  public Set<PosixFilePermission> getMode(String path) throws Exception {
-    final Path p = this.convertToPath(path);
+  public Set<PosixFilePermission> getMode(final String path) throws Exception {
+    final Path convertedPath = this.convertToPath(path);
 
-    if (!p.toFile().exists()) {
+    if (!convertedPath.toFile().exists()) {
       throw new FileNotFoundException(path + " が見つかりません。");
     }
 
-    return Files.getPosixFilePermissions(p);
+    return Files.getPosixFilePermissions(convertedPath);
   }
 
   @Override
-  public int updateMode(String path, String mode) {
+  public int updateMode(final String path, final String mode) {
     int status = 0;
 
     try {
       final Set<PosixFilePermission> curPermission = getMode(path);
       final Set<PosixFilePermission> newPermission = createMode(mode);
 
-      if (curPermission.equals(newPermission)) {
-        return status;
+      if (!curPermission.equals(newPermission)) {
+        this.getLogger().info("パーミッションを変更しています......");
+        final Path convertedPath = this.convertToPath(path);
+        Files.setPosixFilePermissions(convertedPath, newPermission);
+
+        status = 2;
       }
-
-      this.getLogger().info("パーミッションを変更しています......");
-      final Path p = this.convertToPath(path);
-      Files.setPosixFilePermissions(p, newPermission);
-
-      status = 2;
     } catch (final Exception e) {
       this.getLogger().warn(e.toString());
       status = 1;

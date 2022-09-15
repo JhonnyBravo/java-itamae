@@ -9,40 +9,38 @@ import java.nio.file.attribute.UserPrincipalLookupService;
 
 public class OwnerComponentImpl implements OwnerComponent {
   @Override
-  public UserPrincipal createOwner(String owner) throws Exception {
+  public UserPrincipal createOwner(final String owner) throws Exception {
     final UserPrincipalLookupService upls =
         FileSystems.getDefault().getUserPrincipalLookupService();
     return upls.lookupPrincipalByName(owner);
   }
 
   @Override
-  public UserPrincipal getOwner(String path) throws Exception {
-    final Path p = FileSystems.getDefault().getPath(path);
+  public UserPrincipal getOwner(final String path) throws Exception {
+    final Path convertedPath = FileSystems.getDefault().getPath(path);
 
-    if (!p.toFile().exists()) {
+    if (!convertedPath.toFile().exists()) {
       throw new FileNotFoundException(path + " が見つかりません。");
     }
 
-    return Files.getOwner(p);
+    return Files.getOwner(convertedPath);
   }
 
   @Override
-  public int updateOwner(String path, String owner) {
+  public int updateOwner(final String path, final String owner) {
     int status = 0;
 
     try {
       final UserPrincipal curOwner = getOwner(path);
       final UserPrincipal newOwner = createOwner(owner);
 
-      if (curOwner.equals(newOwner)) {
-        return status;
+      if (!curOwner.equals(newOwner)) {
+        this.getLogger().info("所有者を変更しています......");
+        final Path convertedPath = this.convertToPath(path);
+        Files.setOwner(convertedPath, newOwner);
+
+        status = 2;
       }
-
-      this.getLogger().info("所有者を変更しています......");
-      final Path p = this.convertToPath(path);
-      Files.setOwner(p, newOwner);
-
-      status = 2;
     } catch (final Exception e) {
       this.getLogger().warn(e.toString());
       status = 1;

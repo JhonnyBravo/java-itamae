@@ -7,92 +7,88 @@ import java.nio.file.Path;
 import java.util.function.BiFunction;
 
 public class DirectoryComponentImpl implements DirectoryComponent {
-  private final BiFunction<String, Boolean, Integer> createDirectory =
+  /** {@link DirectoryComponent#create(String, boolean)} */
+  private final transient BiFunction<String, Boolean, Integer> createDirectory =
       (path, recursive) -> {
         int status = 0;
-        final Path p = this.convertToPath(path);
+        final Path convertedPath = this.convertToPath(path);
 
-        if (p.toFile().isDirectory()) {
-          return status;
-        }
+        if (!convertedPath.toFile().isDirectory()) {
+          this.getLogger().info("{} を作成しています......", path);
 
-        this.getLogger().info("{} を作成しています......", path);
-
-        try {
-          if (recursive) {
-            Files.createDirectories(p);
+          try {
+            if (recursive) {
+              Files.createDirectories(convertedPath);
+            } else {
+              Files.createDirectory(convertedPath);
+            }
             status = 2;
-          } else {
-            Files.createDirectory(p);
-            status = 2;
+          } catch (final IOException e) {
+            this.getLogger().warn(e.toString());
+            status = 1;
           }
-        } catch (final IOException e) {
-          this.getLogger().warn(e.toString());
-          status = 1;
         }
 
         return status;
       };
-  private final BiFunction<String, Boolean, Integer> deleteDirectory =
+
+  /** {@link DirectoryComponent#delete(String, boolean)} */
+  private final transient BiFunction<String, Boolean, Integer> deleteDirectory =
       (path, recursive) -> {
         int status = 0;
-        final Path p = this.convertToPath(path);
+        final Path convertedPath = this.convertToPath(path);
 
-        if (!p.toFile().isDirectory()) {
-          return status;
-        }
+        if (convertedPath.toFile().isDirectory()) {
+          this.getLogger().info("{} を削除しています......", path);
 
-        this.getLogger().info("{} を削除しています......", path);
-
-        try {
-          if (recursive) {
-            status = this.deleteRecursive(path);
-          } else {
-            Files.delete(p);
-            status = 2;
+          try {
+            if (recursive) {
+              status = this.deleteRecursive(path);
+            } else {
+              Files.delete(convertedPath);
+              status = 2;
+            }
+          } catch (final IOException e) {
+            this.getLogger().warn(e.toString());
+            status = 1;
           }
-        } catch (final IOException e) {
-          this.getLogger().warn(e.toString());
-          status = 1;
         }
 
         return status;
       };
 
   @Override
-  public int create(String path, boolean recursive) {
+  public int create(final String path, final boolean recursive) {
     return this.createDirectory.apply(path, recursive);
   }
 
   @Override
-  public int delete(String path, boolean recursive) {
+  public int delete(final String path, final boolean recursive) {
     return this.deleteDirectory.apply(path, recursive);
   }
 
-  private int deleteRecursive(String path) {
+  private int deleteRecursive(final String path) {
     int status = 0;
-    final Path p = this.convertToPath(path);
+    final Path convertedPath = this.convertToPath(path);
 
-    if (!p.toFile().isDirectory()) {
-      return status;
-    }
-
-    try {
-      for (final File file : p.toFile().listFiles()) {
-        if (file.isDirectory()) {
-          deleteRecursive(file.getPath());
-        } else {
-          // ディレクトリ配下のファイル群を削除する。
-          Files.delete(file.toPath());
+    if (convertedPath.toFile().isDirectory()) {
+      try {
+        for (final File file : convertedPath.toFile().listFiles()) {
+          if (file.isDirectory()) {
+            deleteRecursive(file.getPath());
+          } else {
+            // ディレクトリ配下のファイル群を削除する。
+            Files.delete(file.toPath());
+          }
         }
-      }
 
-      // 空になったディレクトリを削除する。
-      Files.delete(p);
-      status = 2;
-    } catch (final IOException e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+        // 空になったディレクトリを削除する。
+        Files.delete(convertedPath);
+        status = 2;
+      } catch (final IOException e) {
+        this.getLogger().warn(e.toString());
+        status = 1;
+      }
     }
 
     return status;

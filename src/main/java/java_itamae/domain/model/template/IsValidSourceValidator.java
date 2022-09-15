@@ -8,10 +8,9 @@ import java.util.function.Predicate;
 /** {@link TemplateResourceModel} の action の値として create が指定されている場合に複合チェックを実行する。 */
 public class IsValidSourceValidator
     implements ConstraintValidator<IsValidSource, TemplateResourceModel> {
-  @Override
-  public void initialize(IsValidSource annotation) {}
 
-  private final Predicate<String> isNull =
+  /** value に指定した文字列が null である場合、または空文字である場合に true を返す。条件に該当しない場合は false を返す。 */
+  private final transient Predicate<String> isNull =
       value -> {
         boolean result = false;
 
@@ -21,6 +20,9 @@ public class IsValidSourceValidator
 
         return result;
       };
+
+  @Override
+  public void initialize(final IsValidSource annotation) {}
 
   /**
    * {@link TemplateResourceModel} の action の値として create が指定されている場合に以下の複合チェックを実行する。
@@ -40,12 +42,13 @@ public class IsValidSourceValidator
    *     </ul>
    */
   @Override
-  public boolean isValid(TemplateResourceModel model, ConstraintValidatorContext context) {
+  public boolean isValid(
+      final TemplateResourceModel model, final ConstraintValidatorContext context) {
     boolean result = true;
     final String action = model.getAction();
     final String source = model.getSource();
 
-    if (action != null && action.equals("create")) {
+    if ("create".equals(action)) {
       // action = create かつ source が指定されていない場合
       if (isNull.test(source)) {
         result = false;

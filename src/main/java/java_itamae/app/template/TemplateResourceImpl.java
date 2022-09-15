@@ -10,8 +10,10 @@ import java_itamae.domain.service.contents.ContentsServiceImpl;
 
 /** ファイルの読書きを管理する。 */
 public class TemplateResourceImpl implements BaseResource<TemplateResourceModel> {
-  private final ContentsService service;
+  /** {@link ContentsService} */
+  private final transient ContentsService service;
 
+  /** 初期化処理を実行する。 */
   public TemplateResourceImpl() {
     this.service = new ContentsServiceImpl();
   }
@@ -23,7 +25,7 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
    * @return model {@link Map} から変換された {@link TemplateResourceModel} を返す。
    */
   @Override
-  public TemplateResourceModel convertToModel(Map<String, String> properties) {
+  public TemplateResourceModel convertToModel(final Map<String, String> properties) {
     final TemplateResourceModel model = new TemplateResourceModel();
 
     model.setAction(properties.get("action"));
@@ -41,7 +43,7 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
    * @return contents 変換された {@link List}
    * @throws Exception {@link Exception}
    */
-  private List<String> getSourceContents(TemplateResourceModel model) throws Exception {
+  private List<String> getSourceContents(final TemplateResourceModel model) throws Exception {
     final ContentsModel sourceModel = new ContentsModel();
 
     if ("delete".equals(model.getAction())) {
@@ -68,7 +70,7 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
    *       <li>2: 書込みを実行して正常終了したことを表す。
    *     </ul>
    */
-  private int updateContents(TemplateResourceModel model, List<String> contents) {
+  private int updateContents(final TemplateResourceModel model, final List<String> contents) {
     int status = 0;
 
     final ContentsModel targetModel = new ContentsModel();
@@ -87,20 +89,21 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
   }
 
   @Override
-  public int apply(Map<String, String> properties) {
+  @SuppressWarnings("unused")
+  public int apply(final Map<String, String> properties) {
     int status = 0;
     final TemplateResourceModel model = this.convertToModel(properties);
 
-    if (!this.validate(model)) {
-      status = 1;
-      return status;
-    }
-
-    try {
-      final List<String> sourceContents = this.getSourceContents(model);
-      status = this.updateContents(model, sourceContents);
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
+    if (this.validate(model)) {
+      try {
+        final List<String> sourceContents = this.getSourceContents(model);
+        status = this.updateContents(model, sourceContents);
+      } catch (final Exception e) {
+        final String message = e.toString();
+        this.getLogger().warn("{}", message);
+        status = 1;
+      }
+    } else {
       status = 1;
     }
 

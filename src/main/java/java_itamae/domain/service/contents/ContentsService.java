@@ -11,7 +11,7 @@ public interface ContentsService extends BaseService {
    *
    * @param model 操作対象とするファイルの情報を収めた {@link ContentsModel} を指定する。
    */
-  public void init(ContentsModel model);
+  void init(ContentsModel model);
 
   /**
    * ファイルを読込み、 {@link List} に変換して返す。

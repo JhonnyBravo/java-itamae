@@ -22,23 +22,26 @@ public class ContentsModelValidator implements Predicate<ContentsModel> {
    *     </ul>
    */
   @Override
-  public boolean test(ContentsModel model) {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+  public boolean test(final ContentsModel model) {
+    boolean result = true;
+
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     final Set<ConstraintViolation<ContentsModel>> resultSet = validator.validate(model);
 
-    if (resultSet.size() > 0) {
+    if (!resultSet.isEmpty()) {
+      final Logger logger = LoggerFactory.getLogger(this.getClass());
+
       resultSet.stream()
           .forEach(
               error -> {
                 final String path = error.getPropertyPath().toString();
                 final String message = error.getMessage();
-                logger.warn(path + ": " + message);
+                logger.warn("{}: {}", path, message);
               });
 
-      return false;
-    } else {
-      return true;
+      result = false;
     }
+
+    return result;
   }
 }
