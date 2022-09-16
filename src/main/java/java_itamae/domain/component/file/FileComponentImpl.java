@@ -8,16 +8,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FileComponentImpl implements FileComponent {
-  private final Function<String, Integer> createFile =
+  /** {@link FileComponent#create(String)} */
+  private final transient Function<String, Integer> createFile =
       path -> {
         int status = 0;
-        final Path p = this.convertToPath(path);
+        final Path convertedPath = this.convertToPath(path);
 
-        if (!p.toFile().isFile()) {
+        if (!convertedPath.toFile().isFile()) {
           this.getLogger().info("{} を作成しています......", path);
 
           try {
-            Files.createFile(p);
+            Files.createFile(convertedPath);
             status = 2;
           } catch (final IOException e) {
             this.getLogger().warn(e.toString());
@@ -27,15 +28,17 @@ public class FileComponentImpl implements FileComponent {
 
         return status;
       };
-  private final Function<String, Integer> deleteFile =
+
+  /** {@link FileComponent#delete(String)} */
+  private final transient Function<String, Integer> deleteFile =
       path -> {
         int status = 0;
-        final Path p = this.convertToPath(path);
+        final Path convertedPath = this.convertToPath(path);
 
-        if (p.toFile().isFile()) {
+        if (convertedPath.toFile().isFile()) {
           this.getLogger().info("{} を削除しています......", path);
           try {
-            Files.delete(p);
+            Files.delete(convertedPath);
             status = 2;
           } catch (final IOException e) {
             this.getLogger().warn(e.toString());
@@ -47,12 +50,12 @@ public class FileComponentImpl implements FileComponent {
       };
 
   @Override
-  public int create(String path) {
+  public int create(final String path) {
     return createFile.apply(path);
   }
 
   @Override
-  public int delete(String path) {
+  public int delete(final String path) {
     return deleteFile.apply(path);
   }
 }

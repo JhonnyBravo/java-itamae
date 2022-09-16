@@ -15,7 +15,7 @@ public interface BaseResource<T> {
    *
    * @return logger {@link Logger}
    */
-  public default Logger getLogger() {
+  default Logger getLogger() {
     return LoggerFactory.getLogger(this.getClass());
   }
 
@@ -25,7 +25,7 @@ public interface BaseResource<T> {
    * @param properties プロパティ群を収めた {@link Map} を指定する。
    * @return model {@link Map} から変換された Model クラスを返す。
    */
-  public T convertToModel(Map<String, String> properties);
+  T convertToModel(Map<String, String> properties);
 
   /**
    * Model クラスのバリデーションチェックを実行する。
@@ -37,24 +37,27 @@ public interface BaseResource<T> {
    *       <li>false: バリデーションエラーが発生したことを表す。
    *     </ul>
    */
-  public default boolean validate(T model) {
-    final Logger logger = this.getLogger();
+  default boolean validate(final T model) {
+    boolean result = false;
+
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     final Set<ConstraintViolation<T>> resultSet = validator.validate(model);
 
     if (resultSet.isEmpty()) {
-      return true;
+      result = true;
+    } else {
+      final Logger logger = this.getLogger();
+
+      resultSet.stream()
+          .forEach(
+              error -> {
+                final String path = error.getPropertyPath().toString();
+                final String message = error.getMessage();
+                logger.warn("{}: {}", path, message);
+              });
     }
 
-    resultSet.stream()
-        .forEach(
-            error -> {
-              final String path = error.getPropertyPath().toString();
-              final String message = error.getMessage();
-              logger.warn("{}: {}", path, message);
-            });
-
-    return false;
+    return result;
   }
 
   /**
@@ -68,5 +71,5 @@ public interface BaseResource<T> {
    *       <li>2: 操作を実行して正常終了したことを表す。
    *     </ul>
    */
-  public int apply(Map<String, String> properties);
+  int apply(Map<String, String> properties);
 }

@@ -29,14 +29,23 @@ public class Main {
    *       <li>--encoding, -e &lt;encoding&gt;: 文字エンコーディングを指定する。
    *     </ul>
    */
-  public static void main(String[] args) {
-    final ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
-    final Usage usage = context.getBean(Usage.class);
-    final ContentsModelValidator validator = context.getBean(ContentsModelValidator.class);
-    final GetProperties getProperties = context.getBean(GetProperties.class);
-    final FileResourceImpl fileResource = context.getBean(FileResourceImpl.class);
-    final DirectoryResourceImpl directoryResource = context.getBean(DirectoryResourceImpl.class);
-    final TemplateResourceImpl templateResource = context.getBean(TemplateResourceImpl.class);
+  @SuppressWarnings("unused")
+  public static void main(final String[] args) {
+    Usage usage;
+    ContentsModelValidator validator;
+    GetProperties getProperties;
+    FileResourceImpl fileResource;
+    DirectoryResourceImpl directoryResource;
+    TemplateResourceImpl templateResource;
+
+    try (ConfigurableApplicationContext context = SpringApplication.run(Main.class, args); ) {
+      usage = context.getBean(Usage.class);
+      validator = context.getBean(ContentsModelValidator.class);
+      getProperties = context.getBean(GetProperties.class);
+      fileResource = context.getBean(FileResourceImpl.class);
+      directoryResource = context.getBean(DirectoryResourceImpl.class);
+      templateResource = context.getBean(TemplateResourceImpl.class);
+    }
 
     final LongOpt[] longopts = new LongOpt[2];
     longopts[0] = new LongOpt("path", LongOpt.REQUIRED_ARGUMENT, null, 'p');
@@ -46,7 +55,7 @@ public class Main {
 
     final ContentsModel cliArgs = new ContentsModel();
 
-    int c;
+    int option;
     int status = 0;
 
     if (args.length == 0) {
@@ -54,8 +63,8 @@ public class Main {
       status = 1;
     }
 
-    while ((c = options.getopt()) != -1) {
-      switch (c) {
+    while ((option = options.getopt()) != -1) {
+      switch (option) {
         case 'p':
           cliArgs.setPath(options.getOptarg());
           break;
@@ -80,13 +89,13 @@ public class Main {
     // resource_name を取得し、実行するリソースを判定する。
     final String resourceName = properties.get("resource_name");
 
-    if (resourceName != null && resourceName.equals("file")) {
+    if ("file".equals(resourceName)) {
       final BaseResource<?> resource = fileResource;
       status = resource.apply(properties);
-    } else if (resourceName != null && resourceName.equals("directory")) {
+    } else if ("directory".equals(resourceName)) {
       final BaseResource<?> resource = directoryResource;
       status = resource.apply(properties);
-    } else if (resourceName != null && resourceName.equals("template")) {
+    } else if ("template".equals(resourceName)) {
       final BaseResource<?> resource = templateResource;
       status = resource.apply(properties);
     } else {

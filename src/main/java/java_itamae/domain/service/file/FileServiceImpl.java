@@ -10,44 +10,33 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FileServiceImpl implements FileService {
-  @Autowired private FileComponent fc;
-  @Autowired private OwnerComponent oc;
-  @Autowired private GroupComponent gc;
-  @Autowired private ModeComponent mc;
+  /** {@link FileComponent} のインスタンス */
+  @Autowired private transient FileComponent file;
+  /** {@link OwnerComponent} のインスタンス */
+  @Autowired private transient OwnerComponent owner;
+  /** {@link GroupComponent} のインスタンス */
+  @Autowired private transient GroupComponent group;
+  /** {@link ModeComponent} のインスタンス */
+  @Autowired private transient ModeComponent mode;
 
+  @SuppressWarnings("unused")
   @Override
-  public int create(FileResourceModel model) {
+  public int create(final FileResourceModel model) {
     int status = 0;
 
     try {
-      status = fc.create(model.getPath());
+      status = file.create(model.getPath());
 
-      if (status == 1) {
-        return status;
+      if (status != 1 && model.getOwner() != null) {
+        status = owner.updateOwner(model.getPath(), model.getOwner());
       }
 
-      if (model.getOwner() != null) {
-        status = oc.updateOwner(model.getPath(), model.getOwner());
-
-        if (status == 1) {
-          return status;
-        }
+      if (status != 1 && model.getGroup() != null) {
+        status = group.updateGroup(model.getPath(), model.getGroup());
       }
 
-      if (model.getGroup() != null) {
-        status = gc.updateGroup(model.getPath(), model.getGroup());
-
-        if (status == 1) {
-          return status;
-        }
-      }
-
-      if (model.getMode() != null) {
-        status = mc.updateMode(model.getPath(), model.getMode());
-
-        if (status == 1) {
-          return status;
-        }
+      if (status != 1 && model.getMode() != null) {
+        status = mode.updateMode(model.getPath(), model.getMode());
       }
     } catch (final Exception e) {
       this.getLogger().warn(e.toString());
@@ -57,12 +46,13 @@ public class FileServiceImpl implements FileService {
     return status;
   }
 
+  @SuppressWarnings("unused")
   @Override
-  public int delete(FileResourceModel model) {
+  public int delete(final FileResourceModel model) {
     int status = 0;
 
     try {
-      status = fc.delete(model.getPath());
+      status = file.delete(model.getPath());
     } catch (final Exception e) {
       this.getLogger().warn(e.toString());
       status = 1;

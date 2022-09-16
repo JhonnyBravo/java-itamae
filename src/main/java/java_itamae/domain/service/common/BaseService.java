@@ -10,7 +10,7 @@ public interface BaseService {
    *
    * @return logger {@link Logger}
    */
-  public default Logger getLogger() {
+  default Logger getLogger() {
     return LoggerFactory.getLogger(this.getClass());
   }
 }

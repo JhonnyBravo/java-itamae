@@ -1,7 +1,7 @@
 package java_itamae.app.properties;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.service.properties.PropertiesService;
@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 /** プロパティファイルのからキーと値を読み込む。 */
 @Service
 public class GetProperties implements Function<ContentsModel, Map<String, String>> {
-  @Autowired private PropertiesService service;
+  /** {@link PropertiesService} のインスタンス */
+  @Autowired private transient PropertiesService service;
 
   /**
    * プロパティファイルからキーと値を読込み、 {@link Map} 変換して返す。
@@ -22,15 +23,16 @@ public class GetProperties implements Function<ContentsModel, Map<String, String
    * @return properties キーと値を収めた {@link Map}
    */
   @Override
-  public Map<String, String> apply(ContentsModel model) {
+  public Map<String, String> apply(final ContentsModel model) {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    Map<String, String> properties = new HashMap<>();
+    Map<String, String> properties = new ConcurrentHashMap<>();
 
     try {
       service.init(model);
       properties = service.getProperties();
     } catch (final Exception e) {
-      logger.warn(e.toString());
+      final String message = e.toString();
+      logger.warn("{}", message);
     }
 
     return properties;

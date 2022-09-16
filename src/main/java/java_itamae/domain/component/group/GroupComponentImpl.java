@@ -12,44 +12,43 @@ import org.springframework.stereotype.Service;
 @Service
 public class GroupComponentImpl implements GroupComponent {
   @Override
-  public GroupPrincipal createGroup(String group) throws Exception {
+  public GroupPrincipal createGroup(final String group) throws Exception {
     final UserPrincipalLookupService upls =
         FileSystems.getDefault().getUserPrincipalLookupService();
     return upls.lookupPrincipalByGroupName(group);
   }
 
   @Override
-  public GroupPrincipal getGroup(String path) throws Exception {
-    final Path p = this.convertToPath(path);
+  public GroupPrincipal getGroup(final String path) throws Exception {
+    final Path convertedPath = this.convertToPath(path);
 
-    if (!p.toFile().exists()) {
+    if (!convertedPath.toFile().exists()) {
       throw new FileNotFoundException(path + " が見つかりません。");
     }
 
-    final PosixFileAttributeView pfav = Files.getFileAttributeView(p, PosixFileAttributeView.class);
+    final PosixFileAttributeView pfav =
+        Files.getFileAttributeView(convertedPath, PosixFileAttributeView.class);
     return pfav.readAttributes().group();
   }
 
   @Override
-  public int updateGroup(String path, String group) {
+  public int updateGroup(final String path, final String group) {
     int status = 0;
 
     try {
       final GroupPrincipal curGroup = getGroup(path);
       final GroupPrincipal newGroup = createGroup(group);
 
-      if (curGroup.equals(newGroup)) {
-        return status;
+      if (!curGroup.equals(newGroup)) {
+        this.getLogger().info("グループ所有者を変更しています......");
+
+        final Path convertedPath = this.convertToPath(path);
+        final PosixFileAttributeView pfav =
+            Files.getFileAttributeView(convertedPath, PosixFileAttributeView.class);
+        pfav.setGroup(newGroup);
+
+        status = 2;
       }
-
-      this.getLogger().info("グループ所有者を変更しています......");
-
-      final Path p = this.convertToPath(path);
-      final PosixFileAttributeView pfav =
-          Files.getFileAttributeView(p, PosixFileAttributeView.class);
-      pfav.setGroup(newGroup);
-
-      status = 2;
     } catch (final Exception e) {
       this.getLogger().warn(e.toString());
       status = 1;

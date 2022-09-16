@@ -8,8 +8,9 @@ import javax.validation.constraints.NotNull;
 /** 読み書きの対象とするファイルの情報を管理する。 */
 public class ContentsModel implements Serializable {
   private static final long serialVersionUID = 1L;
-
+  /** 操作対象とするファイルのパス */
   @NotNull private String path;
+  /** ファイルの読書きに使用する文字エンコーディング */
   private String encoding;
 
   /**
@@ -26,7 +27,7 @@ public class ContentsModel implements Serializable {
    *
    * @param path 操作対象とするファイルのパス
    */
-  public void setPath(String path) {
+  public void setPath(final String path) {
     this.path = path;
   }
 
@@ -45,7 +46,7 @@ public class ContentsModel implements Serializable {
    *
    * @param encoding 文字エンコーディング
    */
-  public void setEncoding(String encoding) {
+  public void setEncoding(final String encoding) {
     this.encoding = encoding;
   }
 }
