@@ -6,7 +6,8 @@ import org.jboss.weld.environment.se.WeldContainer;
 /** {@link Application} を起動する。 */
 public class Main {
   /** {@link Application} を起動する。 */
-  public static void main(String[] args) {
+  @SuppressWarnings("unused")
+  public static void main(final String[] args) {
     final Weld weld = new Weld();
     int status = 0;
 

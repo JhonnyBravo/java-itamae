@@ -15,12 +15,18 @@ import org.slf4j.LoggerFactory;
 
 /** プロパティファイルを読込み、ファイルの設定値に従って動作を実行する。 */
 public class Application {
-  @Inject private Usage usage;
-  @Inject private ContentsModelValidator validator;
-  @Inject private GetProperties getProperties;
-  @Inject private FileResourceImpl fileResource;
-  @Inject private DirectoryResourceImpl directoryResource;
-  @Inject private TemplateResourceImpl templateResource;
+  /** {@link Usage} のインスタンス */
+  @Inject private transient Usage usage;
+  /** {@link ContentsModelValidator} のインスタンス */
+  @Inject private transient ContentsModelValidator validator;
+  /** {@link GetProperties} のインスタンス */
+  @Inject private transient GetProperties getProperties;
+  /** {@link FileResourceImpl} のインスタンス */
+  @Inject private transient FileResourceImpl fileResource;
+  /** {@link DirectoryResourceImpl} のインスタンス */
+  @Inject private transient DirectoryResourceImpl directoryResource;
+  /** {@link TemplateResourceImpl} のインスタンス */
+  @Inject private transient TemplateResourceImpl templateResource;
 
   /**
    * プロパティファイルを読込み、動作を実行する。
@@ -31,7 +37,8 @@ public class Application {
    *       <li>--encoding, -e &lt;encoding&gt;: 文字エンコーディングを指定する。
    *     </ul>
    */
-  public int main(String[] args) {
+  @SuppressWarnings("unused")
+  public int main(final String[] args) {
     final LongOpt[] longopts = new LongOpt[2];
     longopts[0] = new LongOpt("path", LongOpt.REQUIRED_ARGUMENT, null, 'p');
     longopts[1] = new LongOpt("encoding", LongOpt.REQUIRED_ARGUMENT, null, 'e');
@@ -40,7 +47,7 @@ public class Application {
 
     final ContentsModel cliArgs = new ContentsModel();
 
-    int c;
+    int option;
     int status = 0;
 
     if (args.length == 0) {
@@ -48,8 +55,8 @@ public class Application {
       status = 1;
     }
 
-    while ((c = options.getopt()) != -1) {
-      switch (c) {
+    while ((option = options.getopt()) != -1) {
+      switch (option) {
         case 'p':
           cliArgs.setPath(options.getOptarg());
           break;

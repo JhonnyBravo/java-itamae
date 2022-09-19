@@ -18,7 +18,7 @@ public interface StreamComponent extends BaseComponent {
    * @return reader {@link Reader} を返す。
    * @throws Exception {@link Exception}
    */
-  public default Reader getReader(ContentsModel model) throws Exception {
+  default Reader getReader(final ContentsModel model) throws Exception {
     final Path path = this.convertToPath(model.getPath());
 
     if (!path.toFile().isFile()) {
@@ -35,7 +35,7 @@ public interface StreamComponent extends BaseComponent {
    * @return writer {@link Writer} を返す。
    * @throws Exception {@link Exception}
    */
-  public default Writer getWriter(ContentsModel model) throws Exception {
+  default Writer getWriter(final ContentsModel model) throws Exception {
     final Path path = this.convertToPath(model.getPath());
 
     if (!path.toFile().isFile()) {

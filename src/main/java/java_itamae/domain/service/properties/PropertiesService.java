@@ -11,7 +11,7 @@ public interface PropertiesService extends BaseService {
    *
    * @param model 操作対象とするファイルの情報を収めた {@link ContentsModel} を指定する。
    */
-  public void init(ContentsModel model);
+  void init(ContentsModel model);
 
   /**
    * プロパティファイルからキーと値を読込み、 {@link Map} に変換して返す。

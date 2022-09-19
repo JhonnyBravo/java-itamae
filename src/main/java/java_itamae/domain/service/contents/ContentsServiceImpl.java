@@ -6,11 +6,13 @@ import java_itamae.domain.component.contents.ContentsComponent;
 import java_itamae.domain.model.contents.ContentsModel;
 
 public class ContentsServiceImpl implements ContentsService {
-  private ContentsModel model;
-  @Inject private ContentsComponent component;
+  /** {@link ContentsModel} のインスタンス */
+  private transient ContentsModel model;
+  /** {@link ContentsComponent} のインスタンス */
+  @Inject private transient ContentsComponent component;
 
   @Override
-  public void init(ContentsModel model) {
+  public void init(final ContentsModel model) {
     this.model = model;
   }
 
@@ -20,14 +22,12 @@ public class ContentsServiceImpl implements ContentsService {
   }
 
   @Override
-  public int updateContents(List<String> contents) {
-    final int status = component.updateContents(this.model, contents);
-    return status;
+  public int updateContents(final List<String> contents) {
+    return component.updateContents(this.model, contents);
   }
 
   @Override
   public int deleteContents() {
-    final int status = component.deleteContents(this.model);
-    return status;
+    return component.deleteContents(this.model);
   }
 }

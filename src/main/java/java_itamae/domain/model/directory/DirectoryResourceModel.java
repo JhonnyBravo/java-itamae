@@ -8,28 +8,36 @@ import java_itamae.domain.model.common.NotWindows;
 /** directory resource のモデルクラス */
 public class DirectoryResourceModel implements Serializable {
   private static final long serialVersionUID = 1L;
-
-  public DirectoryResourceModel() {
-    this.resourceName = "directory";
-  }
-
+  /** リソース名 */
   private final String resourceName;
 
+  /** 実行する動作の名前 */
   @NotNull
   @Pattern(regexp = "create|delete")
   private String action;
 
+  /** 操作対象とするディレクトリのパス */
   @NotNull private String path;
+
+  /** ディレクトリ所有者の名前 */
   private String owner;
 
+  /** ディレクトリのグループ所有者の名前 */
   @NotWindows private String group;
 
+  /** ディレクトリパーミッションの値 */
   @Pattern(regexp = "[0-7]{3}")
   @NotWindows
   private String mode;
 
+  /** ディレクトリを再帰的に操作するかどうかを表すフラグ */
   @Pattern(regexp = "true|false")
   private String recursive;
+
+  /** 初期化処理を実行する。 */
+  public DirectoryResourceModel() {
+    this.resourceName = "directory";
+  }
 
   /**
    * リソース名を返す。
@@ -58,7 +66,7 @@ public class DirectoryResourceModel implements Serializable {
    *       <li>delete: ディレクトリを削除する。
    *     </ul>
    */
-  public void setAction(String action) {
+  public void setAction(final String action) {
     this.action = action;
   }
 
@@ -76,7 +84,7 @@ public class DirectoryResourceModel implements Serializable {
    *
    * @param path 操作対象とするディレクトリのパス
    */
-  public void setPath(String path) {
+  public void setPath(final String path) {
     this.path = path;
   }
 
@@ -94,7 +102,7 @@ public class DirectoryResourceModel implements Serializable {
    *
    * @param owner ディレクトリに設定する所有者名を指定する。
    */
-  public void setOwner(String owner) {
+  public void setOwner(final String owner) {
     this.owner = owner;
   }
 
@@ -112,7 +120,7 @@ public class DirectoryResourceModel implements Serializable {
    *
    * @param group ディレクトリに設定するグループ所有者名
    */
-  public void setGroup(String group) {
+  public void setGroup(final String group) {
     this.group = group;
   }
 
@@ -140,7 +148,7 @@ public class DirectoryResourceModel implements Serializable {
    *       <li>7: rwx
    *     </ul>
    */
-  public void setMode(String mode) {
+  public void setMode(final String mode) {
     this.mode = mode;
   }
 
@@ -150,7 +158,7 @@ public class DirectoryResourceModel implements Serializable {
    * @return recursive ディレクトリを再帰的に操作するかどうかを表す真偽値。
    */
   public boolean isRecursive() {
-    return Boolean.valueOf(this.recursive);
+    return Boolean.parseBoolean(this.recursive);
   }
 
   /**
@@ -159,10 +167,10 @@ public class DirectoryResourceModel implements Serializable {
    * @param recursive ディレクトリを再帰的に操作するかどうかを表す真偽値を指定する。
    *     <ul>
    *       <li>true: ディレクトリを再帰的に操作する。
-   *       <li>true: ディレクトリを再帰的に操作しない。
+   *       <li>false: ディレクトリを再帰的に操作しない。
    *     </ul>
    */
-  public void setRecursive(String recursive) {
+  public void setRecursive(final String recursive) {
     this.recursive = recursive;
   }
 }

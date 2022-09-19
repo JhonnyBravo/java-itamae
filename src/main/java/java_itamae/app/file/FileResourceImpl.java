@@ -8,7 +8,8 @@ import java_itamae.domain.service.file.FileService;
 
 /** ファイルの操作を管理する。 */
 public class FileResourceImpl implements BaseResource<FileResourceModel> {
-  @Inject private FileService service;
+  /** {@link FileService} のインスタンス */
+  @Inject private transient FileService service;
 
   /**
    * プロパティ群を収めた {@link Map} を {@link FileResourceModel} に変換して返す。
@@ -17,7 +18,7 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
    * @return model {@link Map} から変換された {@link FileResourceModel} を返す。
    */
   @Override
-  public FileResourceModel convertToModel(Map<String, String> properties) {
+  public FileResourceModel convertToModel(final Map<String, String> properties) {
     final FileResourceModel model = new FileResourceModel();
 
     model.setAction(properties.get("action"));
@@ -30,19 +31,18 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
   }
 
   @Override
-  public int apply(Map<String, String> properties) {
+  public int apply(final Map<String, String> properties) {
     int status = 0;
     final FileResourceModel model = this.convertToModel(properties);
 
-    if (!this.validate(model)) {
+    if (this.validate(model)) {
+      if ("create".equals(model.getAction())) {
+        status = service.create(model);
+      } else if ("delete".equals(model.getAction())) {
+        status = service.delete(model);
+      }
+    } else {
       status = 1;
-      return status;
-    }
-
-    if ("create".equals(model.getAction())) {
-      status = service.create(model);
-    } else if ("delete".equals(model.getAction())) {
-      status = service.delete(model);
     }
 
     return status;
