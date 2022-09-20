@@ -81,11 +81,11 @@ public class Application {
     // resource_name を取得し、実行するリソースを判定する。
     final String resourceName = properties.get("resource_name");
 
-    if (resourceName != null && resourceName.equals("file")) {
+    if ("file".equals(resourceName)) {
       status = fileResource.apply(properties);
-    } else if (resourceName != null && resourceName.equals("directory")) {
+    } else if ("directory".equals(resourceName)) {
       status = directoryResource.apply(properties);
-    } else if (resourceName != null && resourceName.equals("template")) {
+    } else if ("template".equals(resourceName)) {
       status = templateResource.apply(properties);
     } else {
       final Logger logger = LoggerFactory.getLogger(Application.class);
