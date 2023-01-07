@@ -42,7 +42,7 @@ dependencies {
 }
 
 group='com.github.JhonnyBravo'
-version='master-SNAPSHOT'
+version='Java17-gradle-7.6-SNAPSHOT'
 sourceCompatibility=17
 targetCompatibility=17
 
