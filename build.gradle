@@ -85,9 +85,6 @@ publishing{
                 url='https://github.com/JhonnyBravo/java-itamae'
             }
         }
-        gpr(MavenPublication){
-            from(components.java)
-        }
     }
     repositories{
         maven{
@@ -97,7 +94,7 @@ publishing{
         }
         maven{
             name='GitHubPackages'
-            url=uri('https://maven.pkg.github.com/JhonnyBravo/java-itamae')
+            url=uri('https://maven.pkg.github.com/jhonnybravo/java-itamae')
             credentials{
                 username=project.findProperty('gpr.user') ?: System.getenv('USERNAME')
                 password=project.findProperty('gpr.key') ?: System.getenv('TOKEN')
