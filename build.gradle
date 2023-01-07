@@ -42,7 +42,7 @@ dependencies {
 }
 
 group='com.github.JhonnyBravo'
-version='dependency-management-SNAPSHOT'
+version='Java8-gradle-6.8.2-SNAPSHOT'
 sourceCompatibility=1.8
 targetCompatibility=1.8
 
