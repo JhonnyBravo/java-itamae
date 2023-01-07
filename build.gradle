@@ -43,8 +43,8 @@ dependencies {
 
 group='com.github.JhonnyBravo'
 version='master-SNAPSHOT'
-sourceCompatibility=1.8
-targetCompatibility=1.8
+sourceCompatibility=17
+targetCompatibility=17
 
 task sourcesJar(type: Jar, dependsOn: classes){
     classifier='sources'
@@ -85,12 +85,23 @@ publishing{
                 url='https://github.com/JhonnyBravo/java-itamae'
             }
         }
+        gpr(MavenPublication){
+            from(components.java)
+        }
     }
     repositories{
         maven{
             def releasesRepoUrl=layout.buildDirectory.dir('repos/releases')
             def snapshotsRepoUrl=layout.buildDirectory.dir('repos/snapshots')
             url=version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+        maven{
+            name='GitHubPackages'
+            url=uri('https://maven.pkg.github.com/JhonnyBravo/java-itamae')
+            credentials{
+                username=project.findProperty('gpr.user') ?: System.getenv('USERNAME')
+                password=project.findProperty('gpr.key') ?: System.getenv('TOKEN')
+            }
         }
     }
 }
