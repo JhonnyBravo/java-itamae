@@ -1,9 +1,9 @@
 package java_itamae.domain.model.template;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.io.File;
 import java.util.function.Predicate;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /** {@link TemplateResourceModel} の action の値として create が指定されている場合に複合チェックを実行する。 */
 public class IsValidSourceValidator
