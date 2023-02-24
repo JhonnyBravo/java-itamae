@@ -43,7 +43,6 @@ local.properties
 # STS (Spring Tool Suite)
 .springBeans
 .sts4-cache
-application.properties
 
 # Code Recommenders
 .recommenders/
