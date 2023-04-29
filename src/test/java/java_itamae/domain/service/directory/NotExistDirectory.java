@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
 import org.junit.After;
@@ -39,11 +40,18 @@ public class NotExistDirectory {
   }
 
   /**
-   *
+   * ディレクトリ作成の動作検証を実施する。
    *
    * <ul>
-   *   <li>ディレクトリが作成されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ディレクトリが作成され、存在していること。
    * </ul>
    */
   @Test
@@ -51,18 +59,24 @@ public class NotExistDirectory {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = ds.create(model);
-    assertThat(status, is(2));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isDirectory(), is(true));
   }
 
   /**
-   *
+   * ディレクトリ所有者変更の動作検証を実施する。
    *
    * <ul>
-   *   <li>ディレクトリが作成されること。
-   *   <li>所有者が変更されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ディレクトリが作成され、存在していること。
    * </ul>
    */
   @Test
@@ -71,18 +85,24 @@ public class NotExistDirectory {
     model.setPath(path.toFile().getPath());
     model.setOwner(ps.getProperty("owner"));
 
-    final int status = ds.create(model);
-    assertThat(status, is(2));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isDirectory(), is(true));
   }
 
   /**
-   *
+   * ディレクトリのグループ所有者変更の動作検証を実施する。
    *
    * <ul>
-   *   <li>ディレクトリが作成されること。
-   *   <li>グループ所有者が変更されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ディレクトリが作成され、存在していること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
@@ -92,18 +112,24 @@ public class NotExistDirectory {
     model.setPath(path.toFile().getPath());
     model.setGroup(ps.getProperty("group"));
 
-    final int status = ds.create(model);
-    assertThat(status, is(2));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isDirectory(), is(true));
   }
 
   /**
-   *
+   * ディレクトリのパーミッション変更の動作検証を実施する。
    *
    * <ul>
-   *   <li>ディレクトリが作成されること。
-   *   <li>パーミッション設定値が変更されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ディレクトリが作成され、存在していること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
@@ -113,8 +139,8 @@ public class NotExistDirectory {
     model.setPath(path.toFile().getPath());
     model.setMode("741");
 
-    final int status = ds.create(model);
-    assertThat(status, is(2));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isDirectory(), is(true));
   }
 }
