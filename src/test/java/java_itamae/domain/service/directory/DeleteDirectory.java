@@ -8,6 +8,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.model.status.Status;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,11 +23,16 @@ public class DeleteDirectory {
 
   /**
    * 削除対象とするディレクトリが存在しない状態で recursive を指定せずに {@link DirectoryService#delete(DirectoryResourceModel)}
-   * を実行した場合に
+   * を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>操作が実行されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryService#delete(DirectoryResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
@@ -34,17 +40,22 @@ public class DeleteDirectory {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath("test_dir");
 
-    final int status = ds.delete(model);
-    assertThat(status, is(0));
+    final Status status = ds.delete(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
    * 削除対象とするディレクトリが存在しない状態で recursive に true を設定して {@link
-   * DirectoryService#delete(DirectoryResourceModel)} を実行した場合に
+   * DirectoryService#delete(DirectoryResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>操作が実行されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryService#delete(DirectoryResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
@@ -53,17 +64,24 @@ public class DeleteDirectory {
     model.setPath("test_dir");
     model.setRecursive("true");
 
-    final int status = ds.delete(model);
-    assertThat(status, is(0));
+    final Status status = ds.delete(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
    * 削除対象とするディレクトリが存在する状態で recursive を指定せずに {@link DirectoryService#delete(DirectoryResourceModel)}
-   * を実行した場合に
+   * を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ディレクトリが削除されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryService#delete(DirectoryResourceModel)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ディレクトリが削除され、存在しないこと。
    * </ul>
    */
   @Test
@@ -74,18 +92,25 @@ public class DeleteDirectory {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath("test_dir");
 
-    final int status = ds.delete(model);
-    assertThat(status, is(2));
+    final Status status = ds.delete(model);
+    assertThat(status, is(Status.DONE));
     assertThat(directory.isDirectory(), is(false));
   }
 
   /**
    * 削除対象とするディレクトリが存在する状態で recursive に true を設定して {@link
-   * DirectoryService#delete(DirectoryResourceModel)} を実行した場合に
+   * DirectoryService#delete(DirectoryResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ディレクトリが一括削除されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryService#delete(DirectoryResourceModel)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ディレクトリが削除され、存在しないこと。
    * </ul>
    */
   @Test
@@ -101,9 +126,9 @@ public class DeleteDirectory {
     model.setPath(rootDir.toFile().getPath());
     model.setRecursive("true");
 
-    final int status = ds.delete(model);
+    final Status status = ds.delete(model);
 
-    assertThat(status, is(2));
+    assertThat(status, is(Status.DONE));
     assertThat(rootDir.toFile().isDirectory(), is(false));
   }
 }
