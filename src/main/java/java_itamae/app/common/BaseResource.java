@@ -5,6 +5,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.Map;
 import java.util.Set;
+import java_itamae.domain.model.status.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,5 +72,5 @@ public interface BaseResource<T> {
    *       <li>2: 操作を実行して正常終了したことを表す。
    *     </ul>
    */
-  int apply(Map<String, String> properties);
+  Status apply(Map<String, String> properties);
 }
