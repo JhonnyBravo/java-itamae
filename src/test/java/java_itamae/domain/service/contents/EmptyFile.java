@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java_itamae.domain.common.GetTestContents;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,34 +37,64 @@ public class EmptyFile {
     file.delete();
   }
 
-  /** {@link ContentsService#getContents()} 実行時に空の {@link List} が返されること。 */
+  /**
+   * 操作対象とするテキストファイルの内容が空である場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link ContentsService#getContents()} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsService#getContents()} 実行時に空の {@link List} が返されること。
+   * </ul>
+   */
   @Test
   public void css001() throws Exception {
     final List<String> contents = service.getContents();
     assertThat(contents.size(), is(0));
   }
 
-  /** {@link ContentsService#deleteContents()} 実行時に終了ステータスが 0 であること。 */
+  /**
+   * 操作対象とするテキストファイルの内容が空である場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link ContentsService#deleteContents()} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsService#deleteContents()} 実行時に {@link Status#INIT} が返されること。
+   * </ul>
+   */
   @Test
   public void css002() throws Exception {
-    final int status = service.deleteContents();
-    assertThat(status, is(0));
+    final Status status = service.deleteContents();
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   * {@link ContentsService#updateContents(List)} 実行時に
+   * 操作対象とするテキストファイルの内容が空である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルへの書込みができること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link ContentsService#updateContents(List)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsService#updateContents(List)} 実行時に {@link Status#DONE} が返されること。
+   *   <li>ファイルに書き込まれた文字列群がテスト用データと一致すること。
    * </ul>
    */
   @Test
   public void css003() throws Exception {
     final List<String> newContents = getTestContents.get();
 
-    final int status = service.updateContents(newContents);
-    assertThat(status, is(2));
+    final Status status = service.updateContents(newContents);
+    assertThat(status, is(Status.DONE));
 
     final List<String> curContents = service.getContents();
 
