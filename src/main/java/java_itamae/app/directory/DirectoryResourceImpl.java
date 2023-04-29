@@ -3,6 +3,7 @@ package java_itamae.app.directory;
 import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.directory.DirectoryService;
 import java_itamae.domain.service.directory.DirectoryServiceImpl;
 
@@ -29,20 +30,25 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
   }
 
   @Override
-  public int apply(final Map<String, String> properties) {
-    int status = 0;
+  public Status apply(final Map<String, String> properties) {
+    Status status = Status.INIT;
     final DirectoryResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
       final DirectoryService service = new DirectoryServiceImpl();
 
-      if ("create".equals(model.getAction())) {
-        status = service.create(model);
-      } else if ("delete".equals(model.getAction())) {
-        status = service.delete(model);
+      try {
+        if ("create".equals(model.getAction())) {
+          status = service.create(model);
+        } else if ("delete".equals(model.getAction())) {
+          status = service.delete(model);
+        }
+      } catch (Exception e) {
+        status = Status.ERROR;
+        this.getLogger().warn(e.toString());
       }
     } else {
-      status = 1;
+      status = Status.ERROR;
     }
 
     return status;
