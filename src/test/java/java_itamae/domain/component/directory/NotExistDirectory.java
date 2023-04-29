@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java_itamae.domain.model.status.Status;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,60 +31,84 @@ public class NotExistDirectory {
   }
 
   /**
-   *
+   * 単一階層のディレクトリ作成の動作検証を実施する。
    *
    * <ul>
-   *   <li>単一階層のディレクトリ(test_dir)が作成されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryComponent#create(String, boolean)} 実行後の返り値の確認。
+   *   <li>操作対象とするディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>引数 path に指定されたディレクトリが存在すること。
    * </ul>
    */
   @Test
   public void drs001() throws Exception {
-    final int status = component.create(rootDir.toFile().getPath(), false);
-    assertThat(status, is(2));
+    final Status status = component.create(rootDir.toFile().getPath(), false);
+    assertThat(status, is(Status.DONE));
     assertThat(rootDir.toFile().isDirectory(), is(true));
   }
 
   /**
-   *
+   * ディレクトリ一括作成の動作検証を実施する。
    *
    * <ul>
-   *   <li>複数階層のディレクトリ(test_dir/sub_dir)が一括作成されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryComponent#create(String, boolean)} 実行後の返り値の確認。
+   *   <li>操作対象とするディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>引数 path に指定されたディレクトリが親ディレクトリも含めて存在すること。
    * </ul>
    */
   @Test
   public void drs002() throws Exception {
-    final int status = component.create(subDir.toFile().getPath(), true);
-    assertThat(status, is(2));
+    final Status status = component.create(subDir.toFile().getPath(), true);
+    assertThat(status, is(Status.DONE));
     assertThat(subDir.toFile().isDirectory(), is(true));
   }
 
   /**
-   *
+   * 単一階層のディレクトリ削除の動作検証を実施する。
    *
    * <ul>
-   *   <li>{@link DirectoryComponent#delete(String, boolean)} 実行時に何も実行されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryComponent#delete(String, boolean)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
   public void drs003() throws Exception {
-    final int status = component.delete(rootDir.toFile().getPath(), false);
-    assertThat(status, is(0));
+    final Status status = component.delete(rootDir.toFile().getPath(), false);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   *
+   * ディレクトリ一括削除の動作検証を実施する。
    *
    * <ul>
-   *   <li>{@link DirectoryComponent#delete(String, boolean)} 実行時に何も実行されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryComponent#delete(String, boolean)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
   public void drs004() throws Exception {
-    final int status = component.delete(rootDir.toFile().getPath(), true);
-    assertThat(status, is(0));
+    final Status status = component.delete(rootDir.toFile().getPath(), true);
+    assertThat(status, is(Status.INIT));
   }
 }
