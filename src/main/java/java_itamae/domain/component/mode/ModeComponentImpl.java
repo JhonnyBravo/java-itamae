@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
+import java_itamae.domain.model.status.Status;
 
 public class ModeComponentImpl implements ModeComponent {
   @Override
@@ -34,23 +35,17 @@ public class ModeComponentImpl implements ModeComponent {
   }
 
   @Override
-  public int updateMode(final String path, final String mode) {
-    int status = 0;
+  public Status updateMode(final String path, final String mode) throws Exception {
+    Status status = Status.INIT;
 
-    try {
-      final Set<PosixFilePermission> curPermission = getMode(path);
-      final Set<PosixFilePermission> newPermission = createMode(mode);
+    final Set<PosixFilePermission> curPermission = getMode(path);
+    final Set<PosixFilePermission> newPermission = createMode(mode);
 
-      if (!curPermission.equals(newPermission)) {
-        this.getLogger().info("パーミッションを変更しています......");
-        final Path convertedPath = this.convertToPath(path);
-        Files.setPosixFilePermissions(convertedPath, newPermission);
-
-        status = 2;
-      }
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+    if (!curPermission.equals(newPermission)) {
+      this.getLogger().info("パーミッションを変更しています......");
+      final Path convertedPath = this.convertToPath(path);
+      Files.setPosixFilePermissions(convertedPath, newPermission);
+      status = Status.DONE;
     }
 
     return status;
