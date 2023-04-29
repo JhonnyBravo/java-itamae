@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java_itamae.domain.model.status.Status;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,32 +30,44 @@ public class NotExistFile {
   }
 
   /**
-   *
+   * 以下の検証を実施する。
    *
    * <ul>
-   *   <li>ファイルが作成されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link FileComponent#create(String)} 実行後の返り値の確認。
+   *   <li>操作対象とするファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>引数 path に指定されたファイルが存在していること。
    * </ul>
    */
   @Test
   public void frs001() throws Exception {
     final File file = path.toFile();
-    final int status = component.create(file.getPath());
-    assertThat(status, is(2));
+    final Status status = component.create(file.getPath());
+    assertThat(status, is(Status.DONE));
     assertThat(file.isFile(), is(true));
   }
 
   /**
-   *
+   * 以下の検証を実施する。
    *
    * <ul>
-   *   <li>何も実行しないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link FileComponent#delete(String)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
   public void frs002() throws Exception {
-    final int status = component.delete(path.toFile().getPath());
-    assertThat(status, is(0));
+    final Status status = component.delete(path.toFile().getPath());
+    assertThat(status, is(Status.INIT));
   }
 }
