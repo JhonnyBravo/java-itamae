@@ -9,6 +9,7 @@ import java_itamae.domain.component.mode.ModeComponentImpl;
 import java_itamae.domain.component.owner.OwnerComponent;
 import java_itamae.domain.component.owner.OwnerComponentImpl;
 import java_itamae.domain.model.file.FileResourceModel;
+import java_itamae.domain.model.status.Status;
 
 public class FileServiceImpl implements FileService {
   /** {@link FileComponent} */
@@ -42,43 +43,28 @@ public class FileServiceImpl implements FileService {
 
   @SuppressWarnings("unused")
   @Override
-  public int create(final FileResourceModel model) {
-    int status = 0;
+  public Status create(final FileResourceModel model) throws Exception {
+    Status status = Status.INIT;
 
-    try {
-      status = file.create(model.getPath());
+    status = file.create(model.getPath());
 
-      if (status != 1 && model.getOwner() != null) {
-        status = owner.updateOwner(model.getPath(), model.getOwner());
-      }
+    if (model.getOwner() != null) {
+      status = owner.updateOwner(model.getPath(), model.getOwner());
+    }
 
-      if (status != 1 && model.getGroup() != null) {
-        status = group.updateGroup(model.getPath(), model.getGroup());
-      }
+    if (model.getGroup() != null) {
+      status = group.updateGroup(model.getPath(), model.getGroup());
+    }
 
-      if (status != 1 && model.getMode() != null) {
-        status = mode.updateMode(model.getPath(), model.getMode());
-      }
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+    if (model.getMode() != null) {
+      status = mode.updateMode(model.getPath(), model.getMode());
     }
 
     return status;
   }
 
-  @SuppressWarnings("unused")
   @Override
-  public int delete(final FileResourceModel model) {
-    int status = 0;
-
-    try {
-      status = file.delete(model.getPath());
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
-    }
-
-    return status;
+  public Status delete(final FileResourceModel model) throws Exception {
+    return file.delete(model.getPath());
   }
 }
