@@ -9,6 +9,7 @@ import java.util.Map;
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.common.GetTestProperties;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,19 @@ public class EmptyFile {
     Files.delete(path);
   }
 
-  /** {@link PropertiesComponent#getProperties(ContentsModel)} 実行時に空の {@link Map} が返されること。 */
+  /**
+   * 操作対象とするプロパティファイルの内容が空である場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link PropertiesComponent#getProperties(ContentsModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>空の {@link Map} が返されること。
+   * </ul>
+   */
   @Test
   public void prs001() throws Exception {
     final ContentsModel model = new ContentsModel();
@@ -46,11 +59,19 @@ public class EmptyFile {
   }
 
   /**
-   * {@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行時に
+   * 操作対象とするプロパティファイルの内容が空である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルへプロパティの書込みができること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行後の返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>プロパティファイルへ書き込まれたキーの数がテスト用データと一致すること。
+   *   <li>プロパティファイルへ書き込まれたキーと値がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -60,8 +81,8 @@ public class EmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = component.updateProperties(model, newProps, model.getPath());
-    assertThat(status, is(2));
+    final Status status = component.updateProperties(model, newProps, model.getPath());
+    assertThat(status, is(Status.DONE));
 
     final Map<String, String> curProps = component.getProperties(model);
     assertThat(curProps.size(), is(2));
@@ -71,11 +92,19 @@ public class EmptyFile {
 
   /**
    * 文字エンコーディングを指定して {@link PropertiesComponent#updateProperties(ContentsModel, Map, String)}
-   * を実行した場合に
+   * を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルへプロパティの書込みができること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行後の返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>プロパティファイルへ書き込まれたキーの数がテスト用データと一致すること。
+   *   <li>プロパティファイルへ書き込まれたキーと値がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -86,8 +115,8 @@ public class EmptyFile {
     model.setPath(path.toFile().getPath());
     model.setEncoding(getTestEncoding.get());
 
-    final int status = component.updateProperties(model, newProps, model.getPath());
-    assertThat(status, is(2));
+    final Status status = component.updateProperties(model, newProps, model.getPath());
+    assertThat(status, is(Status.DONE));
 
     final Map<String, String> curProps = component.getProperties(model);
     assertThat(curProps.size(), is(2));
@@ -95,14 +124,28 @@ public class EmptyFile {
     assertThat(curProps.get("property2"), is(newProps.get("property2")));
   }
 
-  /** {@link PropertiesComponent#deleteProperties(ContentsModel, String)} 実行時に終了ステータスが 0 であること。 */
+  /**
+   * 操作対象とするプロパティファイルの内容が空である場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link PropertiesComponent#deleteProperties(ContentsModel, String)} 実行後の返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
+   *   <li>プロパティファイルにキーと値が存在しないこと。
+   * </ul>
+   */
   @Test
   public void prs004() throws Exception {
     final ContentsModel model = new ContentsModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = component.deleteProperties(model, model.getPath());
-    assertThat(status, is(0));
+    final Status status = component.deleteProperties(model, model.getPath());
+    assertThat(status, is(Status.INIT));
 
     final Map<String, String> curProps = component.getProperties(model);
     assertThat(curProps.size(), is(0));
