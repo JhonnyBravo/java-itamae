@@ -27,49 +27,77 @@ public class NotExistFile {
   }
 
   /**
-   * {@link PropertiesComponent#getProperties(ContentsModel)} 実行時に {@link FileNotFoundException}
-   * が送出されること。
+   * 操作対象とするプロパティファイルが存在しない場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link PropertiesComponent#getProperties(ContentsModel)} 実行時に {@link
+   *       FileNotFoundException} が発生すること。
+   * </ul>
    */
   @Test(expected = FileNotFoundException.class)
   public void pre001() throws Exception {
     try {
       component.getProperties(model);
     } catch (final Exception e) {
-      System.err.println(e);
       throw e;
     }
   }
 
   /**
-   * {@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行時に
+   * 操作対象とするプロパティファイルが存在しない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
-   *   <li>ファイルが作成されないこと。
+   *   <li>例外の発生確認。
+   *   <li>プロパティファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行時に例外が発生すること。
+   *   <li>プロパティファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void pre002() throws Exception {
     final Map<String, String> properties = new HashMap<>();
-    final int status = component.updateProperties(model, properties, path.toFile().getName());
-    assertThat(status, is(1));
-    assertThat(path.toFile().isFile(), is(false));
+
+    try {
+      component.updateProperties(model, properties, path.toFile().getName());
+    } catch (Exception e) {
+      assertThat(path.toFile().isFile(), is(false));
+      throw e;
+    }
   }
 
   /**
-   * {@link PropertiesComponent#deleteProperties(ContentsModel, String)} 実行時に
+   * 操作対象とするプロパティファイルが存在しない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
-   *   <li>ファイルが作成されないこと。
+   *   <li>例外の発生確認。
+   *   <li>プロパティファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link PropertiesComponent#deleteProperties(ContentsModel, String)} 実行時に例外が発生すること。
+   *   <li>プロパティファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void pre003() throws Exception {
-    final int status = component.deleteProperties(model, path.toFile().getName());
-    assertThat(status, is(1));
-    assertThat(path.toFile().isFile(), is(false));
+    try {
+      component.deleteProperties(model, path.toFile().getName());
+    } catch (Exception e) {
+      assertThat(path.toFile().isFile(), is(false));
+      throw e;
+    }
   }
 }
