@@ -24,59 +24,96 @@ public class NotExistFile {
     file = new File(attr.getPath());
   }
 
-  /** {@link PropertiesService#getProperty(String)} 実行時に {@link FileNotFoundException} が送出されること。 */
+  /**
+   * プロパティファイルが存在しない場合に {@link PropertiesService#getProperty(String)} を実行した場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link FileNotFoundException} が発生すること。
+   * </ul>
+   */
   @Test(expected = FileNotFoundException.class)
   public void pse001() throws Exception {
+    service.getProperty("test");
+  }
+
+  /**
+   * プロパティファイルが存在しない場合に {@link PropertiesService#createProperty(String, String)} を実行した場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>例外の発生確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link FileNotFoundException} が発生すること。
+   *   <li>プロパティファイルが存在しないこと。
+   * </ul>
+   */
+  @Test(expected = FileNotFoundException.class)
+  public void pse002() throws Exception {
     try {
-      service.getProperty("test");
-    } catch (final Exception e) {
-      System.err.println(e);
+      service.createProperty("test", "登録テスト");
+    } catch (Exception e) {
+      assertThat(file.isFile(), is(false));
       throw e;
     }
   }
 
   /**
-   * {@link PropertiesService#createProperty(String, String)} 実行時に
+   * ファイルが存在しない場合に {@link PropertiesService#updateProperty(String, String)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>ファイルの存在確認。
    * </ul>
-   */
-  @Test
-  public void pse002() throws Exception {
-    final int status = service.createProperty("test", "登録テスト");
-    assertThat(status, is(1));
-    assertThat(file.isFile(), is(false));
-  }
-
-  /**
-   * {@link PropertiesService#updateProperty(String, String)} 実行時に
+   *
+   * <p>想定結果
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>{@link FileNotFoundException} が発生すること。
+   *   <li>プロパティファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void pse003() throws Exception {
-    final int status = service.updateProperty("test", "更新テスト");
-    assertThat(status, is(1));
-    assertThat(file.isFile(), is(false));
+    try {
+      service.updateProperty("test", "更新テスト");
+    } catch (Exception e) {
+      assertThat(file.isFile(), is(false));
+      throw e;
+    }
   }
 
   /**
-   * {@link PropertiesService#deleteProperty(String)} 実行時に
+   * ファイルが存在しない場合に {@link PropertiesService#deleteProperty(String)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link FileNotFoundException} が発生すること。
+   *   <li>プロパティファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void pse004() throws Exception {
-    final int status = service.deleteProperty("test");
-    assertThat(status, is(1));
-    assertThat(file.isFile(), is(false));
+    try {
+      service.deleteProperty("test");
+    } catch (Exception e) {
+      assertThat(file.isFile(), is(false));
+      throw e;
+    }
   }
 }
