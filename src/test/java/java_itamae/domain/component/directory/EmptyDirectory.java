@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java_itamae.domain.model.status.Status;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,34 +28,49 @@ public class EmptyDirectory {
   }
 
   /**
-   *
+   * 単一階層のディレクトリ削除の動作検証を実施する。
    *
    * <ul>
-   *   <li>単一階層のディレクトリが削除されること。
-   *   <li>親ディレクトリが削除されないこと。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryComponent#delete(String, boolean)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   *   <li>親ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>引数 path に指定されたディレクトリが存在しないこと。
+   *   <li>引数 path に指定されたディレクトリの親ディレクトリが存在すること。
    * </ul>
    */
   @Test
   public void drs001() throws Exception {
-    final int status = component.delete(path.toFile().getPath(), false);
-    assertThat(status, is(2));
+    final Status status = component.delete(path.toFile().getPath(), false);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isDirectory(), is(false));
     assertThat(path.getParent().toFile().isDirectory(), is(true));
   }
 
   /**
-   *
+   * ディレクトリ一括削除の動作検証を実施する。
    *
    * <ul>
-   *   <li>複数階層のディレクトリが一括削除されること。
-   *   <li>終了ステータスが true であること。
+   *   <li>{@link DirectoryComponent#delete(String, boolean)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>引数 path に指定されたディレクトリが存在しないこと。
    * </ul>
    */
   @Test
   public void drs002() throws Exception {
-    final int status = component.delete(path.getParent().getParent().toFile().getPath(), true);
-    assertThat(status, is(2));
+    final Status status = component.delete(path.getParent().getParent().toFile().getPath(), true);
+    assertThat(status, is(Status.DONE));
     assertThat(path.getParent().getParent().toFile().isDirectory(), is(false));
   }
 }

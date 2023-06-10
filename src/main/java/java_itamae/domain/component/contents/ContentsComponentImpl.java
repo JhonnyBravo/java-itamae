@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 
 public class ContentsComponentImpl implements ContentsComponent {
 
@@ -25,8 +26,9 @@ public class ContentsComponentImpl implements ContentsComponent {
 
   @Override
   @SuppressWarnings("unused")
-  public int updateContents(final ContentsModel model, final List<String> contents) {
-    int status = 0;
+  public Status updateContents(final ContentsModel model, final List<String> contents)
+      throws Exception {
+    Status status = Status.INIT;
 
     try (BufferedWriter buffer = new BufferedWriter(this.getWriter(model))) {
       for (final String line : contents) {
@@ -34,19 +36,17 @@ public class ContentsComponentImpl implements ContentsComponent {
         buffer.newLine();
       }
 
-      status = 2;
+      status = Status.DONE;
     } catch (final Exception e) {
-      final String message = e.toString();
-      this.getLogger().warn("{}", message);
-      status = 1;
+      throw e;
     }
 
     return status;
   }
 
   @Override
-  public int deleteContents(final ContentsModel model) {
-    int status = 0;
+  public Status deleteContents(final ContentsModel model) throws Exception {
+    Status status = Status.INIT;
 
     try {
       final List<String> curContents = this.getContents(model);
@@ -54,13 +54,11 @@ public class ContentsComponentImpl implements ContentsComponent {
       if (!curContents.isEmpty()) {
         try (BufferedWriter buffer = new BufferedWriter(this.getWriter(model))) {
           buffer.write("");
-          status = 2;
+          status = Status.DONE;
         }
       }
     } catch (final Exception e) {
-      final String message = e.toString();
-      this.getLogger().warn("{}", message);
-      status = 1;
+      throw e;
     }
 
     return status;

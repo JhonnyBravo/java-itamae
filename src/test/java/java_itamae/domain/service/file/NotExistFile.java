@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.file.FileResourceModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
 import org.junit.After;
@@ -43,85 +44,117 @@ public class NotExistFile {
   }
 
   /**
-   *
+   * ファイル作成の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルが作成されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ファイルが存在すること。
    * </ul>
    */
   @Test
   public void fss001() throws Exception {
-    final int status = fs.create(model);
-    assertThat(status, is(2));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isFile(), is(true));
   }
 
   /**
-   *
+   * ファイル所有者変更の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルが作成されること。
-   *   <li>ファイル所有者が変更されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ファイルが存在すること。
    * </ul>
    */
   @Test
   public void fss002() throws Exception {
     model.setOwner(ps.getProperty("owner"));
-    final int status = fs.create(model);
-    assertThat(status, is(2));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isFile(), is(true));
   }
 
   /**
-   *
+   * ファイルのグループ所有者変更の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルが作成されること。
-   *   <li>ファイルのグループ所有者が変更されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ファイルが存在すること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
   @Test
   public void fss003() throws Exception {
     model.setGroup(ps.getProperty("group"));
-    final int status = fs.create(model);
-    assertThat(status, is(2));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isFile(), is(true));
   }
 
   /**
-   *
+   * ファイルパーミッション変更の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルが作成されること。
-   *   <li>ファイルパーミッションが変更されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ファイルが存在すること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
   @Test
   public void fss004() throws Exception {
     model.setMode("721");
-    final int status = fs.create(model);
-    assertThat(status, is(2));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isFile(), is(true));
   }
 
   /**
-   *
+   * ファイル削除の動作検証を実施する。
    *
    * <ul>
-   *   <li>{@link FileService#delete(FileResourceModel)} 実行時に何も実行されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link FileService#delete(FileResourceModel)} 実行後の返り値の確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
+   *   <li>ファイルが存在しないこと。
    * </ul>
    */
   @Test
   public void fss005() throws Exception {
-    final int status = fs.delete(model);
-    assertThat(status, is(0));
+    final Status status = fs.delete(model);
+    assertThat(status, is(Status.INIT));
     assertThat(path.toFile().isFile(), is(false));
   }
 }

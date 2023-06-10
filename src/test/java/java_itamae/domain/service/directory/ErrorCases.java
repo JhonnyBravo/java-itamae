@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.service.properties.PropertiesService;
@@ -39,48 +40,63 @@ public class ErrorCases {
   }
 
   /**
-   * path が指定されないまま {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合に
+   * path が指定されないまま {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link NullPointerException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = NullPointerException.class)
   public void dse001() throws Exception {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setOwner(ps.getProperty("owner"));
     model.setGroup(ps.getProperty("group"));
     model.setMode("640");
 
-    final int status = ds.create(model);
-    assertThat(status, is(1));
+    ds.create(model);
   }
 
   /**
-   * path が指定されないまま {@link DirectoryService#delete(DirectoryResourceModel)} を実行した場合に
+   * path が指定されないまま {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link NullPointerException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = NullPointerException.class)
   public void dse002() throws Exception {
     final DirectoryResourceModel model = new DirectoryResourceModel();
-    final int status = ds.delete(model);
-    assertThat(status, is(1));
+    ds.delete(model);
   }
 
   /**
-   * 新しいディレクトリ所有者のユーザ名として、存在しないユーザの名前を指定した場合に
+   * 新しいディレクトリ所有者のユーザ名として、存在しないユーザの名前を指定した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link UserPrincipalNotFoundException} が発生すること。
+   *   <li>ディレクトリが作成され、存在していること。
    * </ul>
    */
-  @Test
+  @Test(expected = UserPrincipalNotFoundException.class)
   public void dse003() throws Exception {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath(path.toFile().getPath());
@@ -88,21 +104,31 @@ public class ErrorCases {
     model.setGroup(ps.getProperty("group"));
     model.setMode("640");
 
-    final int status = ds.create(model);
-    assertThat(status, is(1));
-    assertThat(path.toFile().isDirectory(), is(true));
+    try {
+      ds.create(model);
+    } catch (Exception e) {
+      assertThat(path.toFile().isDirectory(), is(true));
+      throw e;
+    }
   }
 
   /**
-   * 新しいグループ所有者のグループ名として、存在しないグループの名前を指定した場合に
+   * 新しいグループ所有者のグループ名として、存在しないグループの名前を指定した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link UserPrincipalNotFoundException} が発生すること。
+   *   <li>ディレクトリが作成され、存在していること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
-  @Test
+  @Test(expected = UserPrincipalNotFoundException.class)
   public void dse004() throws Exception {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath(path.toFile().getPath());
@@ -110,21 +136,31 @@ public class ErrorCases {
     model.setGroup("NotExist");
     model.setMode("640");
 
-    final int status = ds.create(model);
-    assertThat(status, is(1));
-    assertThat(path.toFile().isDirectory(), is(true));
+    try {
+      ds.create(model);
+    } catch (Exception e) {
+      assertThat(path.toFile().isDirectory(), is(true));
+      throw e;
+    }
   }
 
   /**
-   * 新しいパーミッション設定値として不正なパーミッション値を指定した場合に
+   * 新しいパーミッション設定値として不正なパーミッション値を指定した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link IllegalArgumentException} が発生すること。
+   *   <li>ディレクトリが作成され、存在していること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void dse005() throws Exception {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath(path.toFile().getPath());
@@ -132,8 +168,11 @@ public class ErrorCases {
     model.setGroup(ps.getProperty("group"));
     model.setMode("a40");
 
-    final int status = ds.create(model);
-    assertThat(status, is(1));
-    assertThat(path.toFile().isDirectory(), is(true));
+    try {
+      ds.create(model);
+    } catch (Exception e) {
+      assertThat(path.toFile().isDirectory(), is(true));
+      throw e;
+    }
   }
 }

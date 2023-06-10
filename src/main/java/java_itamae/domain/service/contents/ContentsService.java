@@ -1,48 +1,56 @@
 package java_itamae.domain.service.contents;
 
 import java.util.List;
+import java_itamae.domain.component.contents.ContentsComponent;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.common.BaseService;
 
 /** ファイルの読み書きを操作する。 */
 public interface ContentsService extends BaseService {
   /**
-   * 初期化処理を実行する。
+   * 変数 model へ操作対象とするテキストファイルの情報を収めた {@link ContentsModel} を設定する。
    *
    * @param model 操作対象とするファイルの情報を収めた {@link ContentsModel} を指定する。
    */
   void init(ContentsModel model);
 
   /**
-   * ファイルを読込み、 {@link List} に変換して返す。
+   * テキストファイルを読込み、 {@link String} の {@link List} に変換して返す。
    *
-   * @return contents 変換された {@link List}
-   * @throws Exception {@link Exception}
+   * <ol>
+   *   <li>{@link ContentsComponent#getContents(ContentsModel)} から取得した {@link List} を返り値として返す。
+   *   <li>
+   * </ol>
+   *
+   * @return contents テキストファイルの内容を格納した {@link List} を返す。
+   * @throws Exception ファイルの読込中に発生した例外を投げる。
    */
   List<String> getContents() throws Exception;
 
   /**
-   * ファイルを上書きする。
+   * テキストファイルを上書きする。
+   *
+   * <ol>
+   *   <li>{@link ContentsComponent#updateContents(ContentsModel, List)} から取得した {@link Status}
+   *       を返り値として返す。
+   * </ol>
    *
    * @param contents 書込み対象とする文字列を収めた {@link List} を指定する。
-   * @return status 終了ステータスを返す。
-   *     <ul>
-   *       <li>0: 何も実行せずに正常終了したことを表す
-   *       <li>1: 異常終了したことを表す。
-   *       <li>2: 書込みを実行して正常終了したことを表す。
-   *     </ul>
+   * @return status {@link Status} を返す。
+   * @throws Exception ファイルの書込み中に発生した例外を投げる。
    */
-  int updateContents(List<String> contents);
+  Status updateContents(List<String> contents) throws Exception;
 
   /**
-   * ファイルを空にする。
+   * テキストファイルの内容を空にする。
    *
-   * @return status 終了ステータスを返す。
-   *     <ul>
-   *       <li>0: 何も実行せずに正常終了したことを表す
-   *       <li>1: 異常終了したことを表す。
-   *       <li>2: 削除を実行して正常終了したことを表す。
-   *     </ul>
+   * <ol>
+   *   <li>{@link ContentsComponent#deleteContents(ContentsModel)} から取得した {@link Status} を返り値として返す。
+   * </ol>
+   *
+   * @return status {@link Status} を返す。
+   * @throws Exception ファイルの内容削除中に発生した例外を投げる。
    */
-  int deleteContents();
+  Status deleteContents() throws Exception;
 }

@@ -28,51 +28,80 @@ public class NotExistFile {
   }
 
   /**
-   * {@link ContentsComponent#getContents(ContentsModel)} 実行時に {@link FileNotFoundException}
-   * が送出されること。
+   * 操作対象とするテキストファイルが存在しない場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsComponent#getContents(ContentsModel)} 実行時に {@link FileNotFoundException}
+   *       が発生すること。
+   * </ul>
    */
   @Test(expected = FileNotFoundException.class)
   public void cre001() throws Exception {
     try {
       component.getContents(model);
     } catch (final Exception e) {
-      System.err.println(e);
       throw e;
     }
   }
 
   /**
-   * {@link ContentsComponent#updateContents(ContentsModel, List)} 実行時に
+   * 操作対象とするテキストファイルが存在しない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
-   *   <li>ファイルが新規作成されないこと。
+   *   <li>例外の発生確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsComponent#updateContents(ContentsModel, List)} 実行時に {@link
+   *       FileNotFoundException} が発生すること。
+   *   <li>ファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void cre002() throws Exception {
     final List<String> contents = new ArrayList<>();
     contents.add("書込みテスト");
 
-    final int status = component.updateContents(model, contents);
-    assertThat(status, is(1));
-    assertThat(path.toFile().isFile(), is(false));
+    try {
+      component.updateContents(model, contents);
+    } catch (Exception e) {
+      assertThat(path.toFile().isFile(), is(false));
+      throw e;
+    }
   }
 
   /**
-   * {@link ContentsComponent#deleteContents(ContentsModel)} 実行時に
+   * 操作対象とするテキストファイルが存在しない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
-   *   <li>ファイルが新規作成されないこと。
+   *   <li>例外の発生確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsComponent#deleteContents(ContentsModel)} 実行時に {@link
+   *       FileNotFoundException} が発生すること。
+   *   <li>ファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void cre003() throws Exception {
-    final int status = component.deleteContents(model);
-    assertThat(status, is(1));
-    assertThat(path.toFile().isFile(), is(false));
+    try {
+      component.deleteContents(model);
+    } catch (Exception e) {
+      assertThat(path.toFile().isFile(), is(false));
+      throw e;
+    }
   }
 }

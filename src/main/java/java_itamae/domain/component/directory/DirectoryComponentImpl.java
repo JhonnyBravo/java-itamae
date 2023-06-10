@@ -1,94 +1,85 @@
 package java_itamae.domain.component.directory;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.BiFunction;
+import java_itamae.domain.model.status.Status;
 
 public class DirectoryComponentImpl implements DirectoryComponent {
-  /** {@link DirectoryComponent#create(String, boolean)} */
-  private final transient BiFunction<String, Boolean, Integer> createDirectory =
-      (path, recursive) -> {
-        int status = 0;
-        final Path convertedPath = this.convertToPath(path);
-
-        if (!convertedPath.toFile().isDirectory()) {
-          this.getLogger().info("{} を作成しています......", path);
-
-          try {
-            if (recursive) {
-              Files.createDirectories(convertedPath);
-            } else {
-              Files.createDirectory(convertedPath);
-            }
-            status = 2;
-          } catch (final IOException e) {
-            this.getLogger().warn(e.toString());
-            status = 1;
-          }
-        }
-
-        return status;
-      };
-
-  /** {@link DirectoryComponent#delete(String, boolean)} */
-  private final transient BiFunction<String, Boolean, Integer> deleteDirectory =
-      (path, recursive) -> {
-        int status = 0;
-        final Path convertedPath = this.convertToPath(path);
-
-        if (convertedPath.toFile().isDirectory()) {
-          this.getLogger().info("{} を削除しています......", path);
-
-          try {
-            if (recursive) {
-              status = this.deleteRecursive(path);
-            } else {
-              Files.delete(convertedPath);
-              status = 2;
-            }
-          } catch (final IOException e) {
-            this.getLogger().warn(e.toString());
-            status = 1;
-          }
-        }
-
-        return status;
-      };
-
   @Override
-  public int create(final String path, final boolean recursive) {
-    return this.createDirectory.apply(path, recursive);
+  public Status create(final String path, final boolean recursive) throws Exception {
+    Status status = Status.INIT;
+    final Path convertedPath = this.convertToPath(path);
+
+    if (!convertedPath.toFile().isDirectory()) {
+      this.getLogger().info("{} を作成しています......", path);
+
+      if (recursive) {
+        Files.createDirectories(convertedPath);
+      } else {
+        Files.createDirectory(convertedPath);
+      }
+
+      status = Status.DONE;
+    }
+
+    return status;
   }
 
   @Override
-  public int delete(final String path, final boolean recursive) {
-    return this.deleteDirectory.apply(path, recursive);
-  }
-
-  private int deleteRecursive(final String path) {
-    int status = 0;
+  public Status delete(final String path, final boolean recursive) throws Exception {
+    Status status = Status.INIT;
     final Path convertedPath = this.convertToPath(path);
 
     if (convertedPath.toFile().isDirectory()) {
-      try {
-        for (final File file : convertedPath.toFile().listFiles()) {
-          if (file.isDirectory()) {
-            deleteRecursive(file.getPath());
-          } else {
-            // ディレクトリ配下のファイル群を削除する。
-            Files.delete(file.toPath());
-          }
-        }
+      this.getLogger().info("{} を削除しています......", path);
 
-        // 空になったディレクトリを削除する。
+      if (recursive) {
+        status = this.deleteRecursive(path);
+      } else {
         Files.delete(convertedPath);
-        status = 2;
-      } catch (final IOException e) {
-        this.getLogger().warn(e.toString());
-        status = 1;
+        status = Status.DONE;
       }
+    }
+
+    return status;
+  }
+
+  /**
+   * ディレクトリを一括削除する。
+   *
+   * <ol>
+   *   <li>変数 status へ {@link Status#INIT} を設定する。
+   *   <li>引数 path に指定されたディレクトリのパスが存在するか確認する。
+   *       <ul>
+   *         <li>存在する場合、ディレクトリ配下に存在するファイル及びディレクトリを一括削除する。
+   *         <li>存在しない場合、後続処理へ遷移する。
+   *       </ul>
+   *   <li>空になったディレクトリを削除し、変数 status へ {@link Status#DONE} を設定する。ディレクトリの削除中に例外が発生した場合、例外を投げて異常終了する。
+   *   <li>変数 status を返り値として返す。
+   * </ol>
+   *
+   * @param 操作対象とするディレクトリのパスを指定する。
+   * @return status {@link Status} を返す。
+   * @throws Exception ディレクトリの削除中に発生した例外を投げる。
+   */
+  private Status deleteRecursive(final String path) throws Exception {
+    Status status = Status.INIT;
+    final Path convertedPath = this.convertToPath(path);
+
+    if (convertedPath.toFile().isDirectory()) {
+      for (final File file : convertedPath.toFile().listFiles()) {
+        if (file.isDirectory()) {
+          deleteRecursive(file.getPath());
+        } else {
+          // ディレクトリ配下のファイル群を削除する。
+          Files.delete(file.toPath());
+        }
+      }
+
+      // 空になったディレクトリを削除する。
+      Files.delete(convertedPath);
+      status = Status.DONE;
     }
 
     return status;

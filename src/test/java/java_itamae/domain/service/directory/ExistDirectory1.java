@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java_itamae.domain.common.IsWindows;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.properties.PropertiesService;
 import java_itamae.domain.service.properties.PropertiesServiceImpl;
 import org.junit.After;
@@ -53,11 +54,16 @@ public class ExistDirectory1 {
   }
 
   /**
-   * path に指定したディレクトリが既に存在する場合に
+   * 操作対象とするディレクトリが既に存在する場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>操作が実行されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
@@ -65,16 +71,21 @@ public class ExistDirectory1 {
     final DirectoryResourceModel model = new DirectoryResourceModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = ds.create(model);
-    assertThat(status, is(0));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   * 新しいディレクトリ所有者のユーザ名と、現在設定されているディレクトリ所有者のユーザ名が同一である場合に
+   * 新しいディレクトリ所有者のユーザ名と、現在設定されているディレクトリ所有者のユーザ名が同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>所有者が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
@@ -83,16 +94,21 @@ public class ExistDirectory1 {
     model.setPath(path.toFile().getPath());
     model.setOwner(ps.getProperty("owner"));
 
-    final int status = ds.create(model);
-    assertThat(status, is(0));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   * 新しいグループ所有者のグループ名と、現在設定されているグループ所有者のグループ名が同一である場合に
+   * 新しいグループ所有者のグループ名と、現在設定されているグループ所有者のグループ名が同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>グループ所有者が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
@@ -102,16 +118,21 @@ public class ExistDirectory1 {
     model.setPath(path.toFile().getPath());
     model.setGroup(ps.getProperty("group"));
 
-    final int status = ds.create(model);
-    assertThat(status, is(0));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   * 新しいパーミッション設定値と、現在設定されているパーミッション設定値が同一である場合に
+   * 新しいパーミッション設定値と、現在設定されているパーミッション設定値が同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>パーミッション設定値が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
@@ -121,7 +142,7 @@ public class ExistDirectory1 {
     model.setPath(path.toFile().getPath());
     model.setMode("640");
 
-    final int status = ds.create(model);
-    assertThat(status, is(0));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.INIT));
   }
 }

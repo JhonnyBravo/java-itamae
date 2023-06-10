@@ -4,6 +4,7 @@ import java.util.List;
 import java_itamae.domain.component.contents.ContentsComponent;
 import java_itamae.domain.component.contents.ContentsComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 
 public class ContentsServiceImpl implements ContentsService {
   /** {@link ContentsModel} */
@@ -27,12 +28,12 @@ public class ContentsServiceImpl implements ContentsService {
   }
 
   @Override
-  public int updateContents(final List<String> contents) {
+  public Status updateContents(final List<String> contents) throws Exception {
     return component.updateContents(this.model, contents);
   }
 
   @Override
-  public int deleteContents() {
+  public Status deleteContents() throws Exception {
     return component.deleteContents(this.model);
   }
 }
