@@ -4,8 +4,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.file.FileSystems;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.model.status.Status;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,34 +43,50 @@ public class NotExistParentDirectory {
   }
 
   /**
-   * recursive を指定せずに {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合に
+   * recursive を指定せずに {@link DirectoryService#create(DirectoryResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>ディレクトリが作成されないこと。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link NoSuchFileException} が発生すること。
+   *   <li>ディレクトリが作成されず、存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = NoSuchFileException.class)
   public void dse001() throws Exception {
-    final int status = ds.create(model);
-    assertThat(status, is(1));
-    assertThat(rootDir.toFile().isDirectory(), is(false));
+    try {
+      ds.create(model);
+    } catch (Exception e) {
+      assertThat(rootDir.toFile().isDirectory(), is(false));
+      throw e;
+    }
   }
 
   /**
-   * recursive に true を設定した場合に
+   * recursive に true を設定した場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link DirectoryService#create(DirectoryResourceModel)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
    *
    * <ul>
    *   <li>親ディレクトリも含めてディレクトリが作成されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>返り値として {@link Status#DONE} が返されること。
    * </ul>
    */
   @Test
   public void dss001() throws Exception {
     model.setRecursive("true");
-    final int status = ds.create(model);
-    assertThat(status, is(2));
+    final Status status = ds.create(model);
+    assertThat(status, is(Status.DONE));
 
     // parent/sub1/sub2
     assertThat(path.toFile().isDirectory(), is(true));

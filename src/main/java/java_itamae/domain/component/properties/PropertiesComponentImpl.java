@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,9 +34,10 @@ public class PropertiesComponentImpl implements PropertiesComponent {
 
   @Override
   @SuppressWarnings("unused")
-  public int updateProperties(
-      final ContentsModel model, final Map<String, String> map, final String comment) {
-    int status = 0;
+  public Status updateProperties(
+      final ContentsModel model, final Map<String, String> map, final String comment)
+      throws Exception {
+    Status status = Status.INIT;
     final Properties properties = new Properties();
 
     map.entrySet()
@@ -46,18 +48,17 @@ public class PropertiesComponentImpl implements PropertiesComponent {
 
     try (Writer writer = this.getWriter(model)) {
       properties.store(writer, comment);
-      status = 2;
+      status = Status.DONE;
     } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+      throw e;
     }
 
     return status;
   }
 
   @Override
-  public int deleteProperties(final ContentsModel model, final String comment) {
-    int status = 0;
+  public Status deleteProperties(final ContentsModel model, final String comment) throws Exception {
+    Status status = Status.INIT;
 
     try {
       final Map<String, String> curProperties = this.getProperties(model);
@@ -67,15 +68,13 @@ public class PropertiesComponentImpl implements PropertiesComponent {
 
         try (Writer writer = this.getWriter(model)) {
           properties.store(writer, comment);
-          status = 2;
+          status = Status.DONE;
         } catch (final Exception e) {
-          this.getLogger().warn(e.toString());
-          status = 1;
+          throw e;
         }
       }
     } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+      throw e;
     }
 
     return status;

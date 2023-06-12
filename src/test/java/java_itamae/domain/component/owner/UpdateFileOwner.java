@@ -3,10 +3,13 @@ package java_itamae.domain.component.owner;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.properties.PropertiesService;
 import org.junit.After;
 import org.junit.Before;
@@ -43,72 +46,99 @@ public class UpdateFileOwner {
   }
 
   /**
-   *
+   * 以下の検証を実施する。
    *
    * <ul>
-   *   <li>ファイル所有者が変更されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link OwnerComponent#updateOwner(String, String)} 実行後の返り値の確認。
+   *   <li>所有者の変更確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ファイル所有者が変更されていること。
    * </ul>
    */
   @Test
   public void ors001() throws Exception {
     final UserPrincipal curOwner = component.getOwner(path.toFile().getPath());
-    final int status = component.updateOwner(path.toFile().getPath(), owner);
+    final Status status = component.updateOwner(path.toFile().getPath(), owner);
     final UserPrincipal newOwner = component.getOwner(path.toFile().getPath());
 
-    assertThat(status, is(2));
+    assertThat(status, is(Status.DONE));
     assertThat(curOwner.equals(newOwner), is(false));
   }
 
   /**
-   * 新しく設定するファイル所有者のユーザ名と、現在設定されているファイル所有者のユーザ名が同一である場合に
+   * 新しく設定するファイル所有者のユーザ名と、現在設定されているファイル所有者のユーザ名が同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>所有者が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link OwnerComponent#updateOwner(String, String)} 実行後の返り値の確認。
+   *   <li>所有者の変更確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
+   *   <li>ディレクトリ所有者が変更されていないこと。
    * </ul>
    */
   @Test
   public void ors002() throws Exception {
     component.updateOwner(path.toFile().getPath(), owner);
     final UserPrincipal curOwner = component.getOwner(path.toFile().getPath());
-    final int status = component.updateOwner(path.toFile().getPath(), owner);
+    final Status status = component.updateOwner(path.toFile().getPath(), owner);
     final UserPrincipal newOwner = component.getOwner(path.toFile().getPath());
 
-    assertThat(status, is(0));
+    assertThat(status, is(Status.INIT));
     assertThat(curOwner.equals(newOwner), is(true));
   }
 
   /**
-   * 新しく設定するファイル所有者のユーザ名として、存在しないユーザーの名前を指定した場合に
+   * 新しく設定するファイル所有者のユーザ名として、存在しないユーザーの名前を指定した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>所有者が変更されないこと。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>所有者の変更確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link UserPrincipalNotFoundException} が発生すること。
+   *   <li>ディレクトリ所有者が変更されていないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = UserPrincipalNotFoundException.class)
   public void ore001() throws Exception {
     final UserPrincipal curOwner = component.getOwner(path.toFile().getPath());
-    final int status = component.updateOwner(path.toFile().getPath(), "NotExist");
-    final UserPrincipal newOwner = component.getOwner(path.toFile().getPath());
 
-    assertThat(status, is(1));
-    assertThat(curOwner.equals(newOwner), is(true));
+    try {
+      component.updateOwner(path.toFile().getPath(), "NotExist");
+    } catch (Exception e) {
+      final UserPrincipal newOwner = component.getOwner(path.toFile().getPath());
+      assertThat(curOwner.equals(newOwner), is(true));
+      throw e;
+    }
   }
 
   /**
-   * 存在しないファイルの所有者を変更しようとした場合に
+   * 存在しないファイルの所有者を変更しようとした場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link FileNotFoundException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void ore002() throws Exception {
-    final int status = component.updateOwner("NotExist", owner);
-    assertThat(status, is(1));
+    component.updateOwner("NotExist", owner);
   }
 }

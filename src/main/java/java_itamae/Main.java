@@ -11,6 +11,7 @@ import java_itamae.app.properties.ContentsModelValidator;
 import java_itamae.app.properties.GetProperties;
 import java_itamae.app.template.TemplateResourceImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -56,11 +57,11 @@ public class Main {
     final ContentsModel cliArgs = new ContentsModel();
 
     int option;
-    int status = 0;
+    Status status = Status.INIT;
 
     if (args.length == 0) {
       usage.run();
-      status = 1;
+      status = Status.ERROR;
     }
 
     while ((option = options.getopt()) != -1) {
@@ -73,14 +74,14 @@ public class Main {
           break;
         default:
           usage.run();
-          status = 1;
+          status = Status.ERROR;
           break;
       }
     }
 
     if (!validator.test(cliArgs)) {
-      status = 1;
-      System.exit(status);
+      status = Status.ERROR;
+      System.exit(status.getValue());
     }
 
     // プロパティファイルからキーと値を読み込む。
@@ -101,9 +102,9 @@ public class Main {
     } else {
       final Logger logger = LoggerFactory.getLogger(Main.class);
       logger.warn("resource_name が指定されていない、または不正な値です。");
-      status = 1;
+      status = Status.ERROR;
     }
 
-    System.exit(status);
+    System.exit(status.getValue());
   }
 }

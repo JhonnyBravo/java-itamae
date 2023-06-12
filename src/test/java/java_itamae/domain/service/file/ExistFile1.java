@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java_itamae.domain.common.IsWindows;
 import java_itamae.domain.model.contents.ContentsModel;
 import java_itamae.domain.model.file.FileResourceModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.properties.PropertiesService;
 import org.junit.After;
 import org.junit.Before;
@@ -55,11 +56,16 @@ public class ExistFile1 {
   }
 
   /**
-   * 操作対象とするファイルが既に存在する場合に
+   * 操作対象とするファイルが既に存在する場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>操作が実行されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
@@ -67,16 +73,21 @@ public class ExistFile1 {
     final FileResourceModel model = new FileResourceModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = fs.create(model);
-    assertThat(status, is(0));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   * 新しいファイル所有者のユーザ名と、現在ファイルに設定されている所有者のユーザ名が同一である場合に
+   * 新しいファイル所有者のユーザ名と、現在ファイルに設定されている所有者のユーザ名が同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイル所有者が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   @Test
@@ -85,16 +96,21 @@ public class ExistFile1 {
     model.setPath(path.toFile().getPath());
     model.setOwner(ps.getProperty("owner"));
 
-    final int status = fs.create(model);
-    assertThat(status, is(0));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   * 新しいグループ所有者のグループ名と、現在ファイルに設定されているグループ所有者のグループ名が同一である場合に
+   * 新しいグループ所有者のグループ名と、現在ファイルに設定されているグループ所有者のグループ名が同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>グループ所有者が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない")
@@ -104,16 +120,21 @@ public class ExistFile1 {
     model.setPath(path.toFile().getPath());
     model.setGroup(ps.getProperty("group"));
 
-    final int status = fs.create(model);
-    assertThat(status, is(0));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   * 新しいパーミッション設定値と、現在ファイルに設定されているパーミッション設定値が同一である場合に
+   * 新しいパーミッション設定値と、現在ファイルに設定されているパーミッション設定値が同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>パーミッション設定値が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link FileService#create(FileResourceModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない")
@@ -123,16 +144,23 @@ public class ExistFile1 {
     model.setPath(path.toFile().getPath());
     model.setMode("640");
 
-    final int status = fs.create(model);
-    assertThat(status, is(0));
+    final Status status = fs.create(model);
+    assertThat(status, is(Status.INIT));
   }
 
   /**
-   *
+   * 以下の検証を実施する。
    *
    * <ul>
-   *   <li>{@link FileService#delete(FileResourceModel)} 実行時にファイルが削除されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link FileService#delete(FileResourceModel)} 実行後の返り値の確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ファイルが存在しないこと。
    * </ul>
    */
   @Test
@@ -140,8 +168,8 @@ public class ExistFile1 {
     final FileResourceModel model = new FileResourceModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = fs.delete(model);
-    assertThat(status, is(2));
+    final Status status = fs.delete(model);
+    assertThat(status, is(Status.DONE));
     assertThat(path.toFile().isFile(), is(false));
   }
 }

@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.UserPrincipalLookupService;
+import java_itamae.domain.model.status.Status;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,26 +33,21 @@ public class GroupComponentImpl implements GroupComponent {
   }
 
   @Override
-  public int updateGroup(final String path, final String group) {
-    int status = 0;
+  public Status updateGroup(final String path, final String group) throws Exception {
+    Status status = Status.INIT;
 
-    try {
-      final GroupPrincipal curGroup = getGroup(path);
-      final GroupPrincipal newGroup = createGroup(group);
+    final GroupPrincipal curGroup = getGroup(path);
+    final GroupPrincipal newGroup = createGroup(group);
 
-      if (!curGroup.equals(newGroup)) {
-        this.getLogger().info("グループ所有者を変更しています......");
+    if (!curGroup.equals(newGroup)) {
+      this.getLogger().info("グループ所有者を変更しています......");
 
-        final Path convertedPath = this.convertToPath(path);
-        final PosixFileAttributeView pfav =
-            Files.getFileAttributeView(convertedPath, PosixFileAttributeView.class);
-        pfav.setGroup(newGroup);
+      final Path convertedPath = this.convertToPath(path);
+      final PosixFileAttributeView pfav =
+          Files.getFileAttributeView(convertedPath, PosixFileAttributeView.class);
+      pfav.setGroup(newGroup);
 
-        status = 2;
-      }
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+      status = Status.DONE;
     }
 
     return status;

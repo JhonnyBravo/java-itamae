@@ -2,9 +2,9 @@ package java_itamae.domain.service.properties;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java_itamae.domain.component.properties.PropertiesComponent;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,57 +30,38 @@ public class PropertiesServiceImpl implements PropertiesService {
     final Map<String, String> properties = component.getProperties(this.model);
 
     if (!properties.containsKey(key)) {
-      throw new Exception(key + " が見つかりません。");
+      throw new IllegalArgumentException(key + " が見つかりません。");
     }
 
     return properties.get(key);
   }
 
   @Override
-  public int createProperty(final String key, final String value) {
-    int status = 0;
+  public Status createProperty(final String key, final String value) throws Exception {
+    Status status = Status.INIT;
+    Map<String, String> properties = component.getProperties(model);
 
-    Map<String, String> properties = new ConcurrentHashMap<>();
-
-    try {
-      properties = component.getProperties(model);
-
-      if (properties.containsKey(key)) {
-        this.getLogger().warn("{} は登録済みです。", key);
-        status = 1;
-      }
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+    if (properties.containsKey(key)) {
+      throw new IllegalArgumentException(key + " は登録済みです。");
     }
 
-    if (status != 1) {
-      properties.put(key, value);
-      final String fileName = new File(model.getPath()).getName();
-      status = component.updateProperties(model, properties, fileName);
-    }
+    properties.put(key, value);
+    final String fileName = new File(model.getPath()).getName();
+    status = component.updateProperties(model, properties, fileName);
 
     return status;
   }
 
   @Override
-  public int updateProperty(final String key, final String value) {
-    int status = 0;
-    Map<String, String> properties = new ConcurrentHashMap<>();
+  public Status updateProperty(final String key, final String value) throws Exception {
+    Status status = Status.INIT;
+    Map<String, String> properties = component.getProperties(model);
 
-    try {
-      properties = component.getProperties(model);
-
-      if (!properties.containsKey(key)) {
-        this.getLogger().warn("{} が見つかりません。", key);
-        status = 1;
-      }
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+    if (!properties.containsKey(key)) {
+      throw new IllegalArgumentException(key + " が見つかりません");
     }
 
-    if (status != 1 && !value.equals(properties.get(key))) {
+    if (!value.equals(properties.get(key))) {
       final String fileName = new File(model.getPath()).getName();
       properties.put(key, value);
       status = component.updateProperties(model, properties, fileName);
@@ -90,26 +71,17 @@ public class PropertiesServiceImpl implements PropertiesService {
   }
 
   @Override
-  public int deleteProperty(final String key) {
-    int status = 0;
-    Map<String, String> properties = new ConcurrentHashMap<>();
+  public Status deleteProperty(final String key) throws Exception {
+    Status status = Status.INIT;
+    Map<String, String> properties = component.getProperties(this.model);
 
-    try {
-      properties = component.getProperties(this.model);
-
-      if (!properties.containsKey(key)) {
-        this.getLogger().warn("{} が見つかりません。", key);
-        status = 1;
-      }
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+    if (!properties.containsKey(key)) {
+      throw new IllegalArgumentException(key + " が見つかりません。");
     }
 
-    if (status != 1) {
-      final String fileName = new File(model.getPath()).getName();
-      status = component.updateProperties(model, properties, fileName);
-    }
+    final String fileName = new File(model.getPath()).getName();
+    properties.remove(key);
+    status = component.updateProperties(model, properties, fileName);
 
     return status;
   }

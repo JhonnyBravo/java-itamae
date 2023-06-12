@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.model.template.TemplateResourceModel;
 import java_itamae.domain.service.contents.ContentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +67,12 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
    *       <li>1: 異常終了したことを表す。
    *       <li>2: 書込みを実行して正常終了したことを表す。
    *     </ul>
+   *
+   * @throws Exception
    */
-  private int updateContents(final TemplateResourceModel model, final List<String> contents) {
-    int status = 0;
+  private Status updateContents(final TemplateResourceModel model, final List<String> contents)
+      throws Exception {
+    Status status = Status.INIT;
 
     final ContentsModel targetModel = new ContentsModel();
     targetModel.setPath(model.getPath());
@@ -87,8 +91,8 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
 
   @Override
   @SuppressWarnings("unused")
-  public int apply(final Map<String, String> properties) {
-    int status = 0;
+  public Status apply(final Map<String, String> properties) {
+    Status status = Status.INIT;
     final TemplateResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
@@ -98,10 +102,10 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
       } catch (final Exception e) {
         final String message = e.toString();
         this.getLogger().warn("{}", message);
-        status = 1;
+        status = Status.ERROR;
       }
     } else {
-      status = 1;
+      status = Status.ERROR;
     }
 
     return status;

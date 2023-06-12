@@ -3,6 +3,7 @@ package java_itamae.domain.service.contents;
 import java.util.List;
 import java_itamae.domain.component.contents.ContentsComponent;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +25,12 @@ public class ContentsServiceImpl implements ContentsService {
   }
 
   @Override
-  public int updateContents(final List<String> contents) {
+  public Status updateContents(final List<String> contents) throws Exception {
     return component.updateContents(this.model, contents);
   }
 
   @Override
-  public int deleteContents() {
+  public Status deleteContents() throws Exception {
     return component.deleteContents(this.model);
   }
 }

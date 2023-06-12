@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java_itamae.domain.common.GetTestContents;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +42,20 @@ public class NotEmptyFile {
     file.delete();
   }
 
-  /** {@link ContentsService#getContents()} 実行時にファイルを読込み、内容を {@link List} に変換して返すこと。 */
+  /**
+   * 操作対象とするテキストファイルの内容が空ではない場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link ContentsService#getContents()} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsService#getContents()} から取得した {@link List} の要素数と、テキストファイルの行数が一致すること。
+   *   <li>{@link ContentsService#getContents()} から取得した {@link List} の要素がテスト用データと一致すること。
+   * </ul>
+   */
   @Test
   public void css001() throws Exception {
     final List<String> newContents = getTestContents.get();
@@ -55,28 +69,43 @@ public class NotEmptyFile {
   }
 
   /**
-   * {@link ContentsService#deleteContents()} 実行時に
+   * 操作対象とするテキストファイルの内容が空ではない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルの内容が全削除されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link ContentsService#deleteContents()} 実行後の返り値の確認。
+   *   <li>テキストファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>テキストファイルの内容が空であること。
    * </ul>
    */
   @Test
   public void css002() throws Exception {
-    final int status = service.deleteContents();
-    assertThat(status, is(2));
+    final Status status = service.deleteContents();
+    assertThat(status, is(Status.DONE));
 
     final List<String> contents = service.getContents();
     assertThat(contents.size(), is(0));
   }
 
   /**
-   * {@link ContentsService#updateContents(List)} 実行時に
+   * 操作対象とするテキストファイルの内容が空ではない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルの内容が更新されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link ContentsService#updateContents(List)} 実行後の返り値の確認。
+   *   <li>テキストファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>テキストファイルの行数がテスト用データの要素数と一致すること。
+   *   <li>テキストファイルの内容がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -84,8 +113,8 @@ public class NotEmptyFile {
     final List<String> newContents = new ArrayList<>();
     newContents.add("update");
 
-    final int status = service.updateContents(newContents);
-    assertThat(status, is(2));
+    final Status status = service.updateContents(newContents);
+    assertThat(status, is(Status.DONE));
 
     final List<String> curContents = service.getContents();
     assertThat(curContents.size(), is(1));
