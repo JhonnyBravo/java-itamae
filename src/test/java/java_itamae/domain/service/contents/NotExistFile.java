@@ -37,44 +37,75 @@ public class NotExistFile {
     service.init(model);
   }
 
-  /** {@link ContentsService#getContents()} 実行時に {@link FileNotFoundException} が送出されること。 */
+  /**
+   * ファイルが存在しない場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsService#getContents()} 実行時に {@link FileNotFoundException} が発生すること。
+   * </ul>
+   */
   @Test(expected = FileNotFoundException.class)
   public void cse001() throws Exception {
     try {
       service.getContents();
     } catch (final Exception e) {
-      System.err.println(e);
       throw e;
     }
   }
 
   /**
-   * {@link ContentsService#deleteContents()} 実行時に
+   * ファイルが存在しない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsService#deleteContents()} 実行時に {@link FileNotFoundException} が発生すること。
+   *   <li>テキストファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void cse002() throws Exception {
-    final int status = service.deleteContents();
-    assertThat(status, is(1));
-    assertThat(file.isFile(), is(false));
+    try {
+      service.deleteContents();
+    } catch (Exception e) {
+      assertThat(file.isFile(), is(false));
+      throw e;
+    }
   }
 
   /**
-   * {@link ContentsService#updateContents(List)} 実行時に
+   * ファイルが存在しない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>ファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link ContentsService#updateContents(List)} 実行時に {@link FileNotFoundException} が発生すること。
+   *   <li>テキストファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void cse003() throws Exception {
-    final int status = service.updateContents(getTestContents.get());
-    assertThat(status, is(1));
-    assertThat(file.isFile(), is(false));
+    try {
+      service.updateContents(getTestContents.get());
+    } catch (Exception e) {
+      assertThat(file.isFile(), is(false));
+      throw e;
+    }
   }
 }

@@ -1,9 +1,7 @@
 package java_itamae.domain.component.mode;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import jakarta.inject.Inject;
+import java.io.FileNotFoundException;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,30 +15,36 @@ public class ErrorCases1 {
   public WeldInitiator weld = WeldInitiator.from(ModeComponentImpl.class).inject(this).build();
 
   /**
-   * 存在しないディレクトリのパーミッション設定値を変更しようとした場合に
+   * 存在しないディレクトリのパーミッション設定値を変更しようとした場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link FileNotFoundException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void mre001() throws Exception {
-    final int status = component.updateMode("NotExist", "640");
-    assertThat(status, is(1));
+    component.updateMode("NotExist", "640");
   }
 
   /**
-   * 存在しないファイルのパーミッション設定値を変更しようとした場合に
+   * 存在しないファイルのパーミッション設定値を変更しようとした場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <ul>
+   *   <li>{@link FileNotFoundException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = FileNotFoundException.class)
   public void mre002() throws Exception {
-    final int status = component.updateMode("NotExist.txt", "640");
-    assertThat(status, is(1));
+    component.updateMode("NotExist.txt", "640");
   }
 }

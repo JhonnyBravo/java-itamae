@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
+import java_itamae.domain.model.status.Status;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
@@ -68,39 +69,53 @@ public class UpdateDirectoryMode {
   }
 
   /**
-   *
+   * 以下の検証を実施する。
    *
    * <ul>
+   *   <li>{@link ModeComponent#updateMode(String, String)} 実行後の返り値の確認。
+   *   <li>ディレクトリのパーミッション値変更確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
    *   <li>ディレクトリのパーミッション設定値が変更されること。
-   *   <li>終了ステータスが 2 であること。
    * </ul>
    */
   @Theory
   public void mrs001(String mode) throws Exception {
     final Set<PosixFilePermission> curPermission = component.getMode(path.toFile().getPath());
-    final int status = component.updateMode(path.toFile().getPath(), mode);
+    final Status status = component.updateMode(path.toFile().getPath(), mode);
     final Set<PosixFilePermission> newPermission = component.getMode(path.toFile().getPath());
 
-    assertThat(status, is(2));
+    assertThat(status, is(Status.DONE));
     assertThat(curPermission.equals(newPermission), is(false));
   }
 
   /**
-   * 新しく設定するパーミッション設定値が、現在設定されているパーミッション設定値と同一である場合に
+   * 新しく設定するパーミッション設定値が、現在設定されているパーミッション設定値と同一である場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>パーミッション設定値が変更されないこと。
-   *   <li>終了ステータスが 0 であること。
+   *   <li>{@link ModeComponent#updateMode(String, String)} 実行後の返り値の確認。
+   *   <li>ディレクトリのパーミッション値変更確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#INIT} が返されること。
+   *   <li>パーミッション設定値が変更されていないこと。
    * </ul>
    */
   @Theory
   public void mrs002(String mode) throws Exception {
     component.updateMode(path.toFile().getPath(), mode);
     final Set<PosixFilePermission> curPermission = component.getMode(path.toFile().getPath());
-    final int status = component.updateMode("test_dir", mode);
+    final Status status = component.updateMode("test_dir", mode);
     final Set<PosixFilePermission> newPermission = component.getMode(path.toFile().getPath());
 
-    assertThat(status, is(0));
+    assertThat(status, is(Status.INIT));
     assertThat(curPermission.equals(newPermission), is(true));
   }
 }

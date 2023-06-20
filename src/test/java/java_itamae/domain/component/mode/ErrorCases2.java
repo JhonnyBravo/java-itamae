@@ -2,6 +2,7 @@ package java_itamae.domain.component.mode;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import jakarta.inject.Inject;
 import java.nio.file.Files;
@@ -52,21 +53,35 @@ public class ErrorCases2 {
   }
 
   /**
-   * 不正なパーミッション設定値を指定して {@link ModeComponent#updateMode(String, String)} 実行した場合に
+   * 不正なパーミッション設定値を指定して {@link ModeComponent#updateMode(String, String)} 実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>パーミッション設定値が変更されないこと。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>パーミッション値変更確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link IllegalArgumentException} が発生すること。
+   *   <li>パーミッション設定値が変更されていないこと。
    * </ul>
    */
   @Theory
   public void mre001(String mode) throws Exception {
-    final Set<PosixFilePermission> curPermission = component.getMode(path.toFile().getPath());
-    final int status = component.updateMode(path.toFile().getPath(), mode);
-    final Set<PosixFilePermission> newPermission = component.getMode(path.toFile().getPath());
-
-    assertThat(status, is(1));
-    assertThat(curPermission.equals(newPermission), is(true));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          try {
+            component.updateMode(path.toFile().getPath(), mode);
+          } catch (Exception e) {
+            final Set<PosixFilePermission> curPermission =
+                component.getMode(path.toFile().getPath());
+            final Set<PosixFilePermission> newPermission =
+                component.getMode(path.toFile().getPath());
+            assertThat(curPermission.equals(newPermission), is(true));
+            throw e;
+          }
+        });
   }
 }

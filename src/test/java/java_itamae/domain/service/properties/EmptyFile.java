@@ -8,6 +8,7 @@ import java.io.File;
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.component.properties.PropertiesComponentImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
@@ -38,66 +39,85 @@ public class EmptyFile {
     file.delete();
   }
 
-  /** {@link PropertiesService#getProperty(String)} 実行時に {@link Exception} が送出されること。 */
-  @Test(expected = Exception.class)
+  /**
+   * プロパティファイルが空である場合に {@link PropertiesService#createProperty(String, String)} を実行した場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link IllegalArgumentException} が発生すること。
+   * </ul>
+   */
+  @Test(expected = IllegalArgumentException.class)
   public void pse001() throws Exception {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
     service.init(model);
-
-    try {
-      service.getProperty("test");
-    } catch (final Exception e) {
-      System.err.println(e);
-      throw e;
-    }
+    service.getProperty("test");
   }
 
   /**
-   * {@link PropertiesService#updateProperty(String, String)} 実行時に
+   * プロパティファイルが空である場合に {@link PropertiesService#updateProperty(String, String)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link IllegalArgumentException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void pse002() throws Exception {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
     service.init(model);
-
-    final int status = service.updateProperty("test", "更新テスト");
-    assertThat(status, is(1));
+    service.updateProperty("test", "更新テスト");
   }
 
   /**
-   * {@link PropertiesService#deleteProperty(String)} 実行時に
+   * プロパティファイルが空である場合に {@link PropertiesService#deleteProperty(String)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link IllegalArgumentException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void pse003() throws Exception {
     final ContentsModel model = new ContentsModel();
     model.setPath(file.getPath());
 
     service.init(model);
-
-    final int status = service.deleteProperty("test");
-    assertThat(status, is(1));
+    service.deleteProperty("test");
   }
 
   /**
-   * {@link PropertiesService#createProperty(String, String)} 実行時に
+   * プロパティファイルが空である場合に {@link PropertiesService#createProperty(String, String)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>プロパティファイルへの書込みができること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>プロパティファイルへの書込んだプロパティの値がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -106,17 +126,24 @@ public class EmptyFile {
     model.setPath(file.getPath());
 
     service.init(model);
-    final int status = service.createProperty("test", "登録テスト");
-    assertThat(status, is(2));
+    final Status status = service.createProperty("test", "登録テスト");
+    assertThat(status, is(Status.DONE));
     assertThat(service.getProperty("test"), is("登録テスト"));
   }
 
   /**
-   * 文字エンコーディングを指定して {@link PropertiesService#createProperty(String, String)} を実行した場合に
+   * 文字エンコーディングを指定して {@link PropertiesService#createProperty(String, String)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>プロパティファイルへの書込みができること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>プロパティファイルへの書込んだプロパティの値がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -126,8 +153,8 @@ public class EmptyFile {
     model.setEncoding(getTestEncoding.get());
 
     service.init(model);
-    final int status = service.createProperty("test", "登録テスト");
-    assertThat(status, is(2));
+    final Status status = service.createProperty("test", "登録テスト");
+    assertThat(status, is(Status.DONE));
     assertThat(service.getProperty("test"), is("登録テスト"));
   }
 }

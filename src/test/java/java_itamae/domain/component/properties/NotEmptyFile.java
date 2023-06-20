@@ -11,6 +11,7 @@ import java.util.Map;
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.common.GetTestProperties;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
@@ -48,8 +49,20 @@ public class NotEmptyFile {
   }
 
   /**
-   * {@link PropertiesComponent#getProperties(ContentsModel)} 実行時にプロパティファイルの内容が {@link Map}
-   * に変換されて返されること。
+   * 操作対象とするプロパティファイルの内容が空ではない場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link PropertiesComponent#getProperties(ContentsModel)} 実行後の返り値の確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link PropertiesComponent#getProperties(ContentsModel)} から取得した {@link Map}
+   *       の要素数がプロパティファイルに記述されているキーの数と一致すること。
+   *   <li>{@link PropertiesComponent#getProperties(ContentsModel)} から取得した {@link Map}
+   *       のキーと値がプロパティファイルに記述されているキーと値に一致すること。
+   * </ul>
    */
   @Test
   public void prs001() throws Exception {
@@ -65,11 +78,19 @@ public class NotEmptyFile {
   }
 
   /**
-   * {@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行時に
+   * 操作対象とするプロパティファイルの内容が空ではない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>プロパティファイルの上書きができること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行後の返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>プロパティファイルに書き込まれたキーの数がテスト用データと一致すること。
+   *   <li>プロパティファイルに書き込まれたキーと値がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -80,8 +101,8 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = component.updateProperties(model, newProps, model.getPath());
-    assertThat(status, is(2));
+    final Status status = component.updateProperties(model, newProps, model.getPath());
+    assertThat(status, is(Status.DONE));
 
     final Map<String, String> curProps = component.getProperties(model);
     assertThat(curProps.size(), is(1));
@@ -90,11 +111,19 @@ public class NotEmptyFile {
 
   /**
    * 文字エンコーディングを指定して {@link PropertiesComponent#updateProperties(ContentsModel, Map, String)}
-   * を実行した場合に
+   * を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>プロパティファイルの上書きができること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link PropertiesComponent#updateProperties(ContentsModel, Map, String)} 実行後の返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>プロパティファイルへ書き込まれたキーの数がテスト用データと一致すること。
+   *   <li>プロパティファイルへ書き込まれたキーと値がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -106,8 +135,8 @@ public class NotEmptyFile {
     model.setPath(path.toFile().getPath());
     model.setEncoding(getTestEncoding.get());
 
-    final int status = component.updateProperties(model, newProps, model.getPath());
-    assertThat(status, is(2));
+    final Status status = component.updateProperties(model, newProps, model.getPath());
+    assertThat(status, is(Status.DONE));
 
     final Map<String, String> curProps = component.getProperties(model);
     assertThat(curProps.size(), is(1));
@@ -115,11 +144,18 @@ public class NotEmptyFile {
   }
 
   /**
-   * {@link PropertiesComponent#deleteProperties(ContentsModel, String)} 実行時に
+   * 操作対象とするプロパティファイルの内容が空ではない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>プロパティファイルを空にできること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link PropertiesComponent#deleteProperties(ContentsModel, String)} 実行後の返り値の確認。
+   *   <li>プロパティファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>プロパティファイルからキーと値が削除されていること。
    * </ul>
    */
   @Test
@@ -127,8 +163,8 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = component.deleteProperties(model, model.getPath());
-    assertThat(status, is(2));
+    final Status status = component.deleteProperties(model, model.getPath());
+    assertThat(status, is(Status.DONE));
 
     final Map<String, String> properties = component.getProperties(model);
     assertThat(properties.size(), is(0));

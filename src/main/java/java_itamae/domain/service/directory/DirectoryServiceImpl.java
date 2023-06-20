@@ -6,6 +6,7 @@ import java_itamae.domain.component.group.GroupComponent;
 import java_itamae.domain.component.mode.ModeComponent;
 import java_itamae.domain.component.owner.OwnerComponent;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.model.status.Status;
 
 public class DirectoryServiceImpl implements DirectoryService {
   /** {@link DirectoryComponent} のインスタンス */
@@ -19,26 +20,21 @@ public class DirectoryServiceImpl implements DirectoryService {
 
   @SuppressWarnings("unused")
   @Override
-  public int create(final DirectoryResourceModel model) {
-    int status = 0;
+  public Status create(final DirectoryResourceModel model) throws Exception {
+    Status status = Status.INIT;
 
-    try {
-      status = directory.create(model.getPath(), model.isRecursive());
+    status = directory.create(model.getPath(), model.isRecursive());
 
-      if (status != 1 && model.getOwner() != null) {
-        status = owner.updateOwner(model.getPath(), model.getOwner());
-      }
+    if (status != Status.ERROR && model.getOwner() != null) {
+      status = owner.updateOwner(model.getPath(), model.getOwner());
+    }
 
-      if (status != 1 && model.getGroup() != null) {
-        status = group.updateGroup(model.getPath(), model.getGroup());
-      }
+    if (status != Status.ERROR && model.getGroup() != null) {
+      status = group.updateGroup(model.getPath(), model.getGroup());
+    }
 
-      if (status != 1 && model.getMode() != null) {
-        status = mode.updateMode(model.getPath(), model.getMode());
-      }
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
+    if (status != Status.ERROR && model.getMode() != null) {
+      status = mode.updateMode(model.getPath(), model.getMode());
     }
 
     return status;
@@ -46,16 +42,7 @@ public class DirectoryServiceImpl implements DirectoryService {
 
   @SuppressWarnings("unused")
   @Override
-  public int delete(final DirectoryResourceModel model) {
-    int status = 0;
-
-    try {
-      status = directory.delete(model.getPath(), model.isRecursive());
-    } catch (final Exception e) {
-      this.getLogger().warn(e.toString());
-      status = 1;
-    }
-
-    return status;
+  public Status delete(final DirectoryResourceModel model) throws Exception {
+    return directory.delete(model.getPath(), model.isRecursive());
   }
 }

@@ -10,6 +10,7 @@ import java_itamae.app.properties.ContentsModelValidator;
 import java_itamae.app.properties.GetProperties;
 import java_itamae.app.template.TemplateResourceImpl;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class Application {
    *     </ul>
    */
   @SuppressWarnings("unused")
-  public int main(final String[] args) {
+  public Status main(final String[] args) {
     final LongOpt[] longopts = new LongOpt[2];
     longopts[0] = new LongOpt("path", LongOpt.REQUIRED_ARGUMENT, null, 'p');
     longopts[1] = new LongOpt("encoding", LongOpt.REQUIRED_ARGUMENT, null, 'e');
@@ -48,11 +49,11 @@ public class Application {
     final ContentsModel cliArgs = new ContentsModel();
 
     int option;
-    int status = 0;
+    Status status = Status.INIT;
 
     if (args.length == 0) {
       usage.run();
-      status = 1;
+      status = Status.ERROR;
     }
 
     while ((option = options.getopt()) != -1) {
@@ -65,13 +66,13 @@ public class Application {
           break;
         default:
           usage.run();
-          status = 1;
+          status = Status.ERROR;
           break;
       }
     }
 
     if (!validator.test(cliArgs)) {
-      status = 1;
+      status = Status.ERROR;
       return status;
     }
 
@@ -90,7 +91,7 @@ public class Application {
     } else {
       final Logger logger = LoggerFactory.getLogger(Application.class);
       logger.warn("resource_name が指定されていない、または不正な値です。");
-      status = 1;
+      status = Status.ERROR;
     }
 
     return status;

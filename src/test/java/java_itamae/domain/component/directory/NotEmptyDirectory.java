@@ -5,11 +5,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java_itamae.domain.model.status.Status;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
@@ -61,37 +63,57 @@ public class NotEmptyDirectory {
   }
 
   /**
-   *
+   * 単一階層のディレクトリ削除の動作検証を実施する。
    *
    * <ul>
-   *   <li>test_dir が削除されていないこと。
-   *   <li>test_dir 配下のファイルが削除されていないこと。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>ディレクトリの存在確認。
+   *   <li>ディレクトリ配下のファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link DirectoryNotEmptyException} が発生すること。
+   *   <li>引数 path に指定されたディレクトリが存在すること。
+   *   <li>引数 path に指定されたディレクトリ配下のファイルが存在すること。
    * </ul>
    */
-  @Test
+  @Test(expected = DirectoryNotEmptyException.class)
   public void dre001() throws Exception {
-    final int status = component.delete(rootDir.toFile().getPath(), false);
-    assertThat(status, is(1));
-    assertThat(rootDir.toFile().isDirectory(), is(true));
-    pathList.forEach(
-        path -> {
-          assertThat(path.toFile().isFile(), is(true));
-        });
+    try {
+      component.delete(rootDir.toFile().getPath(), false);
+    } catch (Exception e) {
+      assertThat(rootDir.toFile().isDirectory(), is(true));
+
+      pathList.forEach(
+          path -> {
+            assertThat(path.toFile().isFile(), is(true));
+          });
+
+      throw e;
+    }
   }
 
   /**
-   *
+   * ディレクトリ一括削除の動作検証を実施する。
    *
    * <ul>
-   *   <li>test_dir が配下のファイルと一緒に削除されること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link DirectoryComponent#delete(String, boolean)} 実行後の返り値の確認。
+   *   <li>ディレクトリの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>引数 path に指定されたディレクトリが存在しないこと。
    * </ul>
    */
   @Test
   public void drs001() throws Exception {
-    final int status = component.delete(rootDir.toFile().getPath(), true);
-    assertThat(status, is(2));
+    final Status status = component.delete(rootDir.toFile().getPath(), true);
+    assertThat(status, is(Status.DONE));
     assertThat(rootDir.toFile().isDirectory(), is(false));
   }
 }

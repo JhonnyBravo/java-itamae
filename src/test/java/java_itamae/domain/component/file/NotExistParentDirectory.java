@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import jakarta.inject.Inject;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Before;
@@ -24,17 +25,27 @@ public class NotExistParentDirectory {
   }
 
   /**
-   *
+   * 以下の検証を実施する。
    *
    * <ul>
-   *   <li>ファイルが作成されないこと。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   *   <li>操作対象とするファイルの存在確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link NoSuchFileException} が投げられること。
+   *   <li>引数 path に指定されたファイルが存在しないこと。
    * </ul>
    */
-  @Test
+  @Test(expected = NoSuchFileException.class)
   public void fre001() throws Exception {
-    final int status = component.create(path.toFile().getPath());
-    assertThat(path.toFile().isFile(), is(false));
-    assertThat(status, is(1));
+    try {
+      component.create(path.toFile().getPath());
+    } catch (Exception e) {
+      assertThat(path.toFile().isFile(), is(false));
+      throw e;
+    }
   }
 }

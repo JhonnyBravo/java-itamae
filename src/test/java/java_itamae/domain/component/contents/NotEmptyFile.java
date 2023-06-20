@@ -11,6 +11,7 @@ import java.util.List;
 import java_itamae.domain.common.GetTestContents;
 import java_itamae.domain.common.GetTestEncoding;
 import java_itamae.domain.model.contents.ContentsModel;
+import java_itamae.domain.model.status.Status;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +48,18 @@ public class NotEmptyFile {
   }
 
   /**
-   * {@link ContentsComponent#getContents(ContentsModel)} 実行時にファイルの内容が {@link List} に変換されて返されること。
+   * 操作対象とするテキストファイルの内容が空ではない場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link ContentsComponent#getContents(ContentsModel)} 実行時に返される {@link List} の内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として返される {@link List} の要素数と、テキストファイルの行数が一致すること。
+   *   <li>返り値として返される {@link List} に格納された文字列群がテスト用データと一致すること。
+   * </ul>
    */
   @Test
   public void crs001() throws Exception {
@@ -65,11 +77,19 @@ public class NotEmptyFile {
   }
 
   /**
-   * {@link ContentsComponent#updateContents(ContentsModel, List)} 実行時に
+   * 操作対象とするテキストファイルの内容が空ではない場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルの内容を上書きできること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>{@link ContentsComponent#updateContents(ContentsModel, List)} 実行後の返り値の確認。
+   *   <li>テキストファイルへの書込みが想定通りに行われていることの確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>テキストファイルへの書込みが想定通りの行数行われていること。
+   *   <li>テキストファイルへ書き込まれた文字列群がテスト用データと一致すること。
    * </ul>
    */
   @Test
@@ -80,30 +100,8 @@ public class NotEmptyFile {
     final List<String> newContents = new ArrayList<>();
     newContents.add("上書きテスト");
 
-    final int status = component.updateContents(model, newContents);
-    assertThat(status, is(2));
-
-    final List<String> curContents = component.getContents(model);
-    assertThat(curContents.size(), is(1));
-
-    for (int i = 0; i < curContents.size(); i++) {
-      assertThat(curContents.get(i), is(newContents.get(i)));
-      System.out.println(curContents.get(i));
-    }
-  }
-
-  /** 文字エンコーディングを指定した場合にファイルの読み書きができること */
-  @Test
-  public void crs003() throws Exception {
-    final ContentsModel model = new ContentsModel();
-    model.setPath(path.toFile().getPath());
-    model.setEncoding(getTestEncoding.get());
-
-    final List<String> newContents = new ArrayList<>();
-    newContents.add("上書きテスト");
-
-    final int status = component.updateContents(model, newContents);
-    assertThat(status, is(2));
+    final Status status = component.updateContents(model, newContents);
+    assertThat(status, is(Status.DONE));
 
     final List<String> curContents = component.getContents(model);
     assertThat(curContents.size(), is(1));
@@ -115,11 +113,56 @@ public class NotEmptyFile {
   }
 
   /**
-   * {@link ContentsComponent#deleteContents(ContentsModel)} 実行時に
+   * 文字エンコーディングを指定して {@link ContentsComponent#updateContents(ContentsModel, List)}
+   * を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>ファイルの内容を空にできること。
-   *   <li>終了ステータスが 2 であること。
+   *   <li>テキストファイルへの書込みが想定通り行われていることの確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>適すファイルへの書込みが想定通りの行数行われていること。
+   *   <li>テキストファイルへ書き込まれた文字列群がテスト用データと一致すること。
+   * </ul>
+   */
+  @Test
+  public void crs003() throws Exception {
+    final ContentsModel model = new ContentsModel();
+    model.setPath(path.toFile().getPath());
+    model.setEncoding(getTestEncoding.get());
+
+    final List<String> newContents = new ArrayList<>();
+    newContents.add("上書きテスト");
+
+    final Status status = component.updateContents(model, newContents);
+    assertThat(status, is(Status.DONE));
+
+    final List<String> curContents = component.getContents(model);
+    assertThat(curContents.size(), is(1));
+
+    for (int i = 0; i < curContents.size(); i++) {
+      assertThat(curContents.get(i), is(newContents.get(i)));
+      System.out.println(curContents.get(i));
+    }
+  }
+
+  /**
+   * 操作対象とするテキストファイルの内容が空ではない場合に {@link ContentsComponent#deleteContents(ContentsModel)}
+   * を実行した場合の動作検証を実施する。
+   *
+   * <ul>
+   *   <li>{@link ContentsComponent#deleteContents(ContentsModel)} 実行後の返り値の確認。
+   *   <li>テキストファイルの内容確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>返り値として {@link Status#DONE} が返されること。
+   *   <li>ファイルの内容が空であること。
    * </ul>
    */
   @Test
@@ -127,8 +170,8 @@ public class NotEmptyFile {
     final ContentsModel model = new ContentsModel();
     model.setPath(path.toFile().getPath());
 
-    final int status = component.deleteContents(model);
-    assertThat(status, is(2));
+    final Status status = component.deleteContents(model);
+    assertThat(status, is(Status.DONE));
 
     final List<String> contents = component.getContents(model);
     assertThat(contents.size(), is(0));

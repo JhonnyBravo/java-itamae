@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.file.FileResourceModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.file.FileService;
 
 /** ファイルの操作を管理する。 */
@@ -31,18 +32,24 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
   }
 
   @Override
-  public int apply(final Map<String, String> properties) {
-    int status = 0;
+  public Status apply(final Map<String, String> properties) {
+    Status status = Status.INIT;
     final FileResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
-      if ("create".equals(model.getAction())) {
-        status = service.create(model);
-      } else if ("delete".equals(model.getAction())) {
-        status = service.delete(model);
+      try {
+        if ("create".equals(model.getAction())) {
+          status = service.create(model);
+        } else if ("delete".equals(model.getAction())) {
+          status = service.delete(model);
+        }
+      } catch (Exception e) {
+        final String message = e.toString();
+        this.getLogger().warn("{}", message);
+        status = Status.ERROR;
       }
     } else {
-      status = 1;
+      status = Status.ERROR;
     }
 
     return status;

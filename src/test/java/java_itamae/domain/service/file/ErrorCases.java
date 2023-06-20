@@ -1,12 +1,11 @@
 package java_itamae.domain.service.file;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import jakarta.inject.Inject;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java_itamae.domain.component.file.FileComponentImpl;
 import java_itamae.domain.component.group.GroupComponentImpl;
 import java_itamae.domain.component.mode.ModeComponentImpl;
@@ -59,48 +58,61 @@ public class ErrorCases {
   }
 
   /**
-   * path が指定されないまま {@link FileService#create(FileResourceModel)} を実行した場合に
+   * path が指定されないまま {@link FileService#create(FileResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link NullPointerException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = NullPointerException.class)
   public void fse001() throws Exception {
     final FileResourceModel model = new FileResourceModel();
     model.setOwner(ps.getProperty("owner"));
     model.setGroup(ps.getProperty("group"));
     model.setMode("640");
 
-    final int status = fs.create(model);
-    assertThat(status, is(1));
+    fs.create(model);
   }
 
   /**
-   * path が指定されないまま {@link FileService#delete(FileResourceModel)} を実行した場合に
+   * path が指定されないまま {@link FileService#delete(FileResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link NullPointerException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = NullPointerException.class)
   public void fse002() throws Exception {
     final FileResourceModel model = new FileResourceModel();
-    final int status = fs.delete(model);
-    assertThat(status, is(1));
+    fs.delete(model);
   }
 
   /**
-   * 親ディレクトリが存在しない場合に
+   * 親ディレクトリが存在しないパスを対象に {@link FileService#create(FileResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link NoSuchFileException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = NoSuchFileException.class)
   public void fse003() throws Exception {
     final FileResourceModel model = new FileResourceModel();
     model.setPath("NotExist/test.txt");
@@ -108,19 +120,23 @@ public class ErrorCases {
     model.setGroup(ps.getProperty("group"));
     model.setMode("640");
 
-    final int status = fs.create(model);
-    assertThat(status, is(1));
+    fs.create(model);
   }
 
   /**
-   * 新しいファイル所有者として、存在しないユーザの名前を指定した場合に
+   * 新しいファイル所有者として、存在しないユーザの名前を指定して {@link FileService#create(FileResourceModel)} を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link UserPrincipalNotFoundException} が発生すること。
    * </ul>
    */
-  @Test
+  @Test(expected = UserPrincipalNotFoundException.class)
   public void fse004() throws Exception {
     final FileResourceModel model = new FileResourceModel();
     model.setPath(path.toFile().getPath());
@@ -128,20 +144,25 @@ public class ErrorCases {
     model.setGroup(ps.getProperty("group"));
     model.setMode("640");
 
-    final int status = fs.create(model);
-    assertThat(status, is(1));
+    fs.create(model);
   }
 
   /**
-   * 新しいグループ所有者として、存在しないグループの名前を指定した場合に
+   * 新しいグループ所有者として、存在しないグループの名前を指定して {@link FileService#create(FileResourceModel)}
+   * を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link UserPrincipalNotFoundException} が発生すること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
-  @Test
+  @Test(expected = UserPrincipalNotFoundException.class)
   public void fse005() throws Exception {
     final FileResourceModel model = new FileResourceModel();
     model.setPath(path.toFile().getPath());
@@ -149,20 +170,25 @@ public class ErrorCases {
     model.setGroup("NotExist");
     model.setMode("640");
 
-    final int status = fs.create(model);
-    assertThat(status, is(1));
+    fs.create(model);
   }
 
   /**
-   * 新しいパーミッション設定として不正なパーミッション設定値を指定した場合に
+   * 新しいパーミッション設定として不正なパーミッション設定値を指定して {@link FileService#create(FileResourceModel)}
+   * を実行した場合の動作検証を実施する。
    *
    * <ul>
-   *   <li>異常終了すること。
-   *   <li>終了ステータスが 1 であること。
+   *   <li>例外の発生確認。
+   * </ul>
+   *
+   * <p>想定結果
+   *
+   * <ul>
+   *   <li>{@link IllegalArgumentException} が発生すること。
    * </ul>
    */
   // @Ignore("Windows の場合は非対応である為、実行しない。")
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void fse006() throws Exception {
     final FileResourceModel model = new FileResourceModel();
     model.setPath(path.toFile().getPath());
@@ -170,7 +196,6 @@ public class ErrorCases {
     model.setGroup(ps.getProperty("group"));
     model.setMode("a40");
 
-    final int status = fs.create(model);
-    assertThat(status, is(1));
+    fs.create(model);
   }
 }

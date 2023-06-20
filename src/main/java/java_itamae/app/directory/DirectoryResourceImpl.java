@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import java.util.Map;
 import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
+import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.directory.DirectoryService;
 
 /** ディレクトリの操作を管理する。 */
@@ -32,18 +33,24 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
   }
 
   @Override
-  public int apply(final Map<String, String> properties) {
-    int status = 0;
+  public Status apply(final Map<String, String> properties) {
+    Status status = Status.INIT;
     final DirectoryResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
-      if ("create".equals(model.getAction())) {
-        status = service.create(model);
-      } else if ("delete".equals(model.getAction())) {
-        status = service.delete(model);
+      try {
+        if ("create".equals(model.getAction())) {
+          status = service.create(model);
+        } else if ("delete".equals(model.getAction())) {
+          status = service.delete(model);
+        }
+      } catch (Exception e) {
+        final String message = e.toString();
+        this.getLogger().warn("{}", message);
+        status = Status.ERROR;
       }
     } else {
-      status = 1;
+      status = Status.ERROR;
     }
 
     return status;
