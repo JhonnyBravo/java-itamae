@@ -23,7 +23,13 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     mavenCentral()
     jcenter()
-    maven {url 'https://jitpack.io'}
+    maven{
+        url=uri('https://maven.pkg.github.com/jhonnybravo/java-se-template-bom')
+        credentials{
+            username=project.findProperty('gpr.user') ?: System.getenv('USERNAME')
+            password=project.findProperty('gpr.key') ?: System.getenv('TOKEN')
+        }
+    }
 }
 
 dependencyManagement {
