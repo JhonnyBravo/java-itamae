@@ -34,7 +34,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'com.github.JhonnyBravo:java-se-template-bom:master-SNAPSHOT'
+        mavenBom 'com.github.JhonnyBravo:java-se-template-bom:Java17-gradle-7.6-SNAPSHOT'
     }
 }
 
@@ -48,7 +48,7 @@ dependencies {
 }
 
 group='com.github.JhonnyBravo'
-version='master-SNAPSHOT'
+version='Java17-gradle-7.6-SNAPSHOT'
 sourceCompatibility=17
 targetCompatibility=17
 
