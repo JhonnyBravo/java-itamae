@@ -38,14 +38,13 @@ public class GroupComponentImpl implements GroupComponent {
     final GroupPrincipal newGroup = createGroup(group);
 
     if (!curGroup.equals(newGroup)) {
-      this.getLogger().info("グループ所有者を変更しています......");
-
       final Path convertedPath = this.convertToPath(path);
       final PosixFileAttributeView pfav =
           Files.getFileAttributeView(convertedPath, PosixFileAttributeView.class);
       pfav.setGroup(newGroup);
 
       status = Status.DONE;
+      this.getLogger().info("modified group: {}", group);
     }
 
     return status;
