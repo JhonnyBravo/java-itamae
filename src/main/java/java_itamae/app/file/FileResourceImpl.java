@@ -6,6 +6,7 @@ import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.file.FileService;
 import java_itamae.domain.service.file.FileServiceImpl;
+import org.slf4j.Logger;
 
 /** ファイルの操作を管理する。 */
 public class FileResourceImpl implements BaseResource<FileResourceModel> {
@@ -34,6 +35,10 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
     final FileResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
+      final Logger logger = this.getLogger();
+      final String infoMsg = "resource_name: {}, action: {}, path: {}";
+      logger.info(infoMsg, model.getResourceName(), model.getAction(), model.getPath());
+
       final FileService service = new FileServiceImpl();
 
       try {
@@ -44,7 +49,8 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
         }
       } catch (Exception e) {
         status = Status.ERROR;
-        this.getLogger().warn(e.toString());
+        final String warnMsg = e.toString();
+        logger.warn("{}", warnMsg);
       }
     } else {
       status = Status.ERROR;
