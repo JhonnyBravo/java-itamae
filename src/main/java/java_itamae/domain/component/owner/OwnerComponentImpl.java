@@ -35,11 +35,11 @@ public class OwnerComponentImpl implements OwnerComponent {
     final UserPrincipal newOwner = createOwner(owner);
 
     if (!curOwner.equals(newOwner)) {
-      this.getLogger().info("所有者を変更しています......");
       final Path convertedPath = this.convertToPath(path);
       Files.setOwner(convertedPath, newOwner);
 
       status = Status.DONE;
+      this.getLogger().info("modified owner: {}", owner);
     }
 
     return status;

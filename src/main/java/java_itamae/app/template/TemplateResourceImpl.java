@@ -8,6 +8,7 @@ import java_itamae.domain.model.status.Status;
 import java_itamae.domain.model.template.TemplateResourceModel;
 import java_itamae.domain.service.contents.ContentsService;
 import java_itamae.domain.service.contents.ContentsServiceImpl;
+import org.slf4j.Logger;
 
 /** ファイルの読書きを管理する。 */
 public class TemplateResourceImpl implements BaseResource<TemplateResourceModel> {
@@ -64,14 +65,8 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
    *
    * @param model 書込み対象とするテキストファイルの情報を収めた {@link TemplateResourceModel} を指定する。
    * @param contents 書込み対象とする文字列を収めた {@link List} を指定する。
-   * @return status 終了ステータスを返す。
-   *     <ul>
-   *       <li>0: 何も実行せずに正常終了したことを表す
-   *       <li>1: 異常終了したことを表す。
-   *       <li>2: 書込みを実行して正常終了したことを表す。
-   *     </ul>
-   *
-   * @throws Exception
+   * @return status {@link Status} を返す。
+   * @throws Exception ファイルの操作中に発生した例外を投げる。
    */
   private Status updateContents(final TemplateResourceModel model, final List<String> contents)
       throws Exception {
@@ -99,13 +94,17 @@ public class TemplateResourceImpl implements BaseResource<TemplateResourceModel>
     final TemplateResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
+      final Logger logger = this.getLogger();
+      final String infoMsg = "resource_name: {}, action: {}, path:{}";
+      logger.info(infoMsg, model.getResourceName(), model.getAction(), model.getPath());
+
       try {
         final List<String> sourceContents = this.getSourceContents(model);
         status = this.updateContents(model, sourceContents);
       } catch (final Exception e) {
-        final String message = e.toString();
-        this.getLogger().warn("{}", message);
         status = Status.ERROR;
+        final String warnMsg = e.toString();
+        logger.warn("{}", warnMsg);
       }
     } else {
       status = Status.ERROR;
