@@ -27,15 +27,15 @@ public class DirectoryServiceImpl implements DirectoryService {
 
     status = directory.create(model.getPath(), model.isRecursive());
 
-    if (status != Status.ERROR && model.getOwner() != null) {
+    if (model.getOwner() != null) {
       status = owner.updateOwner(model.getPath(), model.getOwner());
     }
 
-    if (status != Status.ERROR && model.getGroup() != null) {
+    if (model.getGroup() != null) {
       status = group.updateGroup(model.getPath(), model.getGroup());
     }
 
-    if (status != Status.ERROR && model.getMode() != null) {
+    if (model.getMode() != null) {
       status = mode.updateMode(model.getPath(), model.getMode());
     }
 

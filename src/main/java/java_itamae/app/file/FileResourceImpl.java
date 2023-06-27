@@ -5,6 +5,7 @@ import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.file.FileResourceModel;
 import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.file.FileService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,10 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
     final FileResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
+      final Logger logger = this.getLogger();
+      final String infoMsg = "resource_name: {}, action: {}, path: {}";
+      logger.info(infoMsg, model.getResourceName(), model.getAction(), model.getPath());
+
       try {
         if ("create".equals(model.getAction())) {
           status = service.create(model);
@@ -47,7 +52,8 @@ public class FileResourceImpl implements BaseResource<FileResourceModel> {
         }
       } catch (Exception e) {
         status = Status.ERROR;
-        this.getLogger().warn(e.toString());
+        final String warnMsg = e.toString();
+        logger.warn("{}", warnMsg);
       }
     } else {
       status = Status.ERROR;

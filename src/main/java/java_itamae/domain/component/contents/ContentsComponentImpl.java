@@ -39,8 +39,7 @@ public class ContentsComponentImpl implements ContentsComponent {
       }
 
       status = Status.DONE;
-    } catch (final Exception e) {
-      throw e;
+      this.getLogger().info("modified contents: {}", model.getPath());
     }
 
     return status;
@@ -50,17 +49,14 @@ public class ContentsComponentImpl implements ContentsComponent {
   public Status deleteContents(final ContentsModel model) throws Exception {
     Status status = Status.INIT;
 
-    try {
-      final List<String> curContents = this.getContents(model);
+    final List<String> curContents = this.getContents(model);
 
-      if (!curContents.isEmpty()) {
-        try (BufferedWriter buffer = new BufferedWriter(this.getWriter(model))) {
-          buffer.write("");
-          status = Status.DONE;
-        }
+    if (!curContents.isEmpty()) {
+      try (BufferedWriter buffer = new BufferedWriter(this.getWriter(model))) {
+        buffer.write("");
+        status = Status.DONE;
+        this.getLogger().info("deleted contents: {}", model.getPath());
       }
-    } catch (final Exception e) {
-      throw e;
     }
 
     return status;

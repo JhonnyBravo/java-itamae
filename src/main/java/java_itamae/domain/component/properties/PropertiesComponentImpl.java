@@ -49,8 +49,6 @@ public class PropertiesComponentImpl implements PropertiesComponent {
     try (Writer writer = this.getWriter(model)) {
       properties.store(writer, comment);
       status = Status.DONE;
-    } catch (final Exception e) {
-      throw e;
     }
 
     return status;
@@ -60,21 +58,15 @@ public class PropertiesComponentImpl implements PropertiesComponent {
   public Status deleteProperties(final ContentsModel model, final String comment) throws Exception {
     Status status = Status.INIT;
 
-    try {
-      final Map<String, String> curProperties = this.getProperties(model);
+    final Map<String, String> curProperties = this.getProperties(model);
 
-      if (!curProperties.isEmpty()) {
-        final Properties properties = new Properties();
+    if (!curProperties.isEmpty()) {
+      final Properties properties = new Properties();
 
-        try (Writer writer = this.getWriter(model)) {
-          properties.store(writer, comment);
-          status = Status.DONE;
-        } catch (final Exception e) {
-          throw e;
-        }
+      try (Writer writer = this.getWriter(model)) {
+        properties.store(writer, comment);
+        status = Status.DONE;
       }
-    } catch (final Exception e) {
-      throw e;
     }
 
     return status;
