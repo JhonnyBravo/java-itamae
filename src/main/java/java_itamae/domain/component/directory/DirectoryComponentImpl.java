@@ -12,8 +12,6 @@ public class DirectoryComponentImpl implements DirectoryComponent {
     final Path convertedPath = this.convertToPath(path);
 
     if (!convertedPath.toFile().isDirectory()) {
-      this.getLogger().info("{} を作成しています......", path);
-
       if (recursive) {
         Files.createDirectories(convertedPath);
       } else {
@@ -21,6 +19,7 @@ public class DirectoryComponentImpl implements DirectoryComponent {
       }
 
       status = Status.DONE;
+      this.getLogger().info("created directory: {}", path);
     }
 
     return status;
@@ -32,13 +31,12 @@ public class DirectoryComponentImpl implements DirectoryComponent {
     final Path convertedPath = this.convertToPath(path);
 
     if (convertedPath.toFile().isDirectory()) {
-      this.getLogger().info("{} を削除しています......", path);
-
       if (recursive) {
         status = this.deleteRecursive(path);
       } else {
         Files.delete(convertedPath);
         status = Status.DONE;
+        this.getLogger().info("deleted directory: {}", path);
       }
     }
 
@@ -59,7 +57,7 @@ public class DirectoryComponentImpl implements DirectoryComponent {
    *   <li>変数 status を返り値として返す。
    * </ol>
    *
-   * @param 操作対象とするディレクトリのパスを指定する。
+   * @param path 操作対象とするディレクトリのパスを指定する。
    * @return status {@link Status} を返す。
    * @throws Exception ディレクトリの削除中に発生した例外を投げる。
    */
@@ -80,6 +78,7 @@ public class DirectoryComponentImpl implements DirectoryComponent {
       // 空になったディレクトリを削除する。
       Files.delete(convertedPath);
       status = Status.DONE;
+      this.getLogger().info("deleted directory: {}", path);
     }
 
     return status;

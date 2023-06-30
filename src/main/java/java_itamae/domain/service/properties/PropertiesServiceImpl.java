@@ -36,8 +36,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 
   @Override
   public Status createProperty(final String key, final String value) throws Exception {
-    Status status = Status.INIT;
-    Map<String, String> properties = component.getProperties(model);
+    final Map<String, String> properties = component.getProperties(model);
 
     if (properties.containsKey(key)) {
       throw new IllegalArgumentException(key + " は登録済みです。");
@@ -45,19 +44,18 @@ public class PropertiesServiceImpl implements PropertiesService {
 
     properties.put(key, value);
     final String fileName = new File(model.getPath()).getName();
-    status = component.updateProperties(model, properties, fileName);
-
-    return status;
+    return component.updateProperties(model, properties, fileName);
   }
 
   @Override
   public Status updateProperty(final String key, final String value) throws Exception {
-    Status status = Status.INIT;
-    Map<String, String> properties = component.getProperties(model);
+    final Map<String, String> properties = component.getProperties(model);
 
     if (!properties.containsKey(key)) {
       throw new IllegalArgumentException(key + " が見つかりません");
     }
+
+    Status status = Status.INIT;
 
     if (!value.equals(properties.get(key))) {
       final String fileName = new File(model.getPath()).getName();
@@ -70,8 +68,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 
   @Override
   public Status deleteProperty(final String key) throws Exception {
-    Status status = Status.INIT;
-    Map<String, String> properties = component.getProperties(this.model);
+    final Map<String, String> properties = component.getProperties(this.model);
 
     if (!properties.containsKey(key)) {
       throw new IllegalArgumentException(key + " が見つかりません。");
@@ -79,8 +76,6 @@ public class PropertiesServiceImpl implements PropertiesService {
 
     final String fileName = new File(model.getPath()).getName();
     properties.remove(key);
-    status = component.updateProperties(model, properties, fileName);
-
-    return status;
+    return component.updateProperties(model, properties, fileName);
   }
 }

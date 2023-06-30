@@ -42,10 +42,11 @@ public class ModeComponentImpl implements ModeComponent {
     final Set<PosixFilePermission> newPermission = createMode(mode);
 
     if (!curPermission.equals(newPermission)) {
-      this.getLogger().info("パーミッションを変更しています......");
       final Path convertedPath = this.convertToPath(path);
       Files.setPosixFilePermissions(convertedPath, newPermission);
+
       status = Status.DONE;
+      this.getLogger().info("modified mode: {}", mode);
     }
 
     return status;

@@ -6,6 +6,7 @@ import java_itamae.app.common.BaseResource;
 import java_itamae.domain.model.directory.DirectoryResourceModel;
 import java_itamae.domain.model.status.Status;
 import java_itamae.domain.service.directory.DirectoryService;
+import org.slf4j.Logger;
 
 /** ディレクトリの操作を管理する。 */
 public class DirectoryResourceImpl implements BaseResource<DirectoryResourceModel> {
@@ -38,6 +39,10 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
     final DirectoryResourceModel model = this.convertToModel(properties);
 
     if (this.validate(model)) {
+      final Logger logger = this.getLogger();
+      final String infoMsg = "resource_name: {}, action: {}, path: {}";
+      logger.info(infoMsg, model.getResourceName(), model.getAction(), model.getPath());
+
       try {
         if ("create".equals(model.getAction())) {
           status = service.create(model);
@@ -45,9 +50,9 @@ public class DirectoryResourceImpl implements BaseResource<DirectoryResourceMode
           status = service.delete(model);
         }
       } catch (Exception e) {
-        final String message = e.toString();
-        this.getLogger().warn("{}", message);
         status = Status.ERROR;
+        final String warnMsg = e.toString();
+        logger.warn("{}", warnMsg);
       }
     } else {
       status = Status.ERROR;
